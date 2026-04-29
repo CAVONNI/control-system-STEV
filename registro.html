@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <style>
+      /* ================================================
+      HISTORIAL DE ESCANEOS — Corporate Warehouse UI
+      Aesthetic: Industrial Precision / Dark Command Center
+      ================================================ */
+
+      @import url("https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=DM+Mono:wght@300;400;500&display=swap");
+
+      /* ── CSS VARIABLES ── */
+      :root {
+        --bg-deep: #0b0f1a;
+        --bg-panel: #111827;
+        --bg-card: #1a2235;
+        --bg-row-alt: #141c2e;
+        --accent-primary: #00d4ff;
+        --accent-glow: rgba(0, 212, 255, 0.18);
+        --accent-amber: #f59e0b;
+        --accent-green: #10b981;
+        --accent-red: #ef4444;
+        --border: rgba(0, 212, 255, 0.12);
+        --border-strong: rgba(0, 212, 255, 0.3);
+        --text-primary: #e8edf5;
+        --text-secondary: #8fa3c0;
+        --text-muted: #4d6080;
+        --shadow-card: 0 20px 60px rgba(0, 0, 0, 0.6), 0 0 0 1px var(--border);
+        --shadow-glow: 0 0 30px rgba(0, 212, 255, 0.15);
+        --font-display: "Rajdhani", sans-serif;
+        --font-mono: "DM Mono", monospace;
+        --radius: 12px;
+        --radius-sm: 6px;
+      }
+
+      /* ── RESET ── */
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      /* ── BODY ── */
+      body {
+        font-family: var(--font-display);
+        background-color: var(--bg-deep);
+        background-image: radial-gradient(
+            ellipse 80% 50% at 50% -10%,
+            rgba(0, 212, 255, 0.08) 0%,
+            transparent 60%
+          ),
+          linear-gradient(180deg, #0b0f1a 0%, #0d1220 100%);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 48px 24px 64px;
+        color: var(--text-primary);
+        /* Subtle grid overlay */
+        background-image: radial-gradient(
+            ellipse 80% 50% at 50% -10%,
+            rgba(0, 212, 255, 0.08),
+            transparent 60%
+          ),
+          repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 39px,
+            rgba(0, 212, 255, 0.025) 39px,
+            rgba(0, 212, 255, 0.025) 40px
+          ),
+          repeating-linear-gradient(
+            90deg,
+            transparent,
+            transparent 39px,
+            rgba(0, 212, 255, 0.025) 39px,
+            rgba(0, 212, 255, 0.025) 40px
+          );
+      }
+
+      /* ── HEADER SECTION ── */
+      h3 {
+        font-family: var(--font-display);
+        font-size: 36px;
+        font-weight: 700;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+        color: var(--text-primary);
+        text-align: center;
+        margin-bottom: 8px;
+        position: relative;
+      }
+
+      h3::after {
+        content: "";
+        display: block;
+        width: 60px;
+        height: 3px;
+        background: linear-gradient(90deg, var(--accent-primary), transparent);
+        margin: 10px auto 0;
+        border-radius: 2px;
+      }
+
+      /* ── CONTADOR ── */
+      #contadorRegistros {
+        font-family: var(--font-mono);
+        font-size: 12px;
+        font-weight: 400;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        margin-bottom: 28px;
+        padding: 6px 16px;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        background: rgba(0, 212, 255, 0.04);
+      }
+
+      /* ── TABLE WRAPPER ── */
+      .table-wrapper {
+        width: 100%;
+        max-width: 900px;
+        overflow-x: auto;
+        border-radius: var(--radius);
+        box-shadow: var(--shadow-card), var(--shadow-glow);
+      }
+
+      /* ── TABLE ── */
+      #tablaHistorial {
+        width: 100%;
+        border-collapse: collapse;
+        background: var(--bg-card);
+        color: var(--text-primary);
+        font-family: var(--font-display);
+        font-size: 15px;
+        min-width: 560px;
+        overflow: hidden;
+      }
+
+      /* ── THEAD ── */
+      #tablaHistorial thead {
+        background: linear-gradient(135deg, #0f1f3d 0%, #142040 100%);
+        border-bottom: 2px solid var(--accent-primary);
+        position: relative;
+      }
+
+      #tablaHistorial th {
+        padding: 16px 20px;
+        text-align: center;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        font-weight: 500;
+        letter-spacing: 2.5px;
+        text-transform: uppercase;
+        color: var(--accent-primary);
+        white-space: nowrap;
+        position: relative;
+      }
+
+      #tablaHistorial th:not(:last-child)::after {
+        content: "";
+        position: absolute;
+        right: 0;
+        top: 25%;
+        height: 50%;
+        width: 1px;
+        background: var(--border);
+      }
+
+      /* ── TBODY ── */
+      #tablaHistorial tbody tr {
+        border-bottom: 1px solid var(--border);
+        transition: background 0.2s ease, transform 0.15s ease;
+        animation: fadeInRow 0.4s ease both;
+      }
+
+      @keyframes fadeInRow {
+        from {
+          opacity: 0;
+          transform: translateX(-6px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      #tablaHistorial tbody tr:nth-child(even) {
+        background: var(--bg-row-alt);
+      }
+
+      #tablaHistorial tbody tr:hover {
+        background: rgba(0, 212, 255, 0.07);
+        border-color: var(--border-strong);
+      }
+
+      #tablaHistorial tbody tr:last-child {
+        border-bottom: none;
+      }
+
+      /* ── CELLS ── */
+      #tablaHistorial td {
+        padding: 14px 20px;
+        text-align: center;
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--text-primary);
+        white-space: nowrap;
+      }
+
+      /* LPN column — monospaced accent */
+      #tablaHistorial td:first-child {
+        font-family: var(--font-mono);
+        font-size: 13px;
+        color: var(--accent-primary);
+        letter-spacing: 1px;
+      }
+
+      /* Referencia */
+      #tablaHistorial td:nth-child(2) {
+        color: var(--text-secondary);
+        font-weight: 400;
+      }
+
+      /* Cantidad */
+      #tablaHistorial td:nth-child(3) {
+        font-family: var(--font-mono);
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--accent-amber);
+      }
+
+      /* Nota */
+      #tablaHistorial td:nth-child(4) {
+        color: var(--text-secondary);
+        font-size: 13px;
+        font-weight: 400;
+        max-width: 200px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      /* Tipo — badge-style */
+      #tablaHistorial td:nth-child(5) {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        font-weight: 500;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+      }
+
+      #tablaHistorial td:nth-child(5)::after {
+        content: attr(data-tipo);
+      }
+
+      /* ── BUTTONS ── */
+      .botones {
+        font-family: var(--font-display);
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        padding: 12px 28px;
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius-sm);
+        cursor: pointer;
+        margin-top: 20px;
+        margin-inline: 6px;
+        transition: all 0.2s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      /* First button: export */
+      .botones:first-of-type {
+        background: linear-gradient(135deg, #0a3d62, #1e5f8e);
+        color: var(--accent-primary);
+        border-color: rgba(0, 212, 255, 0.35);
+        box-shadow: 0 0 20px rgba(0, 212, 255, 0.1);
+      }
+
+      .botones:first-of-type:hover {
+        background: linear-gradient(135deg, #0d4e7a, #2470a8);
+        box-shadow: 0 0 30px rgba(0, 212, 255, 0.25);
+        transform: translateY(-2px);
+      }
+
+      /* Second button: clear */
+      .botones:last-of-type,
+      .botones + .botones {
+        background: rgba(239, 68, 68, 0.08);
+        color: var(--accent-red);
+        border-color: rgba(239, 68, 68, 0.3);
+      }
+
+      .botones:last-of-type:hover,
+      .botones + .botones:hover {
+        background: rgba(239, 68, 68, 0.18);
+        box-shadow: 0 0 20px rgba(239, 68, 68, 0.2);
+        transform: translateY(-2px);
+      }
+
+      .botones:active {
+        transform: translateY(0px) scale(0.98);
+      }
+
+      /* ── BACK LINK ── */
+      .boton-registro {
+        display: inline-block;
+        margin-top: 16px;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        text-decoration: none;
+        padding: 8px 16px;
+        border-radius: var(--radius-sm);
+        border: 1px solid transparent;
+        transition: all 0.2s ease;
+      }
+
+      .boton-registro::before {
+        content: "← ";
+      }
+
+      .boton-registro:hover {
+        color: var(--accent-primary);
+        border-color: var(--border);
+        background: var(--accent-glow);
+      }
+
+      /* ── RESPONSIVE ── */
+      @media (max-width: 768px) {
+        body {
+          padding: 32px 16px 48px;
+        }
+
+        h3 {
+          font-size: 26px;
+          letter-spacing: 2px;
+        }
+
+        #tablaHistorial th,
+        #tablaHistorial td {
+          padding: 12px 14px;
+        }
+
+        .botones {
+          padding: 11px 20px;
+          font-size: 12px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        h3 {
+          font-size: 22px;
+        }
+
+        .botones {
+          display: block;
+          width: 100%;
+          max-width: 320px;
+          margin-inline: 0;
+        }
+      }
+    </style>
+    <h3>Historial de escaneos</h3>
+
+    <p id="contadorRegistros">Cantidad de registros: 0</p>
+
+    <table id="tablaHistorial">
+      <thead>
+        <tr>
+          <th>LPN</th>
+          <th>Referencia</th>
+          <th>Cantidad</th>
+          <th>Nota</th>
+          <th>Tipo</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <script>
+      let historial = JSON.parse(localStorage.getItem("historialLPN")) || [];
+
+      let tabla = document.querySelector("#tablaHistorial tbody");
+
+      historial.forEach((reg) => {
+        let fila = tabla.insertRow();
+
+        fila.insertCell(0).textContent = reg.LPN;
+        fila.insertCell(1).textContent = reg.REFERENCIA;
+        fila.insertCell(2).textContent = reg.CANTIDAD;
+        fila.insertCell(3).textContent = reg.NOTA;
+        fila.insertCell(4).textContent = reg.TIPO;
+      });
+
+      // actualizar contador
+      document.getElementById("contadorRegistros").textContent =
+        "Cantidad de registros: " + historial.length;
+    </script>
+
+    <button onclick="exportarExcel()" class="botones">Exportar a Excel</button>
+    <button onclick="limpiarTabla()" class="botones">Limpiar historial</button>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+    <a href="validar_lpn.html" class="boton-registro">Volver</a>
+    <script src="funciones.js"></script>
+  </body>
+</html>

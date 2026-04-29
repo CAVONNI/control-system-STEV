@@ -1,0 +1,878 @@
+<!--
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Panel Principal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=DM+Mono:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg-deep: #0b0f1a;
+        --bg-card: #1a2235;
+        --bg-card-hover: #1f2a42;
+        --accent: #00d4ff;
+        --accent-glow: rgba(0, 212, 255, 0.15);
+        --accent-amber: #f59e0b;
+        --accent-green: #10b981;
+        --border: rgba(0, 212, 255, 0.12);
+        --border-strong: rgba(0, 212, 255, 0.35);
+        --text-primary: #e8edf5;
+        --text-secondary: #8fa3c0;
+        --text-muted: #4d6080;
+        --font-display: "Rajdhani", sans-serif;
+        --font-mono: "DM Mono", monospace;
+        --radius: 16px;
+        --radius-sm: 10px;
+      }
+
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: var(--font-display);
+        background-color: var(--bg-deep);
+        background-image: radial-gradient(
+            ellipse 70% 50% at 50% -5%,
+            rgba(0, 212, 255, 0.1),
+            transparent 65%
+          ),
+          repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 39px,
+            rgba(0, 212, 255, 0.022) 39px,
+            rgba(0, 212, 255, 0.022) 40px
+          ),
+          repeating-linear-gradient(
+            90deg,
+            transparent,
+            transparent 39px,
+            rgba(0, 212, 255, 0.022) 39px,
+            rgba(0, 212, 255, 0.022) 40px
+          );
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 48px 24px;
+        color: var(--text-primary);
+      }
+
+      /* ── HEADER ── */
+      .header {
+        text-align: center;
+        margin-bottom: 56px;
+        animation: slideDown 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+      }
+
+      .header .logo {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+        color: var(--accent);
+        margin-bottom: 14px;
+        opacity: 0.8;
+      }
+
+      .header h1 {
+        font-size: 48px;
+        font-weight: 700;
+        letter-spacing: 5px;
+        text-transform: uppercase;
+        line-height: 1;
+      }
+
+      .header h1 span {
+        color: var(--accent);
+      }
+
+      .header .subtitle {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 2.5px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        margin-top: 14px;
+      }
+
+      .accent-line {
+        width: 60px;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--accent),
+          transparent
+        );
+        margin: 16px auto 0;
+        border-radius: 2px;
+        box-shadow: 0 0 12px var(--accent);
+      }
+
+      /* ── GRID ── */
+      .menu-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        width: 100%;
+        max-width: 600px;
+      }
+
+      /* ── CARD ── */
+      .menu-card {
+        position: relative;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 36px 28px 32px;
+        text-decoration: none;
+        color: var(--text-primary);
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+        overflow: hidden;
+        transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+      }
+
+      /* Línea superior animada */
+      .menu-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--card-accent, var(--accent)),
+          transparent
+        );
+        transform: scaleX(0.3);
+        transform-origin: center;
+        transition: transform 0.4s ease;
+      }
+
+      /* Glow de fondo en hover */
+      .menu-card::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(
+          ellipse 80% 60% at 50% 120%,
+          var(--card-glow, rgba(0, 212, 255, 0.1)),
+          transparent
+        );
+        opacity: 0;
+        transition: opacity 0.4s ease;
+        pointer-events: none;
+      }
+
+      .menu-card:hover {
+        border-color: var(--card-border, var(--border-strong));
+        background: var(--bg-card-hover);
+        transform: translateY(-6px);
+        box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55),
+          0 0 0 1px var(--card-border, var(--border-strong));
+      }
+
+      .menu-card:hover::before {
+        transform: scaleX(1);
+      }
+      .menu-card:hover::after {
+        opacity: 1;
+      }
+
+      .menu-card:active {
+        transform: translateY(-2px) scale(0.98);
+      }
+
+      /* Colores por card */
+      .card-lpn {
+        --card-accent: #00d4ff;
+        --card-border: rgba(0, 212, 255, 0.35);
+        --card-glow: rgba(0, 212, 255, 0.1);
+        animation: slideUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+        animation-delay: 0.1s;
+      }
+
+      .card-guias {
+        --card-accent: #10b981;
+        --card-border: rgba(16, 185, 129, 0.35);
+        --card-glow: rgba(16, 185, 129, 0.1);
+        animation: slideUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+        animation-delay: 0.2s;
+      }
+
+      /* Icon */
+      .card-icon {
+        font-size: 36px;
+        margin-bottom: 6px;
+        display: block;
+        filter: drop-shadow(0 0 8px var(--card-accent, var(--accent)));
+        transition: transform 0.3s ease;
+      }
+
+      .menu-card:hover .card-icon {
+        transform: scale(1.15) rotate(-4deg);
+      }
+
+      /* Tag */
+      .card-tag {
+        font-family: var(--font-mono);
+        font-size: 9px;
+        letter-spacing: 2.5px;
+        text-transform: uppercase;
+        color: var(--card-accent, var(--accent));
+        opacity: 0.7;
+      }
+
+      /* Title */
+      .card-title {
+        font-size: 22px;
+        font-weight: 700;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        color: var(--text-primary);
+        line-height: 1.1;
+      }
+
+      /* Description */
+      .card-desc {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        line-height: 1.7;
+        color: var(--text-muted);
+        margin-top: 2px;
+      }
+
+      /* Arrow */
+      .card-arrow {
+        margin-top: 14px;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--card-accent, var(--accent));
+        opacity: 0;
+        transform: translateX(-8px);
+        transition: all 0.3s ease;
+      }
+
+      .menu-card:hover .card-arrow {
+        opacity: 1;
+        transform: translateX(0);
+      }
+
+      /* ── FOOTER ── */
+      .footer {
+        margin-top: 48px;
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        opacity: 0.5;
+        animation: fadeIn 1s ease both;
+        animation-delay: 0.5s;
+      }
+
+      /* ── ANIMATIONS ── */
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(28px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes slideDown {
+        from {
+          opacity: 0;
+          transform: translateY(-20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 0.5;
+        }
+      }
+
+      /* ── RESPONSIVE ── */
+      @media (max-width: 520px) {
+        .menu-grid {
+          grid-template-columns: 1fr;
+          max-width: 340px;
+        }
+
+        .header h1 {
+          font-size: 34px;
+          letter-spacing: 3px;
+        }
+        .menu-card {
+          padding: 28px 22px 24px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="header">
+      <div class="logo">⬡ &nbsp;Reclamos CLH</div>
+      <h1>Panel <span>Principal</span></h1>
+      <p class="subtitle">Selecciona un módulo para continuar</p>
+      <div class="accent-line"></div>
+    </header>
+
+    <div class="menu-grid">
+      <!-- VALIDAR LPN -->
+<!--  <a href="validar_lpn.html" class="menu-card card-lpn">
+        <span class="card-icon">🔍</span>
+        <span class="card-tag">Módulo 01</span>
+        <div class="card-title">Validar LPN</div>
+        <p class="card-desc">
+          Consulta y valida números de LPN cargando un archivo Excel.
+        </p>
+        <span class="card-arrow">Acceder →</span>
+      </a>
+
+      <!-- REGISTRO DE GUÍAS -->
+<!--<a href="guias.html" class="menu-card card-guias">
+        <span class="card-icon">📦</span>
+        <span class="card-tag">Módulo 02</span>
+        <div class="card-title">Registro de Guías</div>
+        <p class="card-desc">
+          Registra paquetes con imagen, fecha y datos del receptor.
+        </p>
+        <span class="card-arrow">Acceder →</span>
+      </a>
+    </div>
+
+    <p class="footer">Steven Realpe · control system · v1.0</p>
+  </body>
+</html>
+-->
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Panel Principal · Reclamos CLH</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=DM+Mono:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg-deep: #0b0f1a;
+        --bg-card: #1a2235;
+        --bg-card-hover: #1f2a42;
+        --accent: #00d4ff;
+        --accent-glow: rgba(0, 212, 255, 0.15);
+        --accent-amber: #f59e0b;
+        --accent-green: #10b981;
+        --accent-red: #ef4444;
+        --border: rgba(0, 212, 255, 0.12);
+        --border-strong: rgba(0, 212, 255, 0.35);
+        --text-primary: #e8edf5;
+        --text-secondary: #8fa3c0;
+        --text-muted: #4d6080;
+        --font-display: "Rajdhani", sans-serif;
+        --font-mono: "DM Mono", monospace;
+        --radius: 16px;
+        --radius-sm: 10px;
+      }
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: var(--font-display);
+        background-color: var(--bg-deep);
+        background-image: radial-gradient(
+            ellipse 70% 50% at 50% -5%,
+            rgba(0, 212, 255, 0.1),
+            transparent 65%
+          ),
+          repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 39px,
+            rgba(0, 212, 255, 0.022) 39px,
+            rgba(0, 212, 255, 0.022) 40px
+          ),
+          repeating-linear-gradient(
+            90deg,
+            transparent,
+            transparent 39px,
+            rgba(0, 212, 255, 0.022) 39px,
+            rgba(0, 212, 255, 0.022) 40px
+          );
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 48px 24px;
+        color: var(--text-primary);
+      }
+
+      /* ── TOP BAR ── */
+      .top-bar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 14px 24px;
+        background: rgba(11, 15, 26, 0.85);
+        border-bottom: 1px solid var(--border);
+        backdrop-filter: blur(10px);
+        z-index: 100;
+        animation: slideDown 0.5s ease both;
+      }
+      .top-user {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .top-avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: linear-gradient(
+          135deg,
+          rgba(0, 212, 255, 0.2),
+          rgba(0, 212, 255, 0.05)
+        );
+        border: 1px solid var(--border-strong);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: var(--font-display);
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--accent);
+        text-transform: uppercase;
+      }
+      .top-name {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 1.5px;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+      }
+      .top-role {
+        font-family: var(--font-mono);
+        font-size: 9px;
+        letter-spacing: 2px;
+        color: var(--text-muted);
+        text-transform: uppercase;
+      }
+      .top-actions {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+      .btn-admin {
+        font-family: var(--font-mono);
+        font-size: 9px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--accent-amber);
+        text-decoration: none;
+        padding: 6px 14px;
+        border: 1px solid rgba(245, 158, 11, 0.3);
+        border-radius: 999px;
+        background: rgba(245, 158, 11, 0.06);
+        transition: all 0.2s;
+      }
+      .btn-admin:hover {
+        background: rgba(245, 158, 11, 0.12);
+        box-shadow: 0 0 16px rgba(245, 158, 11, 0.15);
+      }
+      .btn-logout {
+        font-family: var(--font-mono);
+        font-size: 9px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        background: none;
+        padding: 6px 14px;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .btn-logout:hover {
+        color: var(--accent-red);
+        border-color: rgba(239, 68, 68, 0.35);
+        background: rgba(239, 68, 68, 0.06);
+      }
+
+      /* ── HEADER ── */
+      .header {
+        text-align: center;
+        margin-bottom: 48px;
+        margin-top: 20px;
+        animation: slideDown 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+      }
+      .header .logo {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+        color: var(--accent);
+        margin-bottom: 14px;
+        opacity: 0.8;
+      }
+      .header h1 {
+        font-size: 48px;
+        font-weight: 700;
+        letter-spacing: 5px;
+        text-transform: uppercase;
+        line-height: 1;
+      }
+      .header h1 span {
+        color: var(--accent);
+      }
+      .header .subtitle {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 2.5px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        margin-top: 14px;
+      }
+      .accent-line {
+        width: 60px;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--accent),
+          transparent
+        );
+        margin: 16px auto 0;
+        border-radius: 2px;
+        box-shadow: 0 0 12px var(--accent);
+      }
+
+      /* ── GRID ── */
+      .menu-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        width: 100%;
+        max-width: 600px;
+      }
+
+      /* ── CARD ── */
+      .menu-card {
+        position: relative;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 36px 28px 32px;
+        text-decoration: none;
+        color: var(--text-primary);
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+        overflow: hidden;
+        transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+      }
+      .menu-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--card-accent, var(--accent)),
+          transparent
+        );
+        transform: scaleX(0.3);
+        transform-origin: center;
+        transition: transform 0.4s ease;
+      }
+      .menu-card::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(
+          ellipse 80% 60% at 50% 120%,
+          var(--card-glow, rgba(0, 212, 255, 0.1)),
+          transparent
+        );
+        opacity: 0;
+        transition: opacity 0.4s ease;
+        pointer-events: none;
+      }
+      .menu-card:hover {
+        border-color: var(--card-border, var(--border-strong));
+        background: var(--bg-card-hover);
+        transform: translateY(-6px);
+        box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55),
+          0 0 0 1px var(--card-border, var(--border-strong));
+      }
+      .menu-card:hover::before {
+        transform: scaleX(1);
+      }
+      .menu-card:hover::after {
+        opacity: 1;
+      }
+      .menu-card:active {
+        transform: translateY(-2px) scale(0.98);
+      }
+
+      .card-lpn {
+        --card-accent: #00d4ff;
+        --card-border: rgba(0, 212, 255, 0.35);
+        --card-glow: rgba(0, 212, 255, 0.1);
+        animation: slideUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+        animation-delay: 0.1s;
+      }
+      .card-guias {
+        --card-accent: #10b981;
+        --card-border: rgba(16, 185, 129, 0.35);
+        --card-glow: rgba(16, 185, 129, 0.1);
+        animation: slideUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+        animation-delay: 0.2s;
+      }
+
+      .card-icon {
+        font-size: 36px;
+        margin-bottom: 6px;
+        display: block;
+        filter: drop-shadow(0 0 8px var(--card-accent, var(--accent)));
+        transition: transform 0.3s ease;
+      }
+      .menu-card:hover .card-icon {
+        transform: scale(1.15) rotate(-4deg);
+      }
+      .card-tag {
+        font-family: var(--font-mono);
+        font-size: 9px;
+        letter-spacing: 2.5px;
+        text-transform: uppercase;
+        color: var(--card-accent, var(--accent));
+        opacity: 0.7;
+      }
+      .card-title {
+        font-size: 22px;
+        font-weight: 700;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        color: var(--text-primary);
+        line-height: 1.1;
+      }
+      .card-desc {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        line-height: 1.7;
+        color: var(--text-muted);
+        margin-top: 2px;
+      }
+      .card-arrow {
+        margin-top: 14px;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--card-accent, var(--accent));
+        opacity: 0;
+        transform: translateX(-8px);
+        transition: all 0.3s ease;
+      }
+      .menu-card:hover .card-arrow {
+        opacity: 1;
+        transform: translateX(0);
+      }
+
+      .footer {
+        margin-top: 48px;
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        opacity: 0.5;
+        animation: fadeIn 1s ease both;
+        animation-delay: 0.5s;
+      }
+
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(28px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes slideDown {
+        from {
+          opacity: 0;
+          transform: translateY(-20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 0.5;
+        }
+      }
+
+      @media (max-width: 520px) {
+        .menu-grid {
+          grid-template-columns: 1fr;
+          max-width: 340px;
+        }
+        .header h1 {
+          font-size: 34px;
+          letter-spacing: 3px;
+        }
+        .menu-card {
+          padding: 28px 22px 24px;
+        }
+        .top-bar {
+          padding: 10px 16px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ── TOP BAR ── -->
+    <div class="top-bar">
+      <div class="top-user">
+        <div class="top-avatar" id="topAvatar">?</div>
+        <div>
+          <div class="top-name" id="topName">Cargando...</div>
+          <div class="top-role" id="topRole">—</div>
+        </div>
+      </div>
+      <div class="top-actions">
+        <a href="admin.html" class="btn-admin">⚙ Admin</a>
+        <button class="btn-logout" onclick="cerrarSesion()">Salir</button>
+      </div>
+    </div>
+
+    <header class="header">
+      <div class="logo">⬡ &nbsp;Reclamos CLH</div>
+      <h1>Panel <span>Principal</span></h1>
+      <p class="subtitle">Selecciona un módulo para continuar</p>
+      <div class="accent-line"></div>
+    </header>
+
+    <div class="menu-grid">
+      <a href="validar_lpn.html" class="menu-card card-lpn">
+        <span class="card-icon">🔍</span>
+        <span class="card-tag">Módulo 01</span>
+        <div class="card-title">Validar LPN</div>
+        <p class="card-desc">
+          Consulta y valida números de LPN cargando un archivo Excel.
+        </p>
+        <span class="card-arrow">Acceder →</span>
+      </a>
+      <a href="guias.html" class="menu-card card-guias">
+        <span class="card-icon">📦</span>
+        <span class="card-tag">Módulo 02</span>
+        <div class="card-title">Registro de Guías</div>
+        <p class="card-desc">
+          Registra paquetes con imagen, fecha y datos del receptor.
+        </p>
+        <span class="card-arrow">Acceder →</span>
+      </a>
+
+      <a
+        href="auditoria.html"
+        class="menu-card"
+        style="--card-accent: #a78bfa; --card-border: rgba(167, 139, 250, 0.35)"
+      >
+        <span class="card-icon">🔎</span>
+        <span class="card-tag">Módulo 03</span>
+        <div class="card-title">Historial de Guias</div>
+        <p class="card-desc">
+          Historial de todos los movimientos de registros de guias.
+        </p>
+      </a>
+
+      <a href="novedades.html" class="menu-card card-lpn">
+        <span class="card-icon">🔍</span>
+        <span class="card-tag">Módulo 04</span>
+        <div class="card-title">NOVEDADES CLH</div>
+        <p class="card-desc">Consulta y registra novedades.</p>
+        <span class="card-arrow">Acceder →</span>
+      </a>
+    </div>
+
+    <p class="footer">Steven Realpe · control system · v1.1</p>
+
+    <script>
+      // ── Verificar sesión ──
+      const sesionRaw = sessionStorage.getItem("clh_user");
+      if (!sesionRaw) {
+        window.location.href = "login.html";
+      } else {
+        const sesion = JSON.parse(sesionRaw);
+        const inicial = (sesion.nombre ||
+          sesion.username ||
+          "?")[0].toUpperCase();
+        document.getElementById("topAvatar").textContent = inicial;
+        document.getElementById("topName").textContent =
+          sesion.nombre || sesion.username;
+        document.getElementById("topRole").textContent =
+          sesion.rol || "operario";
+      }
+
+      window.cerrarSesion = function () {
+        sessionStorage.removeItem("clh_user");
+        window.location.href = "login.html";
+      };
+    </script>
+  </body>
+</html>

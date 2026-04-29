@@ -1,0 +1,135 @@
+/* RESET GENERAL */
+/* BOTON FIJO ABAJO CENTRADO */
+
+.boton-registro {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  padding: 12px 25px;
+  background: linear-gradient(135deg, #2c7be5, #1a5fd4);
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  border-radius: 8px;
+  font-size: 15px;
+
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+  transition: 0.3s;
+}
+
+/* EFECTO HOVER */
+
+.boton-registro:hover {
+  background: linear-gradient(135deg, #1a5fd4, #1547a5);
+  transform: translateX(-50%) translateY(-2px);
+  box-shadow: 0px 8px 18px rgba(0, 0, 0, 0.35);
+}
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* FONDO GENERAL */
+body {
+  font-family: "Segoe UI", Arial, sans-serif;
+  background: linear-gradient(135deg, #1e3c72, #2a5298);
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* CONTENEDOR PRINCIPAL */
+.contenedor {
+  background: white;
+  width: 420px;
+  padding: 35px;
+  border-radius: 15px;
+  box-shadow: 0px 15px 35px rgba(0, 0, 0, 0.25);
+  text-align: center;
+  transition: 0.3s;
+}
+
+/* EFECTO HOVER */
+.contenedor:hover {
+  transform: translateY(-5px);
+}
+
+/* TITULO */
+.contenedor h2 {
+  margin-bottom: 20px;
+  color: #2c3e50;
+  font-size: 26px;
+}
+
+/* LABELS */
+label {
+  display: block;
+  margin-top: 15px;
+  text-align: left;
+  font-weight: 600;
+  color: #444;
+}
+
+/* INPUTS */
+input {
+  width: 100%;
+  padding: 12px;
+  margin-top: 8px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  transition: 0.3s;
+}
+
+/* EFECTO INPUT */
+input:focus {
+  border-color: #2c7be5;
+  outline: none;
+  box-shadow: 0 0 6px rgba(44, 123, 229, 0.4);
+}
+
+/* BOTON */
+button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 20px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #2c7be5, #1a5fd4);
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+/* HOVER BOTON */
+button:hover {
+  background: linear-gradient(135deg, #1a5fd4, #1547a5);
+  transform: scale(1.02);
+}
+
+/* RESULTADO */
+.resultado {
+  margin-top: 25px;
+  padding: 15px;
+  border-radius: 8px;
+  background: #f5f7fb;
+  border-left: 5px solid #2c7be5;
+  font-size: 16px;
+  color: #333;
+  font-weight: 600;
+}
+
+.botones {
+  margin-top: 20px;
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  height: ;30px
+ 
+}

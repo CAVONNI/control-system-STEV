@@ -1,0 +1,2313 @@
+<!--<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Buscador de Guías</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=DM+Mono:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+      :root {
+        --bg-deep: #0b0f1a;
+        --bg-card: #1a2235;
+        --bg-card2: #141c2e;
+        --bg-input: rgba(11, 15, 26, 0.75);
+        --accent: #00d4ff;
+        --accent-glow: rgba(0, 212, 255, 0.15);
+        --accent-green: #10b981;
+        --accent-red: #ef4444;
+        --accent-amber: #f59e0b;
+        --border: rgba(0, 212, 255, 0.12);
+        --border-strong: rgba(0, 212, 255, 0.35);
+        --text-primary: #e8edf5;
+        --text-secondary: #8fa3c0;
+        --text-muted: #4d6080;
+        --font-display: "Rajdhani", sans-serif;
+        --font-mono: "DM Mono", monospace;
+        --radius: 14px;
+        --radius-sm: 8px;
+      }
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: var(--font-display);
+        background-color: var(--bg-deep);
+        background-image: radial-gradient(
+            ellipse 70% 50% at 50% -5%,
+            rgba(0, 212, 255, 0.1),
+            transparent 65%
+          ),
+          repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 39px,
+            rgba(0, 212, 255, 0.022) 39px,
+            rgba(0, 212, 255, 0.022) 40px
+          ),
+          repeating-linear-gradient(
+            90deg,
+            transparent,
+            transparent 39px,
+            rgba(0, 212, 255, 0.022) 39px,
+            rgba(0, 212, 255, 0.022) 40px
+          );
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 48px 24px 64px;
+        color: var(--text-primary);
+      }
+      .page-header {
+        text-align: center;
+        margin-bottom: 36px;
+        animation: slideDown 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+      }
+      .page-header h1 {
+        font-size: 34px;
+        font-weight: 700;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+      }
+      .page-header h1 span {
+        color: var(--accent);
+      }
+      .page-header p {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 2px;
+        color: var(--text-muted);
+        margin-top: 6px;
+        text-transform: uppercase;
+      }
+      .accent-line {
+        width: 50px;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--accent),
+          transparent
+        );
+        margin: 12px auto 0;
+        border-radius: 2px;
+      }
+      .search-wrap {
+        width: 100%;
+        max-width: 540px;
+        position: relative;
+        animation: slideUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+        animation-delay: 0.05s;
+      }
+      .search-wrap input {
+        width: 100%;
+        background: var(--bg-card);
+        border: 1px solid var(--border-strong);
+        border-radius: 999px;
+        color: var(--text-primary);
+        font-family: var(--font-mono);
+        font-size: 14px;
+        padding: 15px 56px 15px 24px;
+        outline: none;
+        box-shadow: 0 0 0 1px var(--border), 0 0 30px rgba(0, 212, 255, 0.08);
+        transition: border-color 0.2s, box-shadow 0.2s;
+      }
+      .search-wrap input::placeholder {
+        color: var(--text-muted);
+        font-size: 12px;
+        letter-spacing: 1px;
+      }
+      .search-wrap input:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.12),
+          0 0 30px rgba(0, 212, 255, 0.12);
+      }
+      .search-icon {
+        position: absolute;
+        right: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--accent);
+        font-size: 18px;
+        pointer-events: none;
+      }
+      #contador {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        margin: 16px 0 24px;
+        padding: 5px 14px;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        background: rgba(0, 212, 255, 0.03);
+        animation: slideUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+        animation-delay: 0.1s;
+      }
+      #resultado {
+        width: 100%;
+        max-width: 540px;
+        animation: fadeIn 0.35s ease both;
+      }
+      .result-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        overflow: hidden;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55), 0 0 0 1px var(--border),
+          0 0 30px rgba(0, 212, 255, 0.07);
+        animation: slideUp 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+        position: relative;
+      }
+      .result-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 10%;
+        width: 80%;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--accent),
+          transparent
+        );
+      }
+      .result-image {
+        width: 100%;
+        max-height: 220px;
+        object-fit: cover;
+        display: block;
+        border-bottom: 1px solid var(--border);
+      }
+      .no-image {
+        width: 100%;
+        height: 90px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        background: var(--bg-card2);
+        border-bottom: 1px solid var(--border);
+      }
+      .result-body {
+        padding: 24px 26px 28px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px 24px;
+      }
+      .result-field {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+      .result-field.full {
+        grid-column: 1/-1;
+      }
+      .result-field .rf-label {
+        font-family: var(--font-mono);
+        font-size: 9px;
+        letter-spacing: 2.5px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+      }
+      .result-field .rf-value {
+        font-family: var(--font-mono);
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--text-primary);
+        word-break: break-word;
+      }
+      .result-field .rf-value.guia-val {
+        font-size: 18px;
+        color: var(--accent);
+        letter-spacing: 1px;
+      }
+      .result-field .rf-value.nota-val {
+        font-size: 12px;
+        color: var(--text-secondary);
+        line-height: 1.7;
+      }
+      .btn-delete {
+        display: block;
+        width: calc(100% - 52px);
+        margin: 0 26px 24px;
+        padding: 11px;
+        background: rgba(239, 68, 68, 0.07);
+        color: var(--accent-red);
+        border: 1px solid rgba(239, 68, 68, 0.28);
+        border-radius: var(--radius-sm);
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+      .btn-delete:hover {
+        background: rgba(239, 68, 68, 0.15);
+        box-shadow: 0 0 20px rgba(239, 68, 68, 0.15);
+      }
+      .empty-state {
+        text-align: center;
+        padding: 48px 24px;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        animation: fadeIn 0.35s ease;
+      }
+      .empty-state .empty-icon {
+        font-size: 40px;
+        margin-bottom: 14px;
+        opacity: 0.5;
+      }
+      .empty-state p {
+        font-family: var(--font-mono);
+        font-size: 12px;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+      }
+      .records-list {
+        width: 100%;
+        max-width: 540px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        animation: fadeIn 0.4s ease;
+      }
+      .record-row {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        padding: 14px 18px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+      .record-row:hover {
+        border-color: var(--border-strong);
+        background: rgba(0, 212, 255, 0.04);
+        transform: translateX(4px);
+      }
+      .record-row .rr-guia {
+        font-family: var(--font-mono);
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--accent);
+        flex: 1;
+      }
+      .record-row .rr-name {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--text-secondary);
+      }
+      .record-row .rr-date {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        color: var(--text-muted);
+        letter-spacing: 1px;
+      }
+      .record-row .rr-arrow {
+        color: var(--text-muted);
+        font-size: 14px;
+      }
+      .nav-link {
+        display: inline-block;
+        margin-top: 28px;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        text-decoration: none;
+        padding: 9px 20px;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        transition: all 0.2s ease;
+      }
+      .nav-link:hover {
+        color: var(--accent);
+        border-color: var(--border-strong);
+        background: var(--accent-glow);
+      }
+      /* Loading skeleton */
+      .skeleton {
+        background: linear-gradient(
+          90deg,
+          rgba(0, 212, 255, 0.04) 25%,
+          rgba(0, 212, 255, 0.08) 50%,
+          rgba(0, 212, 255, 0.04) 75%
+        );
+        background-size: 200% 100%;
+        animation: shimmer 1.2s infinite;
+        border-radius: var(--radius-sm);
+        height: 52px;
+        margin-bottom: 10px;
+      }
+      @keyframes shimmer {
+        0% {
+          background-position: 200% 0;
+        }
+        100% {
+          background-position: -200% 0;
+        }
+      }
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes slideDown {
+        from {
+          opacity: 0;
+          transform: translateY(-16px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+      @media (max-width: 520px) {
+        .result-body {
+          grid-template-columns: 1fr;
+        }
+        .page-header h1 {
+          font-size: 26px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="page-header">
+      <h1>Buscar <span>Guía</span></h1>
+      <p>Consulta el historial de paquetes recibidos</p>
+      <div class="accent-line"></div>
+    </header>
+
+    <div class="search-wrap">
+      <input
+        type="text"
+        id="searchInput"
+        placeholder="Escribe el número de guía..."
+        autocomplete="off"
+      />
+      <span class="search-icon">⌕</span>
+    </div>
+
+    <div id="contador">Cargando...</div>
+    <div id="resultado"></div>
+
+    <a href="guias.html" class="nav-link">⬡ &nbsp;Ir a registrar</a>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+      import {
+        getFirestore,
+        collection,
+        getDocs,
+        doc,
+        deleteDoc,
+        query,
+        orderBy,
+      } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyBKLgOakBA2_2QqWC-APWeTGH2YRsClOXM",
+        authDomain: "reclamos-clh.firebaseapp.com",
+        projectId: "reclamos-clh",
+        storageBucket: "reclamos-clh.firebasestorage.app",
+        messagingSenderId: "893651222188",
+        appId: "1:893651222188:web:edb9d9963596255633e909",
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+
+      const searchInput = document.getElementById("searchInput");
+      const resultadoEl = document.getElementById("resultado");
+      const contadorEl = document.getElementById("contador");
+
+      let todosLosDatos = [];
+      window.exportarExcel = function () {
+        if (todosLosDatos.length === 0) {
+          alert("No hay registros para exportar.");
+          return;
+        }
+
+        const datos = todosLosDatos.map((r) => ({
+          Guía: r.guia,
+          Fecha: r.fecha || "",
+          "Recibido por": r.recibidoPor || "",
+          Nota: r.nota || "",
+        }));
+
+        const hoja = XLSX.utils.json_to_sheet(datos);
+        const libro = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(libro, hoja, "Historial Guías");
+        XLSX.writeFile(libro, "Historial_Guias.xlsx");
+      };
+
+      // ── Cargar todos los registros de Firestore al iniciar ──
+      async function cargarDatos() {
+        resultadoEl.innerHTML = `<div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>`;
+        try {
+          const snap = await getDocs(collection(db, "guias"));
+          todosLosDatos = snap.docs.map((d) => d.data());
+          todosLosDatos.sort((a, b) => b.timestamp - a.timestamp);
+          renderAll();
+        } catch (err) {
+          contadorEl.textContent = "Error al cargar";
+          resultadoEl.innerHTML = `<div class="empty-state"><div class="empty-icon">⚠️</div><p>${err.message}</p></div>`;
+        }
+      }
+
+      function formatFecha(f) {
+        if (!f) return "—";
+        const [y, m, d] = f.split("-");
+        return `${d}/${m}/${y}`;
+      }
+
+      function renderAll(datos = todosLosDatos) {
+        contadorEl.textContent = `Registros: ${datos.length}`;
+        if (datos.length === 0) {
+          resultadoEl.innerHTML = `<div class="empty-state"><div class="empty-icon">📦</div><p>No hay registros aún</p></div>`;
+          return;
+        }
+        resultadoEl.innerHTML = `<div class="records-list">${datos
+          .map(
+            (r) => `
+            <div class="record-row" onclick="mostrarDetalle('${r.guia}')">
+              <div class="rr-guia">${r.guia}</div>
+              <div class="rr-name">${r.recibidoPor}</div>
+              <div class="rr-date">${formatFecha(r.fecha)}</div>
+              <div class="rr-arrow">›</div>
+            </div>`
+          )
+          .join("")}</div>`;
+      }
+
+      window.mostrarDetalle = function (guia) {
+        const r = todosLosDatos.find((d) => d.guia === guia);
+        if (!r) return;
+
+        const imgHTML = r.imagenURL
+          ? `<img class="result-image" src="${r.imagenURL}" alt="Imagen del paquete" />`
+          : `<div class="no-image">Sin imagen adjunta</div>`;
+
+        resultadoEl.innerHTML = `
+          <div class="result-card">
+            ${imgHTML}
+            <div class="result-body">
+              <div class="result-field full">
+                <span class="rf-label">Número de Guía</span>
+                <span class="rf-value guia-val">${r.guia}</span>
+              </div>
+              <div class="result-field">
+                <span class="rf-label">Fecha</span>
+                <span class="rf-value">${formatFecha(r.fecha)}</span>
+              </div>
+              <div class="result-field">
+                <span class="rf-label">Recibido por</span>
+                <span class="rf-value">${r.recibidoPor}</span>
+              </div>
+              <div class="result-field full">
+                <span class="rf-label">Nota</span>
+                <span class="rf-value nota-val">${r.nota || "—"}</span>
+              </div>
+            </div>
+            <button class="btn-delete" onclick="eliminarGuia('${
+              r.guia
+            }')">✕ &nbsp;Eliminar este registro</button>
+          </div>
+          <button onclick="renderAll(); searchInput.value=''" style="margin-top:14px;width:100%;padding:10px;background:transparent;border:1px solid var(--border);color:var(--text-muted);border-radius:var(--radius-sm);font-family:var(--font-mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all 0.2s"
+            onmouseover="this.style.borderColor='var(--border-strong)';this.style.color='var(--accent)'"
+            onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-muted)'">
+            ← Volver a todos
+          </button>`;
+      };
+
+      window.eliminarGuia = async function (guia) {
+        if (!confirm(`¿Eliminar el registro de la guía ${guia}?`)) return;
+        try {
+          await deleteDoc(doc(db, "guias", guia));
+          todosLosDatos = todosLosDatos.filter((r) => r.guia !== guia);
+          searchInput.value = "";
+          renderAll();
+        } catch (err) {
+          alert("Error al eliminar: " + err.message);
+        }
+      };
+
+      // ── Búsqueda en tiempo real (sobre los datos ya cargados) ──
+      searchInput.addEventListener("input", function () {
+        const q = this.value.trim().toLowerCase();
+        if (!q) {
+          renderAll();
+          return;
+        }
+        const matches = todosLosDatos.filter((r) =>
+  [r.guia, r.recibidoPor, r.nota, r.fecha]
+    .map((v) => (v || "").toLowerCase())
+    .some((v) => v.includes(q))
+);
+        contadorEl.textContent = `Resultados: ${matches.length}`;
+        if (matches.length === 0) {
+          resultadoEl.innerHTML = `<div class="empty-state"><div class="empty-icon">🔍</div><p>No se encontró ninguna guía</p></div>`;
+          return;
+        }
+        if (matches.length === 1) {
+          mostrarDetalle(matches[0].guia);
+          return;
+        }
+        renderAll(matches);
+      });
+
+      searchInput.addEventListener("keydown", function (e) {
+        if (e.key !== "Enter") return;
+        const exacto = todosLosDatos.find((r) =>
+  [r.guia, r.recibidoPor, r.nota, r.fecha]
+    .map((v) => (v || "").toLowerCase())
+    .some((v) => v.includes(this.value.trim().toLowerCase()))
+);
+        if (exacto) mostrarDetalle(exacto.guia);
+      });
+
+      cargarDatos();
+    </script>
+    <!-- Botón exportar Excel fijo en la parte inferior -->
+<!-- <button
+      id="btnExportar"
+      onclick="exportarExcel()"
+      style="
+        position: fixed;
+        bottom: 28px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 999;
+        background: rgba(0, 212, 255, 0.1);
+        color: #00d4ff;
+        border: 1px solid rgba(0, 212, 255, 0.35);
+        border-radius: 999px;
+        padding: 13px 32px;
+        font-family: 'DM Mono', monospace;
+        font-size: 11px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        cursor: pointer;
+        backdrop-filter: blur(8px);
+        white-space: nowrap;
+        transition: background 0.2s, box-shadow 0.2s;
+      "
+      onmouseover="this.style.background='rgba(0,212,255,0.2)'; this.style.boxShadow='0 0 24px rgba(0,212,255,0.2)'"
+      onmouseout="this.style.background='rgba(0,212,255,0.10)'; this.style.boxShadow='none'"
+    >
+      ↓ &nbsp;Exportar a Excel
+    </button>
+  </body>
+</html>
+-->
+<!--<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Buscador de Guías</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=DM+Mono:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+      :root {
+        --bg-deep: #0b0f1a;
+        --bg-card: #1a2235;
+        --bg-card2: #141c2e;
+        --bg-input: rgba(11, 15, 26, 0.75);
+        --accent: #00d4ff;
+        --accent-glow: rgba(0, 212, 255, 0.15);
+        --accent-green: #10b981;
+        --accent-red: #ef4444;
+        --accent-amber: #f59e0b;
+        --border: rgba(0, 212, 255, 0.12);
+        --border-strong: rgba(0, 212, 255, 0.35);
+        --text-primary: #e8edf5;
+        --text-secondary: #8fa3c0;
+        --text-muted: #4d6080;
+        --font-display: "Rajdhani", sans-serif;
+        --font-mono: "DM Mono", monospace;
+        --radius: 14px;
+        --radius-sm: 8px;
+      }
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: var(--font-display);
+        background-color: var(--bg-deep);
+        background-image: radial-gradient(
+            ellipse 70% 50% at 50% -5%,
+            rgba(0, 212, 255, 0.1),
+            transparent 65%
+          ),
+          repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 39px,
+            rgba(0, 212, 255, 0.022) 39px,
+            rgba(0, 212, 255, 0.022) 40px
+          ),
+          repeating-linear-gradient(
+            90deg,
+            transparent,
+            transparent 39px,
+            rgba(0, 212, 255, 0.022) 39px,
+            rgba(0, 212, 255, 0.022) 40px
+          );
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 48px 24px 100px;
+        color: var(--text-primary);
+      }
+      .page-header {
+        text-align: center;
+        margin-bottom: 36px;
+        animation: slideDown 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+      }
+      .page-header h1 {
+        font-size: 34px;
+        font-weight: 700;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+      }
+      .page-header h1 span {
+        color: var(--accent);
+      }
+      .page-header p {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 2px;
+        color: var(--text-muted);
+        margin-top: 6px;
+        text-transform: uppercase;
+      }
+      .accent-line {
+        width: 50px;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--accent),
+          transparent
+        );
+        margin: 12px auto 0;
+        border-radius: 2px;
+      }
+
+      .search-wrap {
+        width: 100%;
+        max-width: 540px;
+        position: relative;
+        animation: slideUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+        animation-delay: 0.05s;
+      }
+      .search-wrap input {
+        width: 100%;
+        background: var(--bg-card);
+        border: 1px solid var(--border-strong);
+        border-radius: 999px;
+        color: var(--text-primary);
+        font-family: var(--font-mono);
+        font-size: 14px;
+        padding: 15px 56px 15px 24px;
+        outline: none;
+        box-shadow: 0 0 0 1px var(--border), 0 0 30px rgba(0, 212, 255, 0.08);
+        transition: border-color 0.2s, box-shadow 0.2s;
+      }
+      .search-wrap input::placeholder {
+        color: var(--text-muted);
+        font-size: 12px;
+        letter-spacing: 1px;
+      }
+      .search-wrap input:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.12),
+          0 0 30px rgba(0, 212, 255, 0.12);
+      }
+      .search-icon {
+        position: absolute;
+        right: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--accent);
+        font-size: 18px;
+        pointer-events: none;
+      }
+      #contador {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        margin: 16px 0 24px;
+        padding: 5px 14px;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        background: rgba(0, 212, 255, 0.03);
+        animation: slideUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+        animation-delay: 0.1s;
+      }
+      #resultado {
+        width: 100%;
+        max-width: 540px;
+        animation: fadeIn 0.35s ease both;
+      }
+
+      .result-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        overflow: hidden;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55), 0 0 0 1px var(--border),
+          0 0 30px rgba(0, 212, 255, 0.07);
+        animation: slideUp 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+        position: relative;
+      }
+      .result-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 10%;
+        width: 80%;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--accent),
+          transparent
+        );
+      }
+      .result-image {
+        width: 100%;
+        max-height: 220px;
+        object-fit: cover;
+        display: block;
+        border-bottom: 1px solid var(--border);
+      }
+      .no-image {
+        width: 100%;
+        height: 90px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        background: var(--bg-card2);
+        border-bottom: 1px solid var(--border);
+      }
+      .result-body {
+        padding: 24px 26px 28px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px 24px;
+      }
+      .result-field {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+      .result-field.full {
+        grid-column: 1/-1;
+      }
+      .result-field .rf-label {
+        font-family: var(--font-mono);
+        font-size: 9px;
+        letter-spacing: 2.5px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+      }
+      .result-field .rf-value {
+        font-family: var(--font-mono);
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--text-primary);
+        word-break: break-word;
+      }
+      .result-field .rf-value.guia-val {
+        font-size: 18px;
+        color: var(--accent);
+        letter-spacing: 1px;
+      }
+      .result-field .rf-value.nota-val {
+        font-size: 12px;
+        color: var(--text-secondary);
+        line-height: 1.7;
+      }
+      .result-field .rf-value.ingresado-val {
+        color: rgba(0, 212, 255, 0.7);
+        font-size: 12px;
+      }
+
+      .btn-delete {
+        display: block;
+        width: calc(100% - 52px);
+        margin: 0 26px 24px;
+        padding: 11px;
+        background: rgba(239, 68, 68, 0.07);
+        color: var(--accent-red);
+        border: 1px solid rgba(239, 68, 68, 0.28);
+        border-radius: var(--radius-sm);
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+      .btn-delete:hover {
+        background: rgba(239, 68, 68, 0.15);
+        box-shadow: 0 0 20px rgba(239, 68, 68, 0.15);
+      }
+      .empty-state {
+        text-align: center;
+        padding: 48px 24px;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        animation: fadeIn 0.35s ease;
+      }
+      .empty-state .empty-icon {
+        font-size: 40px;
+        margin-bottom: 14px;
+        opacity: 0.5;
+      }
+      .empty-state p {
+        font-family: var(--font-mono);
+        font-size: 12px;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+      }
+
+      .records-list {
+        width: 100%;
+        max-width: 540px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        animation: fadeIn 0.4s ease;
+      }
+      .record-row {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        padding: 14px 18px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+      .record-row:hover {
+        border-color: var(--border-strong);
+        background: rgba(0, 212, 255, 0.04);
+        transform: translateX(4px);
+      }
+      .record-row .rr-guia {
+        font-family: var(--font-mono);
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--accent);
+        flex: 1;
+      }
+      .record-row .rr-name {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--text-secondary);
+      }
+      .record-row .rr-by {
+        font-family: var(--font-mono);
+        font-size: 9px;
+        color: rgba(0, 212, 255, 0.5);
+        letter-spacing: 1px;
+      }
+      .record-row .rr-date {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        color: var(--text-muted);
+        letter-spacing: 1px;
+      }
+      .record-row .rr-arrow {
+        color: var(--text-muted);
+        font-size: 14px;
+      }
+
+      .nav-link {
+        display: inline-block;
+        margin-top: 28px;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        text-decoration: none;
+        padding: 9px 20px;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        transition: all 0.2s ease;
+      }
+      .nav-link:hover {
+        color: var(--accent);
+        border-color: var(--border-strong);
+        background: var(--accent-glow);
+      }
+
+      .skeleton {
+        background: linear-gradient(
+          90deg,
+          rgba(0, 212, 255, 0.04) 25%,
+          rgba(0, 212, 255, 0.08) 50%,
+          rgba(0, 212, 255, 0.04) 75%
+        );
+        background-size: 200% 100%;
+        animation: shimmer 1.2s infinite;
+        border-radius: var(--radius-sm);
+        height: 52px;
+        margin-bottom: 10px;
+      }
+      @keyframes shimmer {
+        0% {
+          background-position: 200% 0;
+        }
+        100% {
+          background-position: -200% 0;
+        }
+      }
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes slideDown {
+        from {
+          opacity: 0;
+          transform: translateY(-16px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+      @media (max-width: 520px) {
+        .result-body {
+          grid-template-columns: 1fr;
+        }
+        .page-header h1 {
+          font-size: 26px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="page-header">
+      <h1>Buscar <span>Guía</span></h1>
+      <p>Consulta el historial de paquetes recibidos</p>
+      <div class="accent-line"></div>
+    </header>
+
+    <div class="search-wrap">
+      <input
+        type="text"
+        id="searchInput"
+        placeholder="Escribe el número de guía, nombre, fecha..."
+        autocomplete="off"
+      />
+      <span class="search-icon">⌕</span>
+    </div>
+
+    <div id="contador">Cargando...</div>
+    <div id="resultado"></div>
+
+    <a href="guias.html" class="nav-link">⬡ &nbsp;Ir a registrar</a>
+    <a href="index.html" class="nav-link">⬡ &nbsp;Inicio</a>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+      import {
+        getFirestore,
+        collection,
+        getDocs,
+        doc,
+        deleteDoc,
+      } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyBKLgOakBA2_2QqWC-APWeTGH2YRsClOXM",
+        authDomain: "reclamos-clh.firebaseapp.com",
+        projectId: "reclamos-clh",
+        storageBucket: "reclamos-clh.firebasestorage.app",
+        messagingSenderId: "893651222188",
+        appId: "1:893651222188:web:edb9d9963596255633e909",
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+
+      // ── Verificar sesión ──
+      if (!sessionStorage.getItem("clh_user")) {
+        window.location.href = "login.html";
+      }
+
+      const searchInput = document.getElementById("searchInput");
+      const resultadoEl = document.getElementById("resultado");
+      const contadorEl = document.getElementById("contador");
+
+      let todosLosDatos = [];
+
+      window.exportarExcel = function () {
+        if (todosLosDatos.length === 0) {
+          alert("No hay registros para exportar.");
+          return;
+        }
+        const datos = todosLosDatos.map((r) => ({
+          Guía: r.guia,
+          Fecha: r.fecha || "",
+          "Recibido por": r.recibidoPor || "",
+          "Ingresado por": r.ingresadoPor || "",
+          Nota: r.nota || "",
+        }));
+        const hoja = XLSX.utils.json_to_sheet(datos);
+        const libro = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(libro, hoja, "Historial Guías");
+        XLSX.writeFile(libro, "Historial_Guias.xlsx");
+      };
+
+      async function cargarDatos() {
+        resultadoEl.innerHTML = `<div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>`;
+        try {
+          const snap = await getDocs(collection(db, "guias"));
+          todosLosDatos = snap.docs.map((d) => d.data());
+          todosLosDatos.sort((a, b) => b.timestamp - a.timestamp);
+          renderAll();
+        } catch (err) {
+          contadorEl.textContent = "Error al cargar";
+          resultadoEl.innerHTML = `<div class="empty-state"><div class="empty-icon">⚠️</div><p>${err.message}</p></div>`;
+        }
+      }
+
+      function formatFecha(f) {
+        if (!f) return "—";
+        const [y, m, d] = f.split("-");
+        return `${d}/${m}/${y}`;
+      }
+
+      function renderAll(datos = todosLosDatos) {
+        contadorEl.textContent = `Registros: ${datos.length}`;
+        if (datos.length === 0) {
+          resultadoEl.innerHTML = `<div class="empty-state"><div class="empty-icon">📦</div><p>No hay registros aún</p></div>`;
+          return;
+        }
+        resultadoEl.innerHTML = `<div class="records-list">${datos
+          .map(
+            (r) => `
+          <div class="record-row" onclick="mostrarDetalle('${r.guia}')">
+            <div style="flex:1; min-width:0;">
+              <div class="rr-guia">${r.guia}</div>
+              <div class="rr-name">${r.recibidoPor}</div>
+              ${
+                r.ingresadoPor
+                  ? `<div class="rr-by">↑ ${r.ingresadoPor}</div>`
+                  : ""
+              }
+            </div>
+            <div class="rr-date">${formatFecha(r.fecha)}</div>
+            <div class="rr-arrow">›</div>
+          </div>`
+          )
+          .join("")}</div>`;
+      }
+
+      window.mostrarDetalle = function (guia) {
+        const r = todosLosDatos.find((d) => d.guia === guia);
+        if (!r) return;
+        const imgHTML = r.imagenURL
+          ? `<img class="result-image" src="${r.imagenURL}" alt="Imagen del paquete" />`
+          : `<div class="no-image">Sin imagen adjunta</div>`;
+
+        resultadoEl.innerHTML = `
+          <div class="result-card">
+            ${imgHTML}
+            <div class="result-body">
+              <div class="result-field full">
+                <span class="rf-label">Número de Guía</span>
+                <span class="rf-value guia-val">${r.guia}</span>
+              </div>
+              <div class="result-field">
+                <span class="rf-label">Fecha</span>
+                <span class="rf-value">${formatFecha(r.fecha)}</span>
+              </div>
+              <div class="result-field">
+                <span class="rf-label">Recibido por</span>
+                <span class="rf-value">${r.recibidoPor}</span>
+              </div>
+              <div class="result-field full">
+                <span class="rf-label">Ingresado por</span>
+                <span class="rf-value ingresado-val">👤 ${
+                  r.ingresadoPor || "—"
+                }</span>
+              </div>
+              <div class="result-field full">
+                <span class="rf-label">Nota</span>
+                <span class="rf-value nota-val">${r.nota || "—"}</span>
+              </div>
+            </div>
+            <button class="btn-delete" onclick="eliminarGuia('${
+              r.guia
+            }')">✕ &nbsp;Eliminar este registro</button>
+          </div>
+          <button onclick="renderAll(); searchInput.value=''"
+            style="margin-top:14px;width:100%;padding:10px;background:transparent;border:1px solid var(--border);color:var(--text-muted);border-radius:var(--radius-sm);font-family:var(--font-mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all 0.2s"
+            onmouseover="this.style.borderColor='var(--border-strong)';this.style.color='var(--accent)'"
+            onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-muted)'">
+            ← Volver a todos
+          </button>`;
+      };
+
+      window.eliminarGuia = async function (guia) {
+        if (!confirm(`¿Eliminar el registro de la guía ${guia}?`)) return;
+        try {
+          await deleteDoc(doc(db, "guias", guia));
+          todosLosDatos = todosLosDatos.filter((r) => r.guia !== guia);
+          searchInput.value = "";
+          renderAll();
+        } catch (err) {
+          alert("Error al eliminar: " + err.message);
+        }
+      };
+
+      searchInput.addEventListener("input", function () {
+        const q = this.value.trim().toLowerCase();
+        if (!q) {
+          renderAll();
+          return;
+        }
+        const matches = todosLosDatos.filter((r) =>
+          [r.guia, r.recibidoPor, r.nota, r.fecha, r.ingresadoPor]
+            .map((v) => (v || "").toLowerCase())
+            .some((v) => v.includes(q))
+        );
+        contadorEl.textContent = `Resultados: ${matches.length}`;
+        if (matches.length === 0) {
+          resultadoEl.innerHTML = `<div class="empty-state"><div class="empty-icon">🔍</div><p>No se encontró ninguna guía</p></div>`;
+          return;
+        }
+        if (matches.length === 1) {
+          mostrarDetalle(matches[0].guia);
+          return;
+        }
+        renderAll(matches);
+      });
+
+      searchInput.addEventListener("keydown", function (e) {
+        if (e.key !== "Enter") return;
+        const exacto = todosLosDatos.find((r) =>
+          [r.guia, r.recibidoPor, r.nota, r.fecha, r.ingresadoPor]
+            .map((v) => (v || "").toLowerCase())
+            .some((v) => v.includes(this.value.trim().toLowerCase()))
+        );
+        if (exacto) mostrarDetalle(exacto.guia);
+      });
+
+      cargarDatos();
+    </script>
+
+    <button
+      id="btnExportar"
+      onclick="exportarExcel()"
+      style="
+        position: fixed;
+        bottom: 28px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 999;
+        background: rgba(0, 212, 255, 0.1);
+        color: #00d4ff;
+        border: 1px solid rgba(0, 212, 255, 0.35);
+        border-radius: 999px;
+        padding: 13px 32px;
+        font-family: 'DM Mono', monospace;
+        font-size: 11px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        cursor: pointer;
+        backdrop-filter: blur(8px);
+        white-space: nowrap;
+        transition: background 0.2s, box-shadow 0.2s;
+      "
+      onmouseover="this.style.background='rgba(0,212,255,0.2)';this.style.boxShadow='0 0 24px rgba(0,212,255,0.2)'"
+      onmouseout="this.style.background='rgba(0,212,255,0.10)';this.style.boxShadow='none'"
+    >
+      ↓ &nbsp;Exportar a Excel
+    </button>
+  </body>
+</html>
+-->
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Buscador de Guías</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=DM+Mono:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+      :root {
+        --bg-deep: #0b0f1a;
+        --bg-card: #1a2235;
+        --bg-card2: #141c2e;
+        --bg-input: rgba(11, 15, 26, 0.75);
+        --accent: #00d4ff;
+        --accent-glow: rgba(0, 212, 255, 0.15);
+        --accent-green: #10b981;
+        --accent-red: #ef4444;
+        --accent-amber: #f59e0b;
+        --border: rgba(0, 212, 255, 0.12);
+        --border-strong: rgba(0, 212, 255, 0.35);
+        --text-primary: #e8edf5;
+        --text-secondary: #8fa3c0;
+        --text-muted: #4d6080;
+        --font-display: "Rajdhani", sans-serif;
+        --font-mono: "DM Mono", monospace;
+        --radius: 14px;
+        --radius-sm: 8px;
+      }
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: var(--font-display);
+        background-color: var(--bg-deep);
+        background-image: radial-gradient(
+            ellipse 70% 50% at 50% -5%,
+            rgba(0, 212, 255, 0.1),
+            transparent 65%
+          ),
+          repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 39px,
+            rgba(0, 212, 255, 0.022) 39px,
+            rgba(0, 212, 255, 0.022) 40px
+          ),
+          repeating-linear-gradient(
+            90deg,
+            transparent,
+            transparent 39px,
+            rgba(0, 212, 255, 0.022) 39px,
+            rgba(0, 212, 255, 0.022) 40px
+          );
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 48px 24px 100px;
+        color: var(--text-primary);
+      }
+      .page-header {
+        text-align: center;
+        margin-bottom: 36px;
+        animation: slideDown 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+      }
+      .page-header h1 {
+        font-size: 34px;
+        font-weight: 700;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+      }
+      .page-header h1 span {
+        color: var(--accent);
+      }
+      .page-header p {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 2px;
+        color: var(--text-muted);
+        margin-top: 6px;
+        text-transform: uppercase;
+      }
+      .accent-line {
+        width: 50px;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--accent),
+          transparent
+        );
+        margin: 12px auto 0;
+        border-radius: 2px;
+      }
+      .search-wrap {
+        width: 100%;
+        max-width: 540px;
+        position: relative;
+        animation: slideUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+        animation-delay: 0.05s;
+      }
+      .search-wrap input {
+        width: 100%;
+        background: var(--bg-card);
+        border: 1px solid var(--border-strong);
+        border-radius: 999px;
+        color: var(--text-primary);
+        font-family: var(--font-mono);
+        font-size: 14px;
+        padding: 15px 56px 15px 24px;
+        outline: none;
+        box-shadow: 0 0 0 1px var(--border), 0 0 30px rgba(0, 212, 255, 0.08);
+        transition: border-color 0.2s, box-shadow 0.2s;
+      }
+      .search-wrap input::placeholder {
+        color: var(--text-muted);
+        font-size: 12px;
+        letter-spacing: 1px;
+      }
+      .search-wrap input:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.12);
+      }
+      .search-icon {
+        position: absolute;
+        right: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--accent);
+        font-size: 18px;
+        pointer-events: none;
+      }
+      #contador {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        margin: 16px 0 24px;
+        padding: 5px 14px;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        background: rgba(0, 212, 255, 0.03);
+      }
+      #resultado {
+        width: 100%;
+        max-width: 540px;
+      }
+
+      /* Modal edición */
+      .modal-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.88);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+        backdrop-filter: blur(6px);
+      }
+      .modal-overlay.active {
+        display: flex;
+      }
+      .modal {
+        background: var(--bg-card);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius);
+        padding: 32px 30px 28px;
+        width: 100%;
+        max-width: 420px;
+        box-shadow: 0 30px 70px rgba(0, 0, 0, 0.7);
+        position: relative;
+        animation: slideUp 0.3s ease both;
+      }
+      .modal::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 10%;
+        width: 80%;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--accent),
+          transparent
+        );
+        border-radius: 2px;
+      }
+      .modal-title {
+        font-size: 20px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        margin-bottom: 20px;
+      }
+      .modal-close {
+        position: absolute;
+        top: 14px;
+        right: 16px;
+        background: none;
+        border: none;
+        color: var(--text-muted);
+        font-size: 18px;
+        cursor: pointer;
+        padding: 4px;
+        transition: color 0.2s;
+      }
+      .modal-close:hover {
+        color: var(--accent);
+      }
+      .field {
+        margin-bottom: 14px;
+      }
+      label.fl {
+        display: block;
+        font-family: var(--font-mono);
+        font-size: 9px;
+        letter-spacing: 2.5px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        margin-bottom: 5px;
+      }
+      input[type="text"],
+      input[type="date"],
+      textarea {
+        width: 100%;
+        background: var(--bg-input);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        color: var(--text-primary);
+        font-family: var(--font-mono);
+        font-size: 13px;
+        padding: 10px 14px;
+        outline: none;
+        transition: border-color 0.2s, box-shadow 0.2s;
+      }
+      input::placeholder,
+      textarea::placeholder {
+        color: var(--text-muted);
+        font-size: 11px;
+      }
+      input:focus,
+      textarea:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1);
+      }
+      input[type="date"] {
+        color-scheme: dark;
+      }
+      textarea {
+        resize: vertical;
+        min-height: 70px;
+        line-height: 1.6;
+      }
+      .btn-save {
+        width: 100%;
+        margin-top: 8px;
+        padding: 12px;
+        background: linear-gradient(135deg, #0a3d62, #1e5f8e);
+        color: var(--accent);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius-sm);
+        font-family: var(--font-display);
+        font-size: 14px;
+        font-weight: 700;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .btn-save:hover {
+        background: linear-gradient(135deg, #0d4e7a, #2470a8);
+        transform: translateY(-1px);
+      }
+
+      .result-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        overflow: hidden;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55),
+          0 0 30px rgba(0, 212, 255, 0.07);
+        animation: slideUp 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+        position: relative;
+      }
+      .result-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 10%;
+        width: 80%;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--accent),
+          transparent
+        );
+      }
+      .result-image {
+        width: 100%;
+        max-height: 220px;
+        object-fit: cover;
+        display: block;
+        border-bottom: 1px solid var(--border);
+      }
+      .no-image {
+        width: 100%;
+        height: 90px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        background: var(--bg-card2);
+        border-bottom: 1px solid var(--border);
+      }
+      .result-body {
+        padding: 24px 26px 20px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px 24px;
+      }
+      .result-field {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+      .result-field.full {
+        grid-column: 1/-1;
+      }
+      .result-field .rf-label {
+        font-family: var(--font-mono);
+        font-size: 9px;
+        letter-spacing: 2.5px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+      }
+      .result-field .rf-value {
+        font-family: var(--font-mono);
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--text-primary);
+        word-break: break-word;
+      }
+      .result-field .rf-value.guia-val {
+        font-size: 18px;
+        color: var(--accent);
+        letter-spacing: 1px;
+      }
+      .result-field .rf-value.nota-val {
+        font-size: 12px;
+        color: var(--text-secondary);
+        line-height: 1.7;
+      }
+      .result-field .rf-value.ingresado-val {
+        color: rgba(0, 212, 255, 0.7);
+        font-size: 12px;
+      }
+      .result-actions {
+        display: flex;
+        gap: 10px;
+        padding: 0 26px 24px;
+      }
+      .btn-edit {
+        flex: 1;
+        padding: 11px;
+        background: rgba(0, 212, 255, 0.07);
+        color: var(--accent);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius-sm);
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .btn-edit:hover {
+        background: rgba(0, 212, 255, 0.15);
+      }
+      .btn-delete {
+        flex: 1;
+        padding: 11px;
+        background: rgba(239, 68, 68, 0.07);
+        color: var(--accent-red);
+        border: 1px solid rgba(239, 68, 68, 0.28);
+        border-radius: var(--radius-sm);
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .btn-delete:hover {
+        background: rgba(239, 68, 68, 0.15);
+      }
+
+      .records-list {
+        width: 100%;
+        max-width: 540px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        animation: fadeIn 0.4s ease;
+      }
+      .record-row {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        padding: 14px 18px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+      .record-row:hover {
+        border-color: var(--border-strong);
+        background: rgba(0, 212, 255, 0.04);
+        transform: translateX(4px);
+      }
+      .record-row .rr-guia {
+        font-family: var(--font-mono);
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--accent);
+        flex: 1;
+      }
+      .record-row .rr-name {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--text-secondary);
+      }
+      .record-row .rr-by {
+        font-family: var(--font-mono);
+        font-size: 9px;
+        color: rgba(0, 212, 255, 0.5);
+        letter-spacing: 1px;
+      }
+      .record-row .rr-date {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        color: var(--text-muted);
+        letter-spacing: 1px;
+      }
+      .record-row .rr-arrow {
+        color: var(--text-muted);
+        font-size: 14px;
+      }
+      .empty-state {
+        text-align: center;
+        padding: 48px 24px;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+      }
+      .empty-state .empty-icon {
+        font-size: 40px;
+        margin-bottom: 14px;
+        opacity: 0.5;
+      }
+      .empty-state p {
+        font-family: var(--font-mono);
+        font-size: 12px;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+      }
+      .skeleton {
+        background: linear-gradient(
+          90deg,
+          rgba(0, 212, 255, 0.04) 25%,
+          rgba(0, 212, 255, 0.08) 50%,
+          rgba(0, 212, 255, 0.04) 75%
+        );
+        background-size: 200% 100%;
+        animation: shimmer 1.2s infinite;
+        border-radius: var(--radius-sm);
+        height: 52px;
+        margin-bottom: 10px;
+      }
+      .nav-link {
+        display: inline-block;
+        margin-top: 28px;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        text-decoration: none;
+        padding: 9px 20px;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        transition: all 0.2s ease;
+      }
+      .nav-link:hover {
+        color: var(--accent);
+        border-color: var(--border-strong);
+        background: var(--accent-glow);
+      }
+      .toast {
+        position: fixed;
+        bottom: 28px;
+        right: 28px;
+        padding: 12px 20px;
+        border-radius: var(--radius-sm);
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        opacity: 0;
+        transform: translateY(12px);
+        transition: all 0.3s ease;
+        pointer-events: none;
+        z-index: 9999;
+      }
+      .toast.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .toast.success {
+        background: rgba(16, 185, 129, 0.12);
+        border: 1px solid rgba(16, 185, 129, 0.4);
+        color: var(--accent-green);
+      }
+      .toast.error {
+        background: rgba(239, 68, 68, 0.1);
+        border: 1px solid rgba(239, 68, 68, 0.35);
+        color: var(--accent-red);
+      }
+      @keyframes shimmer {
+        0% {
+          background-position: 200% 0;
+        }
+        100% {
+          background-position: -200% 0;
+        }
+      }
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes slideDown {
+        from {
+          opacity: 0;
+          transform: translateY(-16px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+      @media (max-width: 520px) {
+        .result-body {
+          grid-template-columns: 1fr;
+        }
+        .page-header h1 {
+          font-size: 26px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="page-header">
+      <h1>Buscar <span>Guía</span></h1>
+      <p>Consulta el historial de paquetes recibidos</p>
+      <div class="accent-line"></div>
+    </header>
+    <div class="search-wrap">
+      <input
+        type="text"
+        id="searchInput"
+        placeholder="Número de guía, nombre, usuario..."
+        autocomplete="off"
+      />
+      <span class="search-icon">⌕</span>
+    </div>
+    <div id="contador">Cargando...</div>
+    <div id="resultado"></div>
+    <a href="guias.html" class="nav-link">⬡ &nbsp;Ir a registrar</a>
+    <a href="index.html" class="nav-link">⬡ &nbsp;Inicio</a>
+
+    <!-- Modal editar -->
+    <div class="modal-overlay" id="editModal">
+      <div class="modal">
+        <button class="modal-close" onclick="cerrarModal()">✕</button>
+        <p class="modal-title">Editar Guía</p>
+        <input type="hidden" id="editGuiaId" />
+        <div class="field">
+          <label class="fl">Número de Guía</label>
+          <input
+            type="text"
+            id="editGuia"
+            readonly
+            style="opacity: 0.5; cursor: default"
+          />
+        </div>
+        <div class="field">
+          <label class="fl">Fecha</label>
+          <input type="date" id="editFecha" />
+        </div>
+        <div class="field">
+          <label class="fl">Recibido Por</label>
+          <input type="text" id="editRecibidoPor" />
+        </div>
+        <div class="field">
+          <label class="fl">Nota</label>
+          <textarea id="editNota"></textarea>
+        </div>
+        <button class="btn-save" onclick="guardarEdicion()">
+          Guardar cambios
+        </button>
+      </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <button
+      id="btnExportar"
+      onclick="exportarExcel()"
+      style="
+        position: fixed;
+        bottom: 28px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 999;
+        background: rgba(0, 212, 255, 0.1);
+        color: #00d4ff;
+        border: 1px solid rgba(0, 212, 255, 0.35);
+        border-radius: 999px;
+        padding: 13px 32px;
+        font-family: 'DM Mono', monospace;
+        font-size: 11px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        cursor: pointer;
+        backdrop-filter: blur(8px);
+        white-space: nowrap;
+        transition: background 0.2s, box-shadow 0.2s;
+      "
+      onmouseover="this.style.background='rgba(0,212,255,0.2)';this.style.boxShadow='0 0 24px rgba(0,212,255,0.2)'"
+      onmouseout="this.style.background='rgba(0,212,255,0.10)';this.style.boxShadow='none'"
+    >
+      ↓ &nbsp;Exportar a Excel
+    </button>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+      import {
+        getFirestore,
+        collection,
+        getDocs,
+        doc,
+        deleteDoc,
+        updateDoc,
+        addDoc,
+      } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyBKLgOakBA2_2QqWC-APWeTGH2YRsClOXM",
+        authDomain: "reclamos-clh.firebaseapp.com",
+        projectId: "reclamos-clh",
+        storageBucket: "reclamos-clh.firebasestorage.app",
+        messagingSenderId: "893651222188",
+        appId: "1:893651222188:web:edb9d9963596255633e909",
+      };
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+
+      const sesionRaw = sessionStorage.getItem("clh_user");
+      if (!sesionRaw) {
+        window.location.href = "login.html";
+      }
+      const sesion = sesionRaw ? JSON.parse(sesionRaw) : null;
+
+      const searchInput = document.getElementById("searchInput");
+      const resultadoEl = document.getElementById("resultado");
+      const contadorEl = document.getElementById("contador");
+      let todosLosDatos = [];
+
+      // ── Auditoría centralizada ──
+      async function auditar({
+        accion,
+        guiaId,
+        datosAntes = null,
+        datosDespues = null,
+        detalle = "",
+      }) {
+        try {
+          await addDoc(collection(db, "auditoria"), {
+            accion,
+            modulo: "guias",
+            guiaId,
+            datosAntes,
+            datosDespues,
+            detalle,
+            usuario: sesion?.username || "—",
+            nombreUsuario: sesion?.nombre || sesion?.username || "—",
+            rol: sesion?.rol || "—",
+            timestamp: Date.now(),
+            fechaHora: new Date().toLocaleString("es-CO"),
+          });
+        } catch (e) {
+          console.warn("Auditoría fallida:", e.message);
+        }
+      }
+
+      window.exportarExcel = function () {
+        if (!todosLosDatos.length) {
+          alert("No hay registros para exportar.");
+          return;
+        }
+        const datos = todosLosDatos.map((r) => ({
+          Guía: r.guia,
+          Fecha: r.fecha || "",
+          "Recibido por": r.recibidoPor || "",
+          "Ingresado por": r.ingresadoPor || "",
+          Nota: r.nota || "",
+        }));
+        const hoja = XLSX.utils.json_to_sheet(datos);
+        const libro = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(libro, hoja, "Historial Guías");
+        XLSX.writeFile(libro, "Historial_Guias.xlsx");
+      };
+
+      async function cargarDatos() {
+        resultadoEl.innerHTML = `<div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>`;
+        try {
+          const snap = await getDocs(collection(db, "guias"));
+          todosLosDatos = snap.docs.map((d) => d.data());
+          todosLosDatos.sort((a, b) => b.timestamp - a.timestamp);
+          renderAll();
+        } catch (err) {
+          contadorEl.textContent = "Error al cargar";
+          resultadoEl.innerHTML = `<div class="empty-state"><div class="empty-icon">⚠️</div><p>${err.message}</p></div>`;
+        }
+      }
+
+      function formatFecha(f) {
+        if (!f) return "—";
+        const [y, m, d] = f.split("-");
+        return `${d}/${m}/${y}`;
+      }
+
+      function renderAll(datos = todosLosDatos) {
+        contadorEl.textContent = `Registros: ${datos.length}`;
+        if (!datos.length) {
+          resultadoEl.innerHTML = `<div class="empty-state"><div class="empty-icon">📦</div><p>No hay registros aún</p></div>`;
+          return;
+        }
+        resultadoEl.innerHTML = `<div class="records-list">${datos
+          .map(
+            (r) => `
+          <div class="record-row" onclick="mostrarDetalle('${r.guia}')">
+            <div style="flex:1;min-width:0;">
+              <div class="rr-guia">${r.guia}</div>
+              <div class="rr-name">${r.recibidoPor}</div>
+              ${
+                r.ingresadoPor
+                  ? `<div class="rr-by">↑ ${r.ingresadoPor}</div>`
+                  : ""
+              }
+            </div>
+            <div class="rr-date">${formatFecha(r.fecha)}</div>
+            <div class="rr-arrow">›</div>
+          </div>`
+          )
+          .join("")}</div>`;
+      }
+
+      window.mostrarDetalle = async function (guia) {
+        const r = todosLosDatos.find((d) => d.guia === guia);
+        if (!r) return;
+
+        // ✅ AUDITORÍA: CONSULTAR
+        await auditar({
+          accion: "CONSULTAR",
+          guiaId: guia,
+          detalle: `Guía ${guia} consultada`,
+        });
+
+        const imgHTML = r.imagenURL
+          ? `<img class="result-image" src="${r.imagenURL}" alt="Imagen"/>`
+          : `<div class="no-image">Sin imagen adjunta</div>`;
+
+        resultadoEl.innerHTML = `
+          <div class="result-card">
+            ${imgHTML}
+            <div class="result-body">
+              <div class="result-field full">
+                <span class="rf-label">Número de Guía</span>
+                <span class="rf-value guia-val">${r.guia}</span>
+              </div>
+              <div class="result-field">
+                <span class="rf-label">Fecha</span>
+                <span class="rf-value">${formatFecha(r.fecha)}</span>
+              </div>
+              <div class="result-field">
+                <span class="rf-label">Recibido por</span>
+                <span class="rf-value">${r.recibidoPor}</span>
+              </div>
+              <div class="result-field full">
+                <span class="rf-label">Ingresado por</span>
+                <span class="rf-value ingresado-val">👤 ${
+                  r.ingresadoPor || "—"
+                }</span>
+              </div>
+              <div class="result-field full">
+                <span class="rf-label">Nota</span>
+                <span class="rf-value nota-val">${r.nota || "—"}</span>
+              </div>
+            </div>
+            <div class="result-actions">
+              <button class="btn-edit" onclick="abrirEditar('${
+                r.guia
+              }')">✏ &nbsp;Editar</button>
+              <button class="btn-delete" onclick="eliminarGuia('${
+                r.guia
+              }')">✕ &nbsp;Eliminar</button>
+            </div>
+          </div>
+          <button onclick="renderAll();searchInput.value=''"
+            style="margin-top:14px;width:100%;padding:10px;background:transparent;border:1px solid var(--border);color:var(--text-muted);border-radius:var(--radius-sm);font-family:var(--font-mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all 0.2s"
+            onmouseover="this.style.borderColor='var(--border-strong)';this.style.color='var(--accent)'"
+            onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-muted)'">
+            ← Volver a todos
+          </button>`;
+      };
+
+      // ── Editar ──
+      window.abrirEditar = function (guia) {
+        const r = todosLosDatos.find((d) => d.guia === guia);
+        if (!r) return;
+        document.getElementById("editGuiaId").value = guia;
+        document.getElementById("editGuia").value = guia;
+        document.getElementById("editFecha").value = r.fecha || "";
+        document.getElementById("editRecibidoPor").value = r.recibidoPor || "";
+        document.getElementById("editNota").value = r.nota || "";
+        document.getElementById("editModal").classList.add("active");
+      };
+
+      window.cerrarModal = function () {
+        document.getElementById("editModal").classList.remove("active");
+      };
+
+      window.guardarEdicion = async function () {
+        const guia = document.getElementById("editGuiaId").value;
+        const fecha = document.getElementById("editFecha").value;
+        const recibidoPor = document
+          .getElementById("editRecibidoPor")
+          .value.trim();
+        const nota = document.getElementById("editNota").value.trim();
+        if (!fecha || !recibidoPor) {
+          showToast("Completa los campos obligatorios", "error");
+          return;
+        }
+
+        const antes = todosLosDatos.find((d) => d.guia === guia);
+        const datosAntes = antes
+          ? {
+              fecha: antes.fecha,
+              recibidoPor: antes.recibidoPor,
+              nota: antes.nota,
+            }
+          : null;
+        const datosDespues = { fecha, recibidoPor, nota };
+
+        try {
+          await updateDoc(doc(db, "guias", guia), {
+            fecha,
+            recibidoPor,
+            nota,
+            ultimaEdicion: Date.now(),
+            editadoPor: sesion?.nombre || sesion?.username || "—",
+            editadoPorUsername: sesion?.username || "—",
+          });
+
+          // ✅ AUDITORÍA: EDITAR
+          await auditar({
+            accion: "EDITAR",
+            guiaId: guia,
+            datosAntes,
+            datosDespues,
+            detalle: `Guía ${guia} editada`,
+          });
+
+          // Actualizar cache local
+          const idx = todosLosDatos.findIndex((d) => d.guia === guia);
+          if (idx >= 0)
+            Object.assign(todosLosDatos[idx], { fecha, recibidoPor, nota });
+
+          showToast("✓ Registro actualizado", "success");
+          cerrarModal();
+          mostrarDetalle(guia);
+        } catch (err) {
+          showToast("Error: " + err.message, "error");
+        }
+      };
+
+      // ── Eliminar ──
+      window.eliminarGuia = async function (guia) {
+        if (!confirm(`¿Eliminar el registro de la guía ${guia}?`)) return;
+        const antes = todosLosDatos.find((d) => d.guia === guia);
+        try {
+          await deleteDoc(doc(db, "guias", guia));
+
+          // ✅ AUDITORÍA: ELIMINAR
+          await auditar({
+            accion: "ELIMINAR",
+            guiaId: guia,
+            datosAntes: antes
+              ? {
+                  guia: antes.guia,
+                  fecha: antes.fecha,
+                  recibidoPor: antes.recibidoPor,
+                  nota: antes.nota,
+                }
+              : null,
+            detalle: `Guía ${guia} eliminada`,
+          });
+
+          todosLosDatos = todosLosDatos.filter((r) => r.guia !== guia);
+          searchInput.value = "";
+          renderAll();
+          showToast("✓ Registro eliminado", "success");
+        } catch (err) {
+          showToast("Error: " + err.message, "error");
+        }
+      };
+
+      searchInput.addEventListener("input", function () {
+        const q = this.value.trim().toLowerCase();
+        if (!q) {
+          renderAll();
+          return;
+        }
+        const matches = todosLosDatos.filter((r) =>
+          [r.guia, r.recibidoPor, r.nota, r.fecha, r.ingresadoPor]
+            .map((v) => (v || "").toLowerCase())
+            .some((v) => v.includes(q))
+        );
+        contadorEl.textContent = `Resultados: ${matches.length}`;
+        if (!matches.length) {
+          resultadoEl.innerHTML = `<div class="empty-state"><div class="empty-icon">🔍</div><p>No se encontró ninguna guía</p></div>`;
+          return;
+        }
+        if (matches.length === 1) {
+          mostrarDetalle(matches[0].guia);
+          return;
+        }
+        renderAll(matches);
+      });
+
+      searchInput.addEventListener("keydown", function (e) {
+        if (e.key !== "Enter") return;
+        const exacto = todosLosDatos.find((r) =>
+          [r.guia, r.recibidoPor, r.nota, r.fecha, r.ingresadoPor]
+            .map((v) => (v || "").toLowerCase())
+            .some((v) => v.includes(this.value.trim().toLowerCase()))
+        );
+        if (exacto) mostrarDetalle(exacto.guia);
+      });
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") cerrarModal();
+      });
+
+      function showToast(msg, type) {
+        const t = document.getElementById("toast");
+        t.textContent = msg;
+        t.className = "toast " + type + " show";
+        setTimeout(() => t.classList.remove("show"), 3500);
+      }
+
+      cargarDatos();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Auditoría · Reclamos CLH</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=DM+Mono:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+      :root {
+        --bg-deep: #0b0f1a;
+        --bg-card: #1a2235;
+        --bg-card2: #141c2e;
+        --accent: #00d4ff;
+        --accent-glow: rgba(0, 212, 255, 0.15);
+        --accent-green: #10b981;
+        --accent-red: #ef4444;
+        --accent-amber: #f59e0b;
+        --accent-purple: #a78bfa;
+        --border: rgba(0, 212, 255, 0.12);
+        --border-strong: rgba(0, 212, 255, 0.35);
+        --text-primary: #e8edf5;
+        --text-secondary: #8fa3c0;
+        --text-muted: #4d6080;
+        --font-display: "Rajdhani", sans-serif;
+        --font-mono: "DM Mono", monospace;
+        --radius: 14px;
+        --radius-sm: 8px;
+      }
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: var(--font-display);
+        background-color: var(--bg-deep);
+        background-image: radial-gradient(
+            ellipse 70% 50% at 50% -5%,
+            rgba(0, 212, 255, 0.1),
+            transparent 65%
+          ),
+          repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 39px,
+            rgba(0, 212, 255, 0.022) 39px,
+            rgba(0, 212, 255, 0.022) 40px
+          ),
+          repeating-linear-gradient(
+            90deg,
+            transparent,
+            transparent 39px,
+            rgba(0, 212, 255, 0.022) 39px,
+            rgba(0, 212, 255, 0.022) 40px
+          );
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 48px 24px 100px;
+        color: var(--text-primary);
+      }
+
+      .page-header {
+        text-align: center;
+        margin-bottom: 32px;
+        animation: slideDown 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+      }
+      .page-header h1 {
+        font-size: 32px;
+        font-weight: 700;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+      }
+      .page-header h1 span {
+        color: var(--accent);
+      }
+      .page-header p {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 2px;
+        color: var(--text-muted);
+        margin-top: 6px;
+        text-transform: uppercase;
+      }
+      .accent-line {
+        width: 50px;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--accent),
+          transparent
+        );
+        margin: 10px auto 0;
+        border-radius: 2px;
+      }
+
+      /* Filtros */
+      .filters {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        width: 100%;
+        max-width: 860px;
+        margin-bottom: 20px;
+        animation: slideUp 0.5s ease both;
+        animation-delay: 0.05s;
+      }
+      .filter-search {
+        flex: 1;
+        min-width: 200px;
+        position: relative;
+      }
+      .filter-search input {
+        width: 100%;
+        background: var(--bg-card);
+        border: 1px solid var(--border-strong);
+        border-radius: 999px;
+        color: var(--text-primary);
+        font-family: var(--font-mono);
+        font-size: 13px;
+        padding: 11px 44px 11px 18px;
+        outline: none;
+        transition: border-color 0.2s, box-shadow 0.2s;
+      }
+      .filter-search input::placeholder {
+        color: var(--text-muted);
+        font-size: 11px;
+      }
+      .filter-search input:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1);
+      }
+      .filter-search span {
+        position: absolute;
+        right: 16px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--accent);
+        pointer-events: none;
+      }
+      select.filter-select {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        color: var(--text-secondary);
+        font-family: var(--font-mono);
+        font-size: 12px;
+        padding: 11px 14px;
+        outline: none;
+        cursor: pointer;
+        transition: border-color 0.2s;
+      }
+      select.filter-select:focus {
+        border-color: var(--accent);
+      }
+      select.filter-select option {
+        background: var(--bg-card);
+      }
+
+      /* Contador */
+      #contador {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        margin-bottom: 20px;
+        padding: 5px 14px;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        background: rgba(0, 212, 255, 0.03);
+      }
+
+      /* Lista */
+      .audit-list {
+        width: 100%;
+        max-width: 860px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .audit-row {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        padding: 16px 20px;
+        cursor: pointer;
+        transition: all 0.2s;
+        animation: fadeIn 0.3s ease both;
+      }
+      .audit-row:hover {
+        border-color: var(--border-strong);
+        background: rgba(0, 212, 255, 0.03);
+        transform: translateX(3px);
+      }
+      .audit-row-top {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        flex-wrap: wrap;
+      }
+      .badge {
+        font-family: var(--font-mono);
+        font-size: 9px;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        padding: 4px 10px;
+        border-radius: 999px;
+        flex-shrink: 0;
+        font-weight: 500;
+      }
+      .badge-CREAR {
+        background: rgba(16, 185, 129, 0.12);
+        border: 1px solid rgba(16, 185, 129, 0.4);
+        color: var(--accent-green);
+      }
+      .badge-EDITAR {
+        background: rgba(0, 212, 255, 0.1);
+        border: 1px solid rgba(0, 212, 255, 0.35);
+        color: var(--accent);
+      }
+      .badge-ELIMINAR {
+        background: rgba(239, 68, 68, 0.1);
+        border: 1px solid rgba(239, 68, 68, 0.35);
+        color: var(--accent-red);
+      }
+      .badge-CONSULTAR {
+        background: rgba(167, 139, 250, 0.1);
+        border: 1px solid rgba(167, 139, 250, 0.3);
+        color: var(--accent-purple);
+      }
+      .audit-guia {
+        font-family: var(--font-mono);
+        font-size: 13px;
+        color: var(--accent);
+        font-weight: 500;
+      }
+      .audit-user {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--text-secondary);
+      }
+      .audit-rol {
+        font-family: var(--font-mono);
+        font-size: 9px;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        padding: 2px 8px;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+      }
+      .audit-time {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        color: var(--text-muted);
+        margin-left: auto;
+        letter-spacing: 1px;
+        white-space: nowrap;
+      }
+      .audit-detail {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--text-muted);
+        margin-top: 8px;
+        letter-spacing: 0.5px;
+      }
+
+      /* Expandible: diff de datos */
+      .audit-diff {
+        display: none;
+        margin-top: 14px;
+        background: var(--bg-card2);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        padding: 14px 16px;
+        animation: fadeIn 0.2s ease;
+      }
+      .audit-diff.open {
+        display: block;
+      }
+      .diff-title {
+        font-family: var(--font-mono);
+        font-size: 9px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        margin-bottom: 10px;
+      }
+      .diff-cols {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+      .diff-col-title {
+        font-family: var(--font-mono);
+        font-size: 9px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        margin-bottom: 6px;
+      }
+      .diff-col-title.antes {
+        color: var(--accent-red);
+      }
+      .diff-col-title.despues {
+        color: var(--accent-green);
+      }
+      .diff-field {
+        margin-bottom: 6px;
+      }
+      .diff-label {
+        font-family: var(--font-mono);
+        font-size: 8px;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+      }
+      .diff-value {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--text-secondary);
+        word-break: break-word;
+        margin-top: 1px;
+      }
+      .diff-changed {
+        color: var(--accent-amber);
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 48px;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+      }
+      .empty-state .empty-icon {
+        font-size: 40px;
+        margin-bottom: 14px;
+        opacity: 0.5;
+      }
+      .empty-state p {
+        font-family: var(--font-mono);
+        font-size: 12px;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+      }
+      .skeleton {
+        background: linear-gradient(
+          90deg,
+          rgba(0, 212, 255, 0.04) 25%,
+          rgba(0, 212, 255, 0.08) 50%,
+          rgba(0, 212, 255, 0.04) 75%
+        );
+        background-size: 200% 100%;
+        animation: shimmer 1.2s infinite;
+        border-radius: var(--radius-sm);
+        height: 64px;
+        margin-bottom: 8px;
+      }
+
+      .nav-link {
+        display: inline-block;
+        margin-top: 28px;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        text-decoration: none;
+        padding: 9px 20px;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        transition: all 0.2s ease;
+      }
+      .nav-link:hover {
+        color: var(--accent);
+        border-color: var(--border-strong);
+        background: var(--accent-glow);
+      }
+
+      @keyframes shimmer {
+        0% {
+          background-position: 200% 0;
+        }
+        100% {
+          background-position: -200% 0;
+        }
+      }
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes slideDown {
+        from {
+          opacity: 0;
+          transform: translateY(-16px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+      @media (max-width: 600px) {
+        .diff-cols {
+          grid-template-columns: 1fr;
+        }
+        .audit-time {
+          margin-left: 0;
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="page-header">
+      <h1>Historial de <span>Auditoría</span></h1>
+      <p>Registro de todos los movimientos en guías</p>
+      <div class="accent-line"></div>
+    </header>
+
+    <div class="filters">
+      <div class="filter-search">
+        <input
+          type="text"
+          id="searchInput"
+          placeholder="Buscar por guía, usuario, acción..."
+        />
+        <span>⌕</span>
+      </div>
+      <select class="filter-select" id="filterAccion">
+        <option value="">Todas las acciones</option>
+        <option value="CREAR">Crear</option>
+        <option value="EDITAR">Editar</option>
+        <option value="ELIMINAR">Eliminar</option>
+        <option value="CONSULTAR">Consultar</option>
+      </select>
+      <select class="filter-select" id="filterUsuario">
+        <option value="">Todos los usuarios</option>
+      </select>
+    </div>
+
+    <div id="contador">Cargando...</div>
+    <div id="listaAuditoria" style="width: 100%; max-width: 860px"></div>
+
+    <a href="buscar_guia.html" class="nav-link">⬡ &nbsp;Ir al buscador</a>
+    <a href="index.html" class="nav-link">⬡ &nbsp;Inicio</a>
+
+    <button
+      onclick="exportarExcel()"
+      style="
+        position: fixed;
+        bottom: 28px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 999;
+        background: rgba(0, 212, 255, 0.1);
+        color: #00d4ff;
+        border: 1px solid rgba(0, 212, 255, 0.35);
+        border-radius: 999px;
+        padding: 13px 32px;
+        font-family: 'DM Mono', monospace;
+        font-size: 11px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        cursor: pointer;
+        backdrop-filter: blur(8px);
+        white-space: nowrap;
+        transition: background 0.2s;
+      "
+      onmouseover="this.style.background='rgba(0,212,255,0.2)'"
+      onmouseout="this.style.background='rgba(0,212,255,0.10)'"
+    >
+      ↓ &nbsp;Exportar auditoría
+    </button>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+      import {
+        getFirestore,
+        collection,
+        getDocs,
+      } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyBKLgOakBA2_2QqWC-APWeTGH2YRsClOXM",
+        authDomain: "reclamos-clh.firebaseapp.com",
+        projectId: "reclamos-clh",
+        storageBucket: "reclamos-clh.firebasestorage.app",
+        messagingSenderId: "893651222188",
+        appId: "1:893651222188:web:edb9d9963596255633e909",
+      };
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+
+      if (!sessionStorage.getItem("clh_user")) {
+        window.location.href = "login.html";
+      }
+
+      let todosLosEventos = [];
+
+      async function cargar() {
+        const el = document.getElementById("listaAuditoria");
+        el.innerHTML = `<div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>`;
+        try {
+          const snap = await getDocs(collection(db, "auditoria"));
+          todosLosEventos = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+          todosLosEventos.sort((a, b) => b.timestamp - a.timestamp);
+
+          // Llenar select de usuarios
+          const usuarios = [
+            ...new Set(todosLosEventos.map((e) => e.usuario).filter(Boolean)),
+          ];
+          const sel = document.getElementById("filterUsuario");
+          usuarios.forEach((u) => {
+            const opt = document.createElement("option");
+            opt.value = u;
+            opt.textContent = u;
+            sel.appendChild(opt);
+          });
+
+          renderEventos();
+        } catch (err) {
+          el.innerHTML = `<div class="empty-state"><div class="empty-icon">⚠️</div><p>${err.message}</p></div>`;
+        }
+      }
+
+      function filtrar() {
+        const q = document
+          .getElementById("searchInput")
+          .value.trim()
+          .toLowerCase();
+        const accion = document.getElementById("filterAccion").value;
+        const usuario = document.getElementById("filterUsuario").value;
+        return todosLosEventos.filter((e) => {
+          const matchQ =
+            !q ||
+            [e.guiaId, e.usuario, e.nombreUsuario, e.accion, e.detalle]
+              .map((v) => (v || "").toLowerCase())
+              .some((v) => v.includes(q));
+          const matchA = !accion || e.accion === accion;
+          const matchU = !usuario || e.usuario === usuario;
+          return matchQ && matchA && matchU;
+        });
+      }
+
+      function renderEventos(eventos = filtrar()) {
+        const el = document.getElementById("listaAuditoria");
+        document.getElementById(
+          "contador"
+        ).textContent = `Eventos: ${eventos.length}`;
+        if (!eventos.length) {
+          el.innerHTML = `<div class="empty-state"><div class="empty-icon">🔍</div><p>Sin resultados</p></div>`;
+          return;
+        }
+        el.innerHTML = `<div class="audit-list">${eventos
+          .map((e, i) => {
+            const hasDiff = e.datosAntes || e.datosDespues;
+            return `
+          <div class="audit-row" onclick="toggleDiff('diff-${i}')">
+            <div class="audit-row-top">
+              <span class="badge badge-${e.accion}">${e.accion}</span>
+              <span class="audit-guia">${e.guiaId || "—"}</span>
+              <span class="audit-user">👤 ${
+                e.nombreUsuario || e.usuario || "—"
+              }</span>
+              <span class="audit-rol">${e.rol || "—"}</span>
+              <span class="audit-time">${e.fechaHora || "—"}</span>
+            </div>
+            <div class="audit-detail">${e.detalle || ""}</div>
+            ${
+              hasDiff
+                ? `
+            <div class="audit-diff" id="diff-${i}">
+              <div class="diff-title">Detalle del cambio · click para colapsar</div>
+              <div class="diff-cols">
+                <div>
+                  <div class="diff-col-title antes">Antes</div>
+                  ${renderDiffFields(e.datosAntes)}
+                </div>
+                <div>
+                  <div class="diff-col-title despues">Después</div>
+                  ${renderDiffFields(e.datosDespues, e.datosAntes)}
+                </div>
+              </div>
+            </div>`
+                : ""
+            }
+          </div>`;
+          })
+          .join("")}</div>`;
+      }
+
+      function renderDiffFields(datos, comparar = null) {
+        if (!datos)
+          return `<div class="diff-field"><div class="diff-value" style="color:var(--text-muted)">—</div></div>`;
+        return Object.entries(datos)
+          .map(([k, v]) => {
+            const cambio = comparar && comparar[k] !== v;
+            return `<div class="diff-field">
+            <div class="diff-label">${k}</div>
+            <div class="diff-value ${cambio ? "diff-changed" : ""}">${
+              v === null
+                ? "sin imagen"
+                : v === true
+                ? "sí"
+                : v === false
+                ? "no"
+                : v || "—"
+            }</div>
+          </div>`;
+          })
+          .join("");
+      }
+
+      window.toggleDiff = function (id) {
+        const el = document.getElementById(id);
+        if (el) el.classList.toggle("open");
+      };
+
+      window.exportarExcel = function () {
+        const eventos = filtrar();
+        if (!eventos.length) {
+          alert("No hay eventos para exportar");
+          return;
+        }
+        const datos = eventos.map((e) => ({
+          "Fecha/Hora": e.fechaHora || "",
+          Acción: e.accion || "",
+          Guía: e.guiaId || "",
+          Usuario: e.usuario || "",
+          Nombre: e.nombreUsuario || "",
+          Rol: e.rol || "",
+          Detalle: e.detalle || "",
+          Antes: e.datosAntes ? JSON.stringify(e.datosAntes) : "",
+          Después: e.datosDespues ? JSON.stringify(e.datosDespues) : "",
+        }));
+        const hoja = XLSX.utils.json_to_sheet(datos);
+        const libro = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(libro, hoja, "Auditoría");
+        XLSX.writeFile(libro, "Auditoria_Guias.xlsx");
+      };
+
+      document
+        .getElementById("searchInput")
+        .addEventListener("input", () => renderEventos());
+      document
+        .getElementById("filterAccion")
+        .addEventListener("change", () => renderEventos());
+      document
+        .getElementById("filterUsuario")
+        .addEventListener("change", () => renderEventos());
+
+      cargar();
+    </script>
+  </body>
+</html>

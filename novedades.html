@@ -1,0 +1,4452 @@
+<!--<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Novedades · Reclamos CLH</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=DM+Mono:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <!-- jsPDF para exportar PDF del lado del cliente -->
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+      :root {
+        --bg-deep: #0b0f1a;
+        --bg-card: #1a2235;
+        --bg-card2: #141c2e;
+        --bg-input: rgba(11, 15, 26, 0.75);
+        --accent: #00d4ff;
+        --accent-glow: rgba(0, 212, 255, 0.15);
+        --accent-green: #10b981;
+        --accent-red: #ef4444;
+        --accent-amber: #f59e0b;
+        --accent-purple: #a78bfa;
+        --border: rgba(0, 212, 255, 0.12);
+        --border-strong: rgba(0, 212, 255, 0.35);
+        --text-primary: #e8edf5;
+        --text-secondary: #8fa3c0;
+        --text-muted: #4d6080;
+        --font-display: "Rajdhani", sans-serif;
+        --font-mono: "DM Mono", monospace;
+        --radius: 14px;
+        --radius-sm: 8px;
+      }
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: var(--font-display);
+        background-color: var(--bg-deep);
+        background-image: radial-gradient(
+            ellipse 70% 50% at 50% -5%,
+            rgba(0, 212, 255, 0.1),
+            transparent 65%
+          ),
+          repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 39px,
+            rgba(0, 212, 255, 0.022) 39px,
+            rgba(0, 212, 255, 0.022) 40px
+          ),
+          repeating-linear-gradient(
+            90deg,
+            transparent,
+            transparent 39px,
+            rgba(0, 212, 255, 0.022) 39px,
+            rgba(0, 212, 255, 0.022) 40px
+          );
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 48px 24px 100px;
+        color: var(--text-primary);
+      }
+
+      /* ── HEADER ── */
+      .page-header {
+        text-align: center;
+        margin-bottom: 30px;
+        animation: slideDown 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+      }
+      .page-header h1 {
+        font-size: 34px;
+        font-weight: 700;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+      }
+      .page-header h1 span {
+        color: var(--accent);
+      }
+      .page-header p {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 2px;
+        color: var(--text-muted);
+        margin-top: 6px;
+        text-transform: uppercase;
+      }
+      .accent-line {
+        width: 50px;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--accent),
+          transparent
+        );
+        margin: 10px auto 0;
+        border-radius: 2px;
+      }
+
+      /* ── SESSION BADGE ── */
+      .session-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(0, 212, 255, 0.06);
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        padding: 6px 14px;
+        margin-bottom: 22px;
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+      }
+      .session-badge strong {
+        color: var(--accent);
+      }
+
+      /* ── TABS ── */
+      .tabs {
+        display: flex;
+        gap: 6px;
+        margin-bottom: 24px;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        padding: 4px;
+        width: 100%;
+        max-width: 680px;
+      }
+      .tab-btn {
+        flex: 1;
+        padding: 9px 12px;
+        background: none;
+        border: none;
+        border-radius: 6px;
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .tab-btn.active {
+        background: rgba(0, 212, 255, 0.12);
+        color: var(--accent);
+        border: 1px solid var(--border-strong);
+      }
+
+      /* ── FORM CARD ── */
+      .card {
+        width: 100%;
+        max-width: 680px;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 32px 32px 28px;
+        box-shadow: 0 24px 64px rgba(0, 0, 0, 0.65),
+          0 0 40px rgba(0, 212, 255, 0.06);
+        position: relative;
+        animation: slideUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+        animation-delay: 0.05s;
+      }
+      .card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 10%;
+        width: 80%;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--accent),
+          transparent
+        );
+        border-radius: 2px;
+      }
+      .card-title {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 2.5px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        margin-bottom: 22px;
+      }
+
+      .grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+      }
+      .field {
+        margin-bottom: 14px;
+      }
+      label.fl {
+        display: block;
+        font-family: var(--font-mono);
+        font-size: 9px;
+        letter-spacing: 2.5px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        margin-bottom: 6px;
+      }
+      input[type="text"],
+      input[type="date"],
+      textarea,
+      select {
+        width: 100%;
+        background: var(--bg-input);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        color: var(--text-primary);
+        font-family: var(--font-mono);
+        font-size: 13px;
+        padding: 11px 14px;
+        outline: none;
+        transition: border-color 0.2s, box-shadow 0.2s;
+      }
+      input::placeholder,
+      textarea::placeholder {
+        color: var(--text-muted);
+        font-size: 11px;
+      }
+      input[type="date"] {
+        color-scheme: dark;
+      }
+      input:focus,
+      textarea:focus,
+      select:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1);
+      }
+      select option {
+        background: var(--bg-card);
+      }
+      textarea {
+        resize: vertical;
+        min-height: 80px;
+        line-height: 1.6;
+      }
+
+      /* Campo readonly (auto-rellenado) */
+      .field-auto input {
+        background: rgba(0, 212, 255, 0.04);
+        border-color: rgba(0, 212, 255, 0.2);
+        color: var(--accent);
+        cursor: default;
+      }
+      .field-auto .fl {
+        color: rgba(0, 212, 255, 0.6);
+      }
+
+      /* Nota toggle */
+      .nota-toggle {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 14px;
+      }
+      .nota-opt {
+        flex: 1;
+        padding: 10px;
+        background: rgba(0, 212, 255, 0.02);
+        border: 1px dashed var(--border-strong);
+        border-radius: var(--radius-sm);
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        cursor: pointer;
+        text-align: center;
+        transition: all 0.2s;
+      }
+      .nota-opt.selected {
+        background: rgba(0, 212, 255, 0.1);
+        border-color: var(--accent);
+        color: var(--accent);
+        border-style: solid;
+      }
+
+      .btn-primary {
+        width: 100%;
+        margin-top: 8px;
+        padding: 13px;
+        background: linear-gradient(135deg, #0a3d62, #1e5f8e);
+        color: var(--accent);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius-sm);
+        font-family: var(--font-display);
+        font-size: 15px;
+        font-weight: 700;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        cursor: pointer;
+        box-shadow: 0 0 20px rgba(0, 212, 255, 0.1);
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+      }
+      .btn-primary:hover {
+        background: linear-gradient(135deg, #0d4e7a, #2470a8);
+        box-shadow: 0 0 35px rgba(0, 212, 255, 0.25);
+        transform: translateY(-2px);
+      }
+      .btn-primary:active {
+        transform: translateY(0) scale(0.98);
+      }
+      .btn-primary:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+      }
+      .spinner {
+        width: 14px;
+        height: 14px;
+        border: 2px solid rgba(0, 212, 255, 0.3);
+        border-top-color: var(--accent);
+        border-radius: 50%;
+        animation: spin 0.7s linear infinite;
+        display: none;
+      }
+      .loading .spinner {
+        display: block;
+      }
+
+      /* ── SEARCH TAB ── */
+      .search-bar {
+        position: relative;
+        width: 100%;
+        max-width: 680px;
+        margin-bottom: 14px;
+      }
+      .search-bar input {
+        width: 100%;
+        background: var(--bg-card);
+        border: 1px solid var(--border-strong);
+        border-radius: 999px;
+        color: var(--text-primary);
+        font-family: var(--font-mono);
+        font-size: 14px;
+        padding: 14px 52px 14px 22px;
+        outline: none;
+        box-shadow: 0 0 30px rgba(0, 212, 255, 0.06);
+        transition: border-color 0.2s, box-shadow 0.2s;
+      }
+      .search-bar input:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1);
+      }
+      .search-bar input::placeholder {
+        color: var(--text-muted);
+        font-size: 12px;
+      }
+      .search-icon {
+        position: absolute;
+        right: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--accent);
+        font-size: 18px;
+        pointer-events: none;
+      }
+
+      .filter-row {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+        width: 100%;
+        max-width: 680px;
+      }
+      select.filter-sel {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        color: var(--text-secondary);
+        font-family: var(--font-mono);
+        font-size: 11px;
+        padding: 9px 12px;
+        outline: none;
+        cursor: pointer;
+        transition: border-color 0.2s;
+        flex-shrink: 0;
+      }
+      select.filter-sel:focus {
+        border-color: var(--accent);
+      }
+      select.filter-sel option {
+        background: var(--bg-card);
+      }
+
+      #contador {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        margin-bottom: 18px;
+        padding: 5px 14px;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        background: rgba(0, 212, 255, 0.03);
+      }
+
+      /* ── RECORDS LIST ── */
+      .records-list {
+        width: 100%;
+        max-width: 680px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .record-row {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        padding: 14px 18px;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .record-row:hover {
+        border-color: var(--border-strong);
+        background: rgba(0, 212, 255, 0.03);
+        transform: translateX(3px);
+      }
+      .record-top {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+      .rr-reclamo {
+        font-family: var(--font-mono);
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--accent);
+        flex: 1;
+        min-width: 0;
+      }
+      .rr-ref {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--text-secondary);
+      }
+      .rr-cant {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--accent-amber);
+        padding: 2px 8px;
+        border: 1px solid rgba(245, 158, 11, 0.3);
+        border-radius: 999px;
+      }
+      .nota-badge {
+        font-family: var(--font-mono);
+        font-size: 9px;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        padding: 2px 8px;
+        border-radius: 999px;
+      }
+      .nota-con {
+        background: rgba(16, 185, 129, 0.1);
+        border: 1px solid rgba(16, 185, 129, 0.35);
+        color: var(--accent-green);
+      }
+      .nota-sin {
+        background: rgba(239, 68, 68, 0.08);
+        border: 1px solid rgba(239, 68, 68, 0.25);
+        color: var(--accent-red);
+      }
+      .rr-date {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        color: var(--text-muted);
+        margin-left: auto;
+        white-space: nowrap;
+      }
+      .rr-user {
+        font-family: var(--font-mono);
+        font-size: 9px;
+        color: rgba(0, 212, 255, 0.5);
+        letter-spacing: 1px;
+        margin-top: 4px;
+      }
+
+      /* ── DETAIL CARD ── */
+      .detail-card {
+        width: 100%;
+        max-width: 680px;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        overflow: hidden;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55),
+          0 0 30px rgba(0, 212, 255, 0.07);
+        animation: slideUp 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+        position: relative;
+      }
+      .detail-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 10%;
+        width: 80%;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--accent),
+          transparent
+        );
+      }
+      .detail-body {
+        padding: 26px 28px 20px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px 24px;
+      }
+      .df {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+      .df.full {
+        grid-column: 1/-1;
+      }
+      .df-label {
+        font-family: var(--font-mono);
+        font-size: 9px;
+        letter-spacing: 2.5px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+      }
+      .df-value {
+        font-family: var(--font-mono);
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--text-primary);
+        word-break: break-word;
+      }
+      .df-value.main {
+        font-size: 18px;
+        color: var(--accent);
+        letter-spacing: 1px;
+      }
+      .df-value.obs {
+        font-size: 12px;
+        color: var(--text-secondary);
+        line-height: 1.7;
+      }
+      .df-value.by {
+        color: rgba(0, 212, 255, 0.7);
+        font-size: 12px;
+      }
+      .detail-actions {
+        display: flex;
+        gap: 8px;
+        padding: 0 28px 24px;
+        flex-wrap: wrap;
+      }
+      .btn-act {
+        flex: 1;
+        min-width: 100px;
+        padding: 10px;
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        border-radius: var(--radius-sm);
+        cursor: pointer;
+        transition: all 0.2s;
+        border: 1px solid;
+      }
+      .btn-edit-a {
+        background: rgba(0, 212, 255, 0.07);
+        color: var(--accent);
+        border-color: var(--border-strong);
+      }
+      .btn-edit-a:hover {
+        background: rgba(0, 212, 255, 0.15);
+      }
+      .btn-del-a {
+        background: rgba(239, 68, 68, 0.07);
+        color: var(--accent-red);
+        border-color: rgba(239, 68, 68, 0.28);
+      }
+      .btn-del-a:hover {
+        background: rgba(239, 68, 68, 0.15);
+      }
+      .btn-pdf-a {
+        background: rgba(245, 158, 11, 0.08);
+        color: var(--accent-amber);
+        border-color: rgba(245, 158, 11, 0.3);
+      }
+      .btn-pdf-a:hover {
+        background: rgba(245, 158, 11, 0.16);
+      }
+
+      /* ── MODAL ── */
+      .modal-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.88);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+        backdrop-filter: blur(6px);
+        padding: 16px;
+      }
+      .modal-overlay.active {
+        display: flex;
+      }
+      .modal {
+        background: var(--bg-card);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius);
+        padding: 32px 30px 28px;
+        width: 100%;
+        max-width: 480px;
+        max-height: 90vh;
+        overflow-y: auto;
+        box-shadow: 0 30px 70px rgba(0, 0, 0, 0.7);
+        position: relative;
+        animation: slideUp 0.3s ease both;
+      }
+      .modal::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 10%;
+        width: 80%;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--accent),
+          transparent
+        );
+        border-radius: 2px;
+      }
+      .modal-title {
+        font-size: 20px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        margin-bottom: 20px;
+      }
+      .modal-close {
+        position: absolute;
+        top: 14px;
+        right: 16px;
+        background: none;
+        border: none;
+        color: var(--text-muted);
+        font-size: 18px;
+        cursor: pointer;
+        padding: 4px;
+        transition: color 0.2s;
+      }
+      .modal-close:hover {
+        color: var(--accent);
+      }
+      .btn-save {
+        width: 100%;
+        margin-top: 8px;
+        padding: 12px;
+        background: linear-gradient(135deg, #0a3d62, #1e5f8e);
+        color: var(--accent);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius-sm);
+        font-family: var(--font-display);
+        font-size: 14px;
+        font-weight: 700;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .btn-save:hover {
+        background: linear-gradient(135deg, #0d4e7a, #2470a8);
+        transform: translateY(-1px);
+      }
+
+      /* ── EMPTY STATE ── */
+      .empty-state {
+        text-align: center;
+        padding: 48px;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        width: 100%;
+        max-width: 680px;
+      }
+      .empty-state .empty-icon {
+        font-size: 40px;
+        margin-bottom: 14px;
+        opacity: 0.5;
+      }
+      .empty-state p {
+        font-family: var(--font-mono);
+        font-size: 12px;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+      }
+      .skeleton {
+        background: linear-gradient(
+          90deg,
+          rgba(0, 212, 255, 0.04) 25%,
+          rgba(0, 212, 255, 0.08) 50%,
+          rgba(0, 212, 255, 0.04) 75%
+        );
+        background-size: 200% 100%;
+        animation: shimmer 1.2s infinite;
+        border-radius: var(--radius-sm);
+        height: 64px;
+        margin-bottom: 8px;
+        width: 100%;
+        max-width: 680px;
+      }
+
+      /* ── TOAST ── */
+      .toast {
+        position: fixed;
+        bottom: 28px;
+        right: 28px;
+        padding: 12px 20px;
+        border-radius: var(--radius-sm);
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        opacity: 0;
+        transform: translateY(12px);
+        transition: all 0.3s ease;
+        pointer-events: none;
+        z-index: 9999;
+        max-width: 320px;
+      }
+      .toast.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .toast.success {
+        background: rgba(16, 185, 129, 0.12);
+        border: 1px solid rgba(16, 185, 129, 0.4);
+        color: var(--accent-green);
+      }
+      .toast.error {
+        background: rgba(239, 68, 68, 0.1);
+        border: 1px solid rgba(239, 68, 68, 0.35);
+        color: var(--accent-red);
+      }
+      .toast.info {
+        background: rgba(245, 158, 11, 0.1);
+        border: 1px solid rgba(245, 158, 11, 0.35);
+        color: var(--accent-amber);
+      }
+
+      .nav-link {
+        display: inline-block;
+        margin-top: 22px;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        text-decoration: none;
+        padding: 9px 20px;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        transition: all 0.2s ease;
+      }
+      .nav-link:hover {
+        color: var(--accent);
+        border-color: var(--border-strong);
+        background: var(--accent-glow);
+      }
+
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(24px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes slideDown {
+        from {
+          opacity: 0;
+          transform: translateY(-16px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      @keyframes shimmer {
+        0% {
+          background-position: 200% 0;
+        }
+        100% {
+          background-position: -200% 0;
+        }
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+      @media (max-width: 560px) {
+        .grid-2 {
+          grid-template-columns: 1fr;
+        }
+        .detail-body {
+          grid-template-columns: 1fr;
+        }
+        .card {
+          padding: 22px 16px;
+        }
+        .modal {
+          padding: 24px 18px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="page-header">
+      <h1>Registro de <span>Novedades</span></h1>
+      <p>Gestion y seguimiento de novedades operativas</p>
+      <div class="accent-line"></div>
+    </header>
+
+    <div class="session-badge">
+      👤 &nbsp;Sesion: <strong id="sessionLabel">—</strong>
+    </div>
+
+    <!-- Tabs -->
+<!--<div class="tabs">
+      <button class="tab-btn active" id="tab1" onclick="switchTab('registrar')">
+        ➕ Registrar
+      </button>
+      <button class="tab-btn" id="tab2" onclick="switchTab('consultar')">
+        🔍 Consultar
+      </button>
+    </div>
+
+    <!-- ── TAB REGISTRAR ── -->
+<!-- <div id="tabRegistrar" style="width: 100%; max-width: 680px">
+      <div class="card">
+        <p class="card-title">Nueva novedad</p>
+        <div class="grid-2">
+          <div class="field field-auto">
+            <label class="fl">Registrado por</label>
+            <input type="text" id="regPor" readonly />
+          </div>
+          <div class="field field-auto">
+            <label class="fl">Fecha de registro</label>
+            <input type="text" id="regFecha" readonly />
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="field">
+            <label class="fl">Reclamo</label>
+            <input
+              type="text"
+              id="reclamo"
+              placeholder="Numero o codigo de reclamo"
+            />
+          </div>
+          <div class="field">
+            <label class="fl">Referencia</label>
+            <input
+              type="text"
+              id="referencia"
+              placeholder="Referencia del producto"
+            />
+          </div>
+        </div>
+        <div class="field">
+          <label class="fl">Cantidad</label>
+          <input type="text" id="cantidad" placeholder="Ej: 12 unidades" />
+        </div>
+        <div class="field">
+          <label class="fl">Nota</label>
+          <div class="nota-toggle">
+            <div
+              class="nota-opt selected"
+              id="notaConBtn"
+              onclick="seleccionarNota('Con nota')"
+            >
+              ✔ Con nota
+            </div>
+            <div
+              class="nota-opt"
+              id="notaSinBtn"
+              onclick="seleccionarNota('Sin nota')"
+            >
+              ✕ Sin nota
+            </div>
+          </div>
+        </div>
+        <div class="field">
+          <label class="fl">Observaciones</label>
+          <textarea
+            id="observaciones"
+            placeholder="Describe la novedad presentada, causas, impacto, acciones tomadas..."
+          ></textarea>
+        </div>
+        <button class="btn-primary" id="btnGuardar" onclick="guardarNovedad()">
+          <div class="spinner"></div>
+          <span class="btn-text">Registrar Novedad</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ── TAB CONSULTAR ── -->
+<!--  <div id="tabConsultar" style="display: none; width: 100%; max-width: 680px">
+      <div class="search-bar">
+        <input
+          type="text"
+          id="searchInput"
+          placeholder="Buscar por reclamo, referencia, usuario, nota..."
+        />
+        <span class="search-icon">⌕</span>
+      </div>
+      <div class="filter-row">
+        <select class="filter-sel" id="filterNota">
+          <option value="">Todas las notas</option>
+          <option value="Con nota">Con nota</option>
+          <option value="Sin nota">Sin nota</option>
+        </select>
+        <select class="filter-sel" id="filterUsuario">
+          <option value="">Todos los usuarios</option>
+        </select>
+        <button
+          onclick="exportarTodosPDF()"
+          style="
+            background: rgba(245, 158, 11, 0.08);
+            color: var(--accent-amber);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: var(--radius-sm);
+            font-family: var(--font-mono);
+            font-size: 10px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            padding: 9px 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+          "
+          onmouseover="this.style.background='rgba(245,158,11,0.16)'"
+          onmouseout="this.style.background='rgba(245,158,11,0.08)'"
+        >
+          📄 Exportar PDF
+        </button>
+      </div>
+      <div id="contador" style="display: none">—</div>
+      <div id="listaNovedades"></div>
+      <div id="detalleNovedad"></div>
+    </div>
+
+    <!-- ── MODAL EDITAR ── -->
+<!--   <div class="modal-overlay" id="editModal">
+      <div class="modal">
+        <button class="modal-close" onclick="cerrarModal()">✕</button>
+        <p class="modal-title">Editar Novedad</p>
+        <input type="hidden" id="editId" />
+        <div class="grid-2">
+          <div class="field">
+            <label class="fl">Reclamo</label>
+            <input type="text" id="editReclamo" />
+          </div>
+          <div class="field">
+            <label class="fl">Referencia</label>
+            <input type="text" id="editReferencia" />
+          </div>
+        </div>
+        <div class="field">
+          <label class="fl">Cantidad</label>
+          <input type="text" id="editCantidad" />
+        </div>
+        <div class="field">
+          <label class="fl">Nota</label>
+          <div class="nota-toggle">
+            <div
+              class="nota-opt"
+              id="editNotaConBtn"
+              onclick="seleccionarNotaEdit('Con nota')"
+            >
+              ✔ Con nota
+            </div>
+            <div
+              class="nota-opt"
+              id="editNotaSinBtn"
+              onclick="seleccionarNotaEdit('Sin nota')"
+            >
+              ✕ Sin nota
+            </div>
+          </div>
+        </div>
+        <div class="field">
+          <label class="fl">Observaciones</label>
+          <textarea id="editObservaciones" style="min-height: 100px"></textarea>
+        </div>
+        <button class="btn-save" onclick="guardarEdicion()">
+          Guardar cambios
+        </button>
+      </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+    <a href="index.html" class="nav-link">⬡ &nbsp;Inicio</a>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+      import {
+        getFirestore,
+        collection,
+        addDoc,
+        getDocs,
+        doc,
+        updateDoc,
+        deleteDoc,
+        query,
+        orderBy,
+      } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyBKLgOakBA2_2QqWC-APWeTGH2YRsClOXM",
+        authDomain: "reclamos-clh.firebaseapp.com",
+        projectId: "reclamos-clh",
+        storageBucket: "reclamos-clh.firebasestorage.app",
+        messagingSenderId: "893651222188",
+        appId: "1:893651222188:web:edb9d9963596255633e909",
+      };
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+
+      // ── Sesion ──
+      const sesionRaw = sessionStorage.getItem("clh_user");
+      if (!sesionRaw) {
+        window.location.href = "login.html";
+      }
+      const sesion = sesionRaw ? JSON.parse(sesionRaw) : {};
+
+      const ahora = new Date();
+      const fechaStr = ahora.toLocaleDateString("es-CO", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      });
+      const horaStr = ahora.toLocaleTimeString("es-CO", {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+
+      document.getElementById("regPor").value =
+        sesion.nombre || sesion.username || "—";
+      document.getElementById("regFecha").value = `${fechaStr} ${horaStr}`;
+      document.getElementById("sessionLabel").textContent =
+        sesion.nombre || sesion.username || "—";
+
+      // ── Nota toggle ──
+      let notaSeleccionada = "Con nota";
+      window.seleccionarNota = function (val) {
+        notaSeleccionada = val;
+        document
+          .getElementById("notaConBtn")
+          .classList.toggle("selected", val === "Con nota");
+        document
+          .getElementById("notaSinBtn")
+          .classList.toggle("selected", val === "Sin nota");
+      };
+      let notaEditSeleccionada = "Con nota";
+      window.seleccionarNotaEdit = function (val) {
+        notaEditSeleccionada = val;
+        document
+          .getElementById("editNotaConBtn")
+          .classList.toggle("selected", val === "Con nota");
+        document
+          .getElementById("editNotaSinBtn")
+          .classList.toggle("selected", val === "Sin nota");
+      };
+
+      // ── Tabs ──
+      window.switchTab = function (tab) {
+        document.getElementById("tabRegistrar").style.display = "none";
+        document.getElementById("tabConsultar").style.display = "none";
+        document.getElementById("tab1").classList.remove("active");
+        document.getElementById("tab2").classList.remove("active");
+        if (tab === "registrar") {
+          document.getElementById("tabRegistrar").style.display = "block";
+          document.getElementById("tab1").classList.add("active");
+        } else {
+          document.getElementById("tabConsultar").style.display = "block";
+          document.getElementById("tab2").classList.add("active");
+          cargarNovedades();
+        }
+      };
+
+      // ── Guardar novedad ──
+      window.guardarNovedad = async function () {
+        const reclamo = document.getElementById("reclamo").value.trim();
+        const referencia = document.getElementById("referencia").value.trim();
+        const cantidad = document.getElementById("cantidad").value.trim();
+        const observaciones = document
+          .getElementById("observaciones")
+          .value.trim();
+        if (!reclamo || !referencia || !cantidad) {
+          showToast("Completa los campos obligatorios", "error");
+          return;
+        }
+
+        const btn = document.getElementById("btnGuardar");
+        btn.disabled = true;
+        btn.classList.add("loading");
+        btn.querySelector(".btn-text").textContent = "Guardando...";
+
+        const ts = Date.now();
+        const fechaHoraCompleta = new Date(ts).toLocaleString("es-CO");
+
+        try {
+          await addDoc(collection(db, "novedades"), {
+            reclamo,
+            referencia,
+            cantidad,
+            nota: notaSeleccionada,
+            observaciones,
+            registradoPor: sesion.nombre || sesion.username || "—",
+            registradoPorUsername: sesion.username || "—",
+            rol: sesion.rol || "—",
+            timestamp: ts,
+            fechaRegistro: fechaStr,
+            horaRegistro: horaStr,
+            fechaHoraCompleta,
+          });
+          showToast("✓ Novedad registrada correctamente", "success");
+          document.getElementById("reclamo").value = "";
+          document.getElementById("referencia").value = "";
+          document.getElementById("cantidad").value = "";
+          document.getElementById("observaciones").value = "";
+          seleccionarNota("Con nota");
+          // Actualizar fecha/hora
+          const n = new Date();
+          document.getElementById("regFecha").value = `${n.toLocaleDateString(
+            "es-CO",
+            { day: "2-digit", month: "2-digit", year: "numeric" }
+          )} ${n.toLocaleTimeString("es-CO", {
+            hour: "2-digit",
+            minute: "2-digit",
+          })}`;
+        } catch (err) {
+          showToast("Error: " + err.message, "error");
+        } finally {
+          btn.disabled = false;
+          btn.classList.remove("loading");
+          btn.querySelector(".btn-text").textContent = "Registrar Novedad";
+        }
+      };
+
+      // ── Cargar novedades ──
+      let todasLasNovedades = [];
+
+      async function cargarNovedades() {
+        const el = document.getElementById("listaNovedades");
+        el.innerHTML = `<div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>`;
+        document.getElementById("detalleNovedad").innerHTML = "";
+        document.getElementById("contador").style.display = "none";
+        try {
+          const snap = await getDocs(
+            query(collection(db, "novedades"), orderBy("timestamp", "desc"))
+          );
+          todasLasNovedades = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+
+          // Llenar filtro usuarios
+          const usuarios = [
+            ...new Set(
+              todasLasNovedades
+                .map((n) => n.registradoPorUsername)
+                .filter(Boolean)
+            ),
+          ];
+          const sel = document.getElementById("filterUsuario");
+          sel.innerHTML = `<option value="">Todos los usuarios</option>`;
+          usuarios.forEach((u) => {
+            const o = document.createElement("option");
+            o.value = u;
+            o.textContent = u;
+            sel.appendChild(o);
+          });
+
+          renderLista();
+        } catch (err) {
+          el.innerHTML = `<div class="empty-state"><div class="empty-icon">⚠️</div><p>${err.message}</p></div>`;
+        }
+      }
+
+      function filtrar() {
+        const q = (document.getElementById("searchInput").value || "")
+          .trim()
+          .toLowerCase();
+        const nota = document.getElementById("filterNota").value;
+        const usuario = document.getElementById("filterUsuario").value;
+        return todasLasNovedades.filter((n) => {
+          const mq =
+            !q ||
+            [
+              n.reclamo,
+              n.referencia,
+              n.cantidad,
+              n.observaciones,
+              n.registradoPor,
+              n.nota,
+            ]
+              .map((v) => (v || "").toLowerCase())
+              .some((v) => v.includes(q));
+          const mn = !nota || n.nota === nota;
+          const mu = !usuario || n.registradoPorUsername === usuario;
+          return mq && mn && mu;
+        });
+      }
+
+      function renderLista(datos = filtrar()) {
+        const el = document.getElementById("listaNovedades");
+        const ctEl = document.getElementById("contador");
+        ctEl.style.display = "block";
+        ctEl.textContent = `Novedades: ${datos.length}`;
+        document.getElementById("detalleNovedad").innerHTML = "";
+        if (!datos.length) {
+          el.innerHTML = `<div class="empty-state"><div class="empty-icon">📋</div><p>Sin resultados</p></div>`;
+          return;
+        }
+        el.innerHTML = `<div class="records-list">${datos
+          .map(
+            (n) => `
+          <div class="record-row" onclick="mostrarDetalle('${n.id}')">
+            <div class="record-top">
+              <div class="rr-reclamo">${n.reclamo}</div>
+              <div class="rr-ref">${n.referencia}</div>
+              <div class="rr-cant">${n.cantidad}</div>
+              <span class="nota-badge ${
+                n.nota === "Con nota" ? "nota-con" : "nota-sin"
+              }">${n.nota}</span>
+              <div class="rr-date">${n.fechaRegistro || "—"}</div>
+            </div>
+            <div class="rr-user">👤 ${n.registradoPor || "—"} · ${
+              n.horaRegistro || ""
+            }</div>
+          </div>`
+          )
+          .join("")}</div>`;
+      }
+
+      window.mostrarDetalle = function (id) {
+        const n = todasLasNovedades.find((x) => x.id === id);
+        if (!n) return;
+        document.getElementById("listaNovedades").innerHTML = "";
+        document.getElementById("contador").style.display = "none";
+        document.getElementById("detalleNovedad").innerHTML = `
+          <div class="detail-card">
+            <div class="detail-body">
+              <div class="df full">
+                <span class="df-label">Reclamo</span>
+                <span class="df-value main">${n.reclamo}</span>
+              </div>
+              <div class="df">
+                <span class="df-label">Referencia</span>
+                <span class="df-value">${n.referencia}</span>
+              </div>
+              <div class="df">
+                <span class="df-label">Cantidad</span>
+                <span class="df-value">${n.cantidad}</span>
+              </div>
+              <div class="df">
+                <span class="df-label">Nota</span>
+                <span class="df-value"><span class="nota-badge ${
+                  n.nota === "Con nota" ? "nota-con" : "nota-sin"
+                }">${n.nota}</span></span>
+              </div>
+              <div class="df">
+                <span class="df-label">Fecha de registro</span>
+                <span class="df-value">${
+                  n.fechaHoraCompleta || n.fechaRegistro || "—"
+                }</span>
+              </div>
+              <div class="df full">
+                <span class="df-label">Registrado por</span>
+                <span class="df-value by">👤 ${n.registradoPor || "—"} · ${
+          n.rol || "—"
+        }</span>
+              </div>
+              <div class="df full">
+                <span class="df-label">Observaciones</span>
+                <span class="df-value obs">${n.observaciones || "—"}</span>
+              </div>
+            </div>
+            <div class="detail-actions">
+              <button class="btn-act btn-edit-a" onclick="abrirEditar('${
+                n.id
+              }')">✏ Editar</button>
+              <button class="btn-act btn-pdf-a" onclick="exportarPDFUno('${
+                n.id
+              }')">📄 Exportar PDF</button>
+              <button class="btn-act btn-del-a" onclick="eliminarNovedad('${
+                n.id
+              }')">✕ Eliminar</button>
+            </div>
+          </div>
+          <button onclick="renderLista()" style="margin-top:14px;width:100%;padding:10px;background:transparent;border:1px solid var(--border);color:var(--text-muted);border-radius:var(--radius-sm);font-family:var(--font-mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all 0.2s"
+            onmouseover="this.style.borderColor='var(--border-strong)';this.style.color='var(--accent)'"
+            onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-muted)'">
+            ← Volver a la lista
+          </button>`;
+      };
+
+      // ── Editar ──
+      window.abrirEditar = function (id) {
+        const n = todasLasNovedades.find((x) => x.id === id);
+        if (!n) return;
+        document.getElementById("editId").value = id;
+        document.getElementById("editReclamo").value = n.reclamo || "";
+        document.getElementById("editReferencia").value = n.referencia || "";
+        document.getElementById("editCantidad").value = n.cantidad || "";
+        document.getElementById("editObservaciones").value =
+          n.observaciones || "";
+        notaEditSeleccionada = n.nota || "Con nota";
+        seleccionarNotaEdit(notaEditSeleccionada);
+        document.getElementById("editModal").classList.add("active");
+      };
+      window.cerrarModal = function () {
+        document.getElementById("editModal").classList.remove("active");
+      };
+
+      window.guardarEdicion = async function () {
+        const id = document.getElementById("editId").value;
+        const reclamo = document.getElementById("editReclamo").value.trim();
+        const referencia = document
+          .getElementById("editReferencia")
+          .value.trim();
+        const cantidad = document.getElementById("editCantidad").value.trim();
+        const observaciones = document
+          .getElementById("editObservaciones")
+          .value.trim();
+        if (!reclamo || !referencia || !cantidad) {
+          showToast("Completa los campos", "error");
+          return;
+        }
+        try {
+          await updateDoc(doc(db, "novedades", id), {
+            reclamo,
+            referencia,
+            cantidad,
+            observaciones,
+            nota: notaEditSeleccionada,
+            ultimaEdicion: Date.now(),
+            editadoPor: sesion.nombre || sesion.username || "—",
+            editadoPorUsername: sesion.username || "—",
+          });
+          const idx = todasLasNovedades.findIndex((x) => x.id === id);
+          if (idx >= 0)
+            Object.assign(todasLasNovedades[idx], {
+              reclamo,
+              referencia,
+              cantidad,
+              observaciones,
+              nota: notaEditSeleccionada,
+            });
+          showToast("✓ Novedad actualizada", "success");
+          cerrarModal();
+          mostrarDetalle(id);
+        } catch (err) {
+          showToast("Error: " + err.message, "error");
+        }
+      };
+
+      // ── Eliminar ──
+      window.eliminarNovedad = async function (id) {
+        if (
+          !confirm("¿Eliminar esta novedad? Esta accion no se puede deshacer.")
+        )
+          return;
+        try {
+          await deleteDoc(doc(db, "novedades", id));
+          todasLasNovedades = todasLasNovedades.filter((x) => x.id !== id);
+          showToast("✓ Novedad eliminada", "success");
+          renderLista();
+        } catch (err) {
+          showToast("Error: " + err.message, "error");
+        }
+      };
+
+      // ── PDF: una novedad ──
+      window.exportarPDFUno = function (id) {
+        const n = todasLasNovedades.find((x) => x.id === id);
+        if (!n) return;
+        generarPDF([n], `Informe_Novedad_${n.reclamo}`);
+      };
+
+      // ── PDF: todas (filtradas) ──
+      window.exportarTodosPDF = function () {
+        const datos = filtrar();
+        if (!datos.length) {
+          showToast("No hay novedades para exportar", "error");
+          return;
+        }
+        generarPDF(datos, "Informe_Novedades_CLH");
+      };
+
+      // ── Generador PDF APA 7ma edicion ──
+      function generarPDF(novedades, nombreArchivo) {
+        showToast("⏳ Generando informe PDF...", "info");
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF({
+          orientation: "portrait",
+          unit: "mm",
+          format: "a4",
+        });
+
+        const W = 210,
+          H = 297;
+        const marL = 25,
+          marR = 25,
+          marT = 25,
+          marB = 25;
+        const contentW = W - marL - marR;
+        let y = marT;
+
+        // ── Colores institucionales ──
+        const azul = [10, 61, 98];
+        const azulClaro = [30, 95, 142];
+        const gris = [100, 116, 139];
+        const grisClaro = [220, 228, 240];
+        const negro = [30, 30, 40];
+        const blanco = [255, 255, 255];
+
+        // ── Funciones auxiliares ──
+        function nuevaPagina() {
+          doc.addPage();
+          y = marT;
+          piePagina(doc.internal.getNumberOfPages());
+        }
+        function piePagina(pagNum) {
+          doc.setFillColor(...grisClaro);
+          doc.rect(0, H - 14, W, 14, "F");
+          doc.setFontSize(8);
+          doc.setTextColor(...gris);
+          doc.setFont("helvetica", "italic");
+          doc.text(
+            "Reclamos CLH — Informe de Novedades Operativas",
+            marL,
+            H - 5
+          );
+          doc.text(`Pag. ${pagNum}`, W - marR, H - 5, { align: "right" });
+        }
+        function checkY(needed = 20) {
+          if (y + needed > H - marB - 14) nuevaPagina();
+        }
+        function linea(color = grisClaro, grosor = 0.3) {
+          doc.setDrawColor(...color);
+          doc.setLineWidth(grosor);
+          doc.line(marL, y, W - marR, y);
+          y += 4;
+        }
+        function texto(
+          t,
+          x,
+          fontSize = 10,
+          color = negro,
+          font = "helvetica",
+          style = "normal",
+          align = "left"
+        ) {
+          doc.setFontSize(fontSize);
+          doc.setTextColor(...color);
+          doc.setFont(font, style);
+          doc.text(t, x, y, { align });
+        }
+        function parrafo(t, fontSize = 10, color = negro, indent = 0) {
+          doc.setFontSize(fontSize);
+          doc.setTextColor(...color);
+          doc.setFont("helvetica", "normal");
+          const lines = doc.splitTextToSize(t, contentW - indent);
+          checkY(lines.length * (fontSize * 0.4) + 4);
+          doc.text(lines, marL + indent, y);
+          y += lines.length * (fontSize * 0.45) + 3;
+        }
+
+        // ══════════════════════════════════════════
+        //  PORTADA
+        // ══════════════════════════════════════════
+        // Fondo encabezado
+        doc.setFillColor(...azul);
+        doc.rect(0, 0, W, 52, "F");
+
+        // Linea decorativa
+        doc.setFillColor(...azulClaro);
+        doc.rect(0, 50, W, 4, "F");
+
+        // Logo / empresa
+        doc.setFontSize(10);
+        doc.setTextColor(...blanco);
+        doc.setFont("helvetica", "bold");
+        doc.text("RECLAMOS CLH", marL, 18);
+        doc.setFontSize(8);
+        doc.setFont("helvetica", "normal");
+        doc.setTextColor(180, 210, 240);
+        doc.text("Sistema de Control y Gestion de Novedades", marL, 24);
+
+        // Titulo principal
+        doc.setFontSize(18);
+        doc.setTextColor(...blanco);
+        doc.setFont("helvetica", "bold");
+        doc.text("INFORME DE NOVEDADES", W / 2, 38, { align: "center" });
+        doc.setFontSize(11);
+        doc.setFont("helvetica", "normal");
+        doc.setTextColor(180, 210, 240);
+        doc.text("OPERATIVAS Y DE GESTIoN", W / 2, 45, { align: "center" });
+
+        y = 64;
+
+        // Metadatos APA
+        doc.setFillColor(245, 248, 252);
+        doc.roundedRect(marL, y, contentW, 44, 3, 3, "F");
+        doc.setDrawColor(...grisClaro);
+        doc.setLineWidth(0.5);
+        doc.roundedRect(marL, y, contentW, 44, 3, 3, "S");
+
+        const fechaInforme = new Date().toLocaleDateString("es-CO", {
+          day: "2-digit",
+          month: "long",
+          year: "numeric",
+        });
+        const metaDatos = [
+          [
+            "Preparado por:",
+            sesion.nombre || sesion.username || "Usuario del sistema",
+          ],
+          ["Rol:", sesion.rol || "Operario"],
+          ["Fecha de elaboracion:", fechaInforme],
+          ["Numero de registros:", `${novedades.length} novedad(es)`],
+          ["Clasificacion:", "Informe Tecnico Operativo"],
+        ];
+        let my = y + 7;
+        metaDatos.forEach(([label, val]) => {
+          doc.setFontSize(9);
+          doc.setTextColor(...gris);
+          doc.setFont("helvetica", "bold");
+          doc.text(label, marL + 6, my);
+          doc.setTextColor(...negro);
+          doc.setFont("helvetica", "normal");
+          doc.text(val, marL + 52, my);
+          my += 7;
+        });
+        y += 52;
+
+        // Linea divisoria
+        y += 4;
+        doc.setFillColor(...azulClaro);
+        doc.rect(marL, y, contentW, 1.5, "F");
+        y += 8;
+
+        // ── SECCIoN 1: RESUMEN EJECUTIVO ──
+        doc.setFontSize(12);
+        doc.setTextColor(...azul);
+        doc.setFont("helvetica", "bold");
+        doc.text("1. Resumen Ejecutivo", marL, y);
+        y += 7;
+        doc.setDrawColor(...azulClaro);
+        doc.setLineWidth(1.5);
+        doc.line(marL, y, marL + 40, y);
+        y += 6;
+
+        const resumen =
+          novedades.length === 1
+            ? `El presente informe tecnico documenta la novedad operativa registrada bajo el identificador de reclamo "${
+                novedades[0].reclamo
+              }", correspondiente a la referencia "${
+                novedades[0].referencia
+              }" con una cantidad reportada de ${
+                novedades[0].cantidad
+              } unidades. El registro fue efectuado por ${
+                novedades[0].registradoPor
+              } el ${
+                novedades[0].fechaHoraCompleta || novedades[0].fechaRegistro
+              }.`
+            : `El presente informe tecnico compila ${
+                novedades.length
+              } novedades operativas registradas en el sistema de control de Reclamos CLH. Los registros han sido generados por el personal autorizado del sistema y abarcan distintas referencias y cantidades reportadas. Este documento ha sido preparado por ${
+                sesion.nombre || sesion.username
+              } con fecha ${fechaInforme}.`;
+        parrafo(resumen, 10);
+
+        y += 2;
+        // ── SECCIoN 2: MARCO DE REFERENCIA ──
+        checkY(30);
+        doc.setFontSize(12);
+        doc.setTextColor(...azul);
+        doc.setFont("helvetica", "bold");
+        doc.text("2. Marco de Referencia y Metodologia", marL, y);
+        y += 7;
+        doc.setDrawColor(...azulClaro);
+        doc.setLineWidth(1.5);
+        doc.line(marL, y, marL + 60, y);
+        y += 6;
+        parrafo(
+          "El presente documento se elabora siguiendo los lineamientos de presentacion de informes tecnicos bajo la normativa APA (American Psychological Association, 2020, 7.ª ed.). La informacion contenida en este informe ha sido extraida directamente del sistema de gestion Reclamos CLH, el cual registra de manera automatizada los datos del operario que realizo el ingreso, la fecha y hora exacta del registro, asi como los campos tecnicos de cada novedad.",
+          10
+        );
+        parrafo(
+          "Referencia normativa: American Psychological Association. (2020). Publication manual of the American Psychological Association (7th ed.). https://doi.org/10.1037/0000165-000",
+          9,
+          gris,
+          6
+        );
+        y += 4;
+
+        // ── SECCIoN 3: DETALLE DE NOVEDADES ──
+        checkY(20);
+        doc.setFontSize(12);
+        doc.setTextColor(...azul);
+        doc.setFont("helvetica", "bold");
+        doc.text("3. Detalle de Novedades Registradas", marL, y);
+        y += 7;
+        doc.setDrawColor(...azulClaro);
+        doc.setLineWidth(1.5);
+        doc.line(marL, y, marL + 65, y);
+        y += 8;
+
+        novedades.forEach((n, idx) => {
+          checkY(60);
+
+          // Encabezado de novedad
+          doc.setFillColor(...azul);
+          doc.roundedRect(marL, y, contentW, 10, 2, 2, "F");
+          doc.setFontSize(10);
+          doc.setTextColor(...blanco);
+          doc.setFont("helvetica", "bold");
+          doc.text(
+            `Novedad ${idx + 1} — Reclamo: ${n.reclamo}`,
+            marL + 4,
+            y + 6.5
+          );
+          y += 14;
+
+          // Tabla de campos
+          const campos = [
+            ["Reclamo", n.reclamo],
+            ["Referencia", n.referencia],
+            ["Cantidad", n.cantidad],
+            ["Nota", n.nota],
+            ["Registrado por", n.registradoPor || "—"],
+            ["Rol", n.rol || "—"],
+            [
+              "Fecha de registro",
+              n.fechaHoraCompleta || n.fechaRegistro || "—",
+            ],
+          ];
+
+          campos.forEach(([label, val], ci) => {
+            checkY(8);
+            if (ci % 2 === 0) {
+              doc.setFillColor(245, 248, 252);
+            } else {
+              doc.setFillColor(...blanco);
+            }
+            doc.rect(marL, y - 4, contentW, 8, "F");
+            doc.setFontSize(9);
+            doc.setTextColor(...gris);
+            doc.setFont("helvetica", "bold");
+            doc.text(label + ":", marL + 3, y + 1);
+            doc.setTextColor(...negro);
+            doc.setFont("helvetica", "normal");
+            doc.text(String(val || "—"), marL + 50, y + 1);
+            doc.setDrawColor(...grisClaro);
+            doc.setLineWidth(0.2);
+            doc.line(marL, y + 4, W - marR, y + 4);
+            y += 8;
+          });
+
+          // Observaciones
+          if (n.observaciones) {
+            y += 3;
+            checkY(12);
+            doc.setFontSize(9);
+            doc.setTextColor(...azulClaro);
+            doc.setFont("helvetica", "bold");
+            doc.text("Observaciones:", marL + 3, y);
+            y += 5;
+            doc.setFillColor(248, 250, 253);
+            const obsLines = doc.splitTextToSize(
+              n.observaciones,
+              contentW - 10
+            );
+            const obsH = obsLines.length * 5 + 8;
+            checkY(obsH);
+            doc.rect(marL, y - 2, contentW, obsH, "F");
+            doc.setDrawColor(200, 215, 235);
+            doc.setLineWidth(0.4);
+            doc.rect(marL, y - 2, contentW, obsH, "S");
+            doc.setFontSize(10);
+            doc.setTextColor(...negro);
+            doc.setFont("helvetica", "normal");
+            doc.text(obsLines, marL + 5, y + 4);
+            y += obsH + 4;
+          }
+
+          y += 8;
+        });
+
+        // ── SECCIoN 4: ANaLISIS Y CONCLUSIONES ──
+        checkY(40);
+        doc.setFontSize(12);
+        doc.setTextColor(...azul);
+        doc.setFont("helvetica", "bold");
+        doc.text("4. Analisis y Conclusiones", marL, y);
+        y += 7;
+        doc.setDrawColor(...azulClaro);
+        doc.setLineWidth(1.5);
+        doc.line(marL, y, marL + 50, y);
+        y += 6;
+
+        if (novedades.length === 1) {
+          parrafo(
+            `La novedad de reclamo "${
+              novedades[0].reclamo
+            }" ha sido debidamente documentada en el sistema con todos los campos requeridos. El estado de nota del registro es "${
+              novedades[0].nota
+            }", lo que indica ${
+              novedades[0].nota === "Con nota"
+                ? "que existe documentacion adicional asociada a esta novedad"
+                : "que la novedad no cuenta con documentacion adicional en el momento del registro"
+            }. Se recomienda dar seguimiento al estado del reclamo y actualizar las observaciones en caso de evoluciones posteriores.`,
+            10
+          );
+        } else {
+          const conNota = novedades.filter((n) => n.nota === "Con nota").length;
+          const sinNota = novedades.length - conNota;
+          const usuarios = [...new Set(novedades.map((n) => n.registradoPor))];
+          parrafo(
+            `Del total de ${
+              novedades.length
+            } novedades analizadas, ${conNota} cuentan con nota de soporte y ${sinNota} no tienen nota adjunta. Los registros fueron efectuados por ${
+              usuarios.length
+            } usuario(s): ${usuarios.join(
+              ", "
+            )}. Se recomienda revisar y actualizar las novedades sin nota para garantizar la trazabilidad completa del proceso operativo.`,
+            10
+          );
+        }
+
+        // ── SECCIoN 5: REFERENCIAS APA ──
+        checkY(35);
+        y += 4;
+        doc.setFontSize(12);
+        doc.setTextColor(...azul);
+        doc.setFont("helvetica", "bold");
+        doc.text("5. Referencias", marL, y);
+        y += 7;
+        doc.setDrawColor(...azulClaro);
+        doc.setLineWidth(1.5);
+        doc.line(marL, y, marL + 25, y);
+        y += 6;
+        parrafo(
+          "American Psychological Association. (2020). Publication manual of the American Psychological Association (7th ed.). American Psychological Association. https://doi.org/10.1037/0000165-000",
+          10,
+          negro,
+          10
+        );
+        y += 2;
+        parrafo(
+          `Reclamos CLH. (${new Date().getFullYear()}). Sistema de gestion de novedades operativas [Software]. Desarrollado por Steven Realpe.`,
+          10,
+          negro,
+          10
+        );
+
+        // ── PIE en todas las paginas ──
+        const totalPags = doc.internal.getNumberOfPages();
+        for (let p = 1; p <= totalPags; p++) {
+          doc.setPage(p);
+          piePagina(p);
+        }
+
+        doc.save(`${nombreArchivo}.pdf`);
+        showToast("✓ PDF generado correctamente", "success");
+      }
+
+      // ── Filtros ──
+      document
+        .getElementById("searchInput")
+        .addEventListener("input", () => renderLista());
+      document
+        .getElementById("filterNota")
+        .addEventListener("change", () => renderLista());
+      document
+        .getElementById("filterUsuario")
+        .addEventListener("change", () => renderLista());
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") cerrarModal();
+      });
+
+      function showToast(msg, type) {
+        const t = document.getElementById("toast");
+        t.textContent = msg;
+        t.className = "toast " + type + " show";
+        setTimeout(() => t.classList.remove("show"), 3500);
+      }
+    </script>
+  </body>
+</html> -->
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Novedades · Reclamos CLH</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=DM+Mono:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+      :root {
+        --bg-deep: #0b0f1a;
+        --bg-card: #1a2235;
+        --bg-card2: #141c2e;
+        --bg-input: rgba(11, 15, 26, 0.75);
+        --accent: #00d4ff;
+        --accent-glow: rgba(0, 212, 255, 0.15);
+        --accent-green: #10b981;
+        --accent-red: #ef4444;
+        --accent-amber: #f59e0b;
+        --accent-purple: #a78bfa;
+        --border: rgba(0, 212, 255, 0.12);
+        --border-strong: rgba(0, 212, 255, 0.35);
+        --text-primary: #e8edf5;
+        --text-secondary: #8fa3c0;
+        --text-muted: #4d6080;
+        --font-display: "Rajdhani", sans-serif;
+        --font-mono: "DM Mono", monospace;
+        --radius: 14px;
+        --radius-sm: 8px;
+      }
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: var(--font-display);
+        background-color: var(--bg-deep);
+        background-image: radial-gradient(
+            ellipse 70% 50% at 50% -5%,
+            rgba(0, 212, 255, 0.1),
+            transparent 65%
+          ),
+          repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 39px,
+            rgba(0, 212, 255, 0.022) 39px,
+            rgba(0, 212, 255, 0.022) 40px
+          ),
+          repeating-linear-gradient(
+            90deg,
+            transparent,
+            transparent 39px,
+            rgba(0, 212, 255, 0.022) 39px,
+            rgba(0, 212, 255, 0.022) 40px
+          );
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 48px 24px 100px;
+        color: var(--text-primary);
+      }
+      .page-header {
+        text-align: center;
+        margin-bottom: 30px;
+        animation: slideDown 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+      }
+      .page-header h1 {
+        font-size: 34px;
+        font-weight: 700;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+      }
+      .page-header h1 span {
+        color: var(--accent);
+      }
+      .page-header p {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 2px;
+        color: var(--text-muted);
+        margin-top: 6px;
+        text-transform: uppercase;
+      }
+      .accent-line {
+        width: 50px;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--accent),
+          transparent
+        );
+        margin: 10px auto 0;
+        border-radius: 2px;
+      }
+      .session-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(0, 212, 255, 0.06);
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        padding: 6px 14px;
+        margin-bottom: 22px;
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+      }
+      .session-badge strong {
+        color: var(--accent);
+      }
+      .tabs {
+        display: flex;
+        gap: 6px;
+        margin-bottom: 24px;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        padding: 4px;
+        width: 100%;
+        max-width: 680px;
+      }
+      .tab-btn {
+        flex: 1;
+        padding: 9px 12px;
+        background: none;
+        border: none;
+        border-radius: 6px;
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .tab-btn.active {
+        background: rgba(0, 212, 255, 0.12);
+        color: var(--accent);
+        border: 1px solid var(--border-strong);
+      }
+      .card {
+        width: 100%;
+        max-width: 680px;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 32px 32px 28px;
+        box-shadow: 0 24px 64px rgba(0, 0, 0, 0.65),
+          0 0 40px rgba(0, 212, 255, 0.06);
+        position: relative;
+        animation: slideUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+        animation-delay: 0.05s;
+      }
+      .card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 10%;
+        width: 80%;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--accent),
+          transparent
+        );
+        border-radius: 2px;
+      }
+      .card-title {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 2.5px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        margin-bottom: 22px;
+      }
+      .grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+      }
+      .field {
+        margin-bottom: 14px;
+      }
+      label.fl {
+        display: block;
+        font-family: var(--font-mono);
+        font-size: 9px;
+        letter-spacing: 2.5px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        margin-bottom: 6px;
+      }
+      input[type="text"],
+      input[type="date"],
+      textarea,
+      select {
+        width: 100%;
+        background: var(--bg-input);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        color: var(--text-primary);
+        font-family: var(--font-mono);
+        font-size: 13px;
+        padding: 11px 14px;
+        outline: none;
+        transition: border-color 0.2s, box-shadow 0.2s;
+      }
+      input::placeholder,
+      textarea::placeholder {
+        color: var(--text-muted);
+        font-size: 11px;
+      }
+      input[type="date"] {
+        color-scheme: dark;
+      }
+      input:focus,
+      textarea:focus,
+      select:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1);
+      }
+      select option {
+        background: var(--bg-card);
+      }
+      textarea {
+        resize: vertical;
+        min-height: 80px;
+        line-height: 1.6;
+      }
+      .field-auto input {
+        background: rgba(0, 212, 255, 0.04);
+        border-color: rgba(0, 212, 255, 0.2);
+        color: var(--accent);
+        cursor: default;
+      }
+      .field-auto .fl {
+        color: rgba(0, 212, 255, 0.6);
+      }
+      .nota-toggle {
+        display: flex;
+        gap: 8px;
+      }
+      .nota-opt {
+        flex: 1;
+        padding: 10px;
+        background: rgba(0, 212, 255, 0.02);
+        border: 1px dashed var(--border-strong);
+        border-radius: var(--radius-sm);
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        cursor: pointer;
+        text-align: center;
+        transition: all 0.2s;
+      }
+      .nota-opt.selected {
+        background: rgba(0, 212, 255, 0.1);
+        border-color: var(--accent);
+        color: var(--accent);
+        border-style: solid;
+      }
+      .nota-detalle-wrap {
+        display: none;
+        margin-top: 10px;
+        animation: slideDown 0.2s ease both;
+      }
+      .nota-detalle-wrap.visible {
+        display: block;
+      }
+      .btn-primary {
+        width: 100%;
+        margin-top: 8px;
+        padding: 13px;
+        background: linear-gradient(135deg, #0a3d62, #1e5f8e);
+        color: var(--accent);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius-sm);
+        font-family: var(--font-display);
+        font-size: 15px;
+        font-weight: 700;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        cursor: pointer;
+        box-shadow: 0 0 20px rgba(0, 212, 255, 0.1);
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+      }
+      .btn-primary:hover {
+        background: linear-gradient(135deg, #0d4e7a, #2470a8);
+        box-shadow: 0 0 35px rgba(0, 212, 255, 0.25);
+        transform: translateY(-2px);
+      }
+      .btn-primary:active {
+        transform: translateY(0) scale(0.98);
+      }
+      .btn-primary:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+      }
+      .spinner {
+        width: 14px;
+        height: 14px;
+        border: 2px solid rgba(0, 212, 255, 0.3);
+        border-top-color: var(--accent);
+        border-radius: 50%;
+        animation: spin 0.7s linear infinite;
+        display: none;
+      }
+      .loading .spinner {
+        display: block;
+      }
+      .lista-dinamica {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        margin-bottom: 8px;
+      }
+      .lista-dinamica-row {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+      .lista-dinamica-row input {
+        flex: 1;
+      }
+      .btn-remove-row {
+        background: rgba(239, 68, 68, 0.07);
+        border: 1px solid rgba(239, 68, 68, 0.25);
+        color: var(--accent-red);
+        border-radius: var(--radius-sm);
+        width: 32px;
+        height: 32px;
+        font-size: 13px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        transition: all 0.2s;
+        padding: 0;
+      }
+      .btn-remove-row:hover {
+        background: rgba(239, 68, 68, 0.15);
+      }
+      .btn-add-row {
+        width: 100%;
+        padding: 8px;
+        background: none;
+        border: 1px dashed var(--border-strong);
+        border-radius: var(--radius-sm);
+        color: var(--text-muted);
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: all 0.2s;
+        margin-top: 2px;
+      }
+      .btn-add-row:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+        background: rgba(0, 212, 255, 0.04);
+      }
+      .btn-opcional {
+        width: 100%;
+        padding: 10px;
+        background: none;
+        border: 1px dashed var(--border);
+        border-radius: var(--radius-sm);
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        cursor: pointer;
+        transition: all 0.2s;
+        text-align: center;
+      }
+      .btn-opcional:hover {
+        border-color: var(--border-strong);
+        color: var(--text-secondary);
+      }
+      .panel-opcional {
+        display: none;
+        margin-top: 10px;
+        padding: 14px 16px;
+        border-radius: var(--radius-sm);
+        animation: slideDown 0.2s ease both;
+      }
+      .panel-opcional.visible {
+        display: block;
+      }
+      .panel-subreclamo {
+        background: rgba(0, 212, 255, 0.03);
+        border: 1px solid rgba(0, 212, 255, 0.15);
+      }
+      .panel-refs-extra {
+        background: rgba(167, 139, 250, 0.04);
+        border: 1px solid rgba(167, 139, 250, 0.2);
+      }
+      .panel-refs-extra .btn-add-row {
+        border-color: rgba(167, 139, 250, 0.35);
+        color: var(--accent-purple);
+      }
+      .panel-refs-extra .btn-add-row:hover {
+        border-color: var(--accent-purple);
+        color: var(--accent-purple);
+        background: rgba(167, 139, 250, 0.06);
+      }
+      .panel-refs-extra .lista-dinamica-row input {
+        border-color: rgba(167, 139, 250, 0.2);
+      }
+      .panel-refs-extra .lista-dinamica-row input:focus {
+        border-color: var(--accent-purple);
+        box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.1);
+      }
+      .panel-header {
+        font-family: var(--font-mono);
+        font-size: 9px;
+        letter-spacing: 2.5px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        margin-bottom: 10px;
+      }
+      .panel-header.purple {
+        color: var(--accent-purple);
+      }
+      .section-gap {
+        margin-top: 14px;
+      }
+      .search-bar {
+        position: relative;
+        width: 100%;
+        max-width: 680px;
+        margin-bottom: 14px;
+      }
+      .search-bar input {
+        width: 100%;
+        background: var(--bg-card);
+        border: 1px solid var(--border-strong);
+        border-radius: 999px;
+        color: var(--text-primary);
+        font-family: var(--font-mono);
+        font-size: 14px;
+        padding: 14px 52px 14px 22px;
+        outline: none;
+        box-shadow: 0 0 30px rgba(0, 212, 255, 0.06);
+        transition: border-color 0.2s, box-shadow 0.2s;
+      }
+      .search-bar input:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1);
+      }
+      .search-bar input::placeholder {
+        color: var(--text-muted);
+        font-size: 12px;
+      }
+      .search-icon {
+        position: absolute;
+        right: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--accent);
+        font-size: 18px;
+        pointer-events: none;
+      }
+      .filter-row {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+        width: 100%;
+        max-width: 680px;
+      }
+      select.filter-sel {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        color: var(--text-secondary);
+        font-family: var(--font-mono);
+        font-size: 11px;
+        padding: 9px 12px;
+        outline: none;
+        cursor: pointer;
+        transition: border-color 0.2s;
+        flex-shrink: 0;
+      }
+      select.filter-sel:focus {
+        border-color: var(--accent);
+      }
+      select.filter-sel option {
+        background: var(--bg-card);
+      }
+      #contador {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        margin-bottom: 18px;
+        padding: 5px 14px;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        background: rgba(0, 212, 255, 0.03);
+      }
+      .records-list {
+        width: 100%;
+        max-width: 680px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .record-row {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        padding: 14px 18px;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .record-row:hover {
+        border-color: var(--border-strong);
+        background: rgba(0, 212, 255, 0.03);
+        transform: translateX(3px);
+      }
+      .record-top {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+      .rr-reclamo {
+        font-family: var(--font-mono);
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--accent);
+        flex: 1;
+        min-width: 0;
+      }
+      .rr-ref {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--text-secondary);
+      }
+      .rr-cant {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--accent-amber);
+        padding: 2px 8px;
+        border: 1px solid rgba(245, 158, 11, 0.3);
+        border-radius: 999px;
+      }
+      .nota-badge {
+        font-family: var(--font-mono);
+        font-size: 9px;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        padding: 2px 8px;
+        border-radius: 999px;
+      }
+      .nota-con {
+        background: rgba(16, 185, 129, 0.1);
+        border: 1px solid rgba(16, 185, 129, 0.35);
+        color: var(--accent-green);
+      }
+      .nota-sin {
+        background: rgba(239, 68, 68, 0.08);
+        border: 1px solid rgba(239, 68, 68, 0.25);
+        color: var(--accent-red);
+      }
+      .rr-date {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        color: var(--text-muted);
+        margin-left: auto;
+        white-space: nowrap;
+      }
+      .rr-user {
+        font-family: var(--font-mono);
+        font-size: 9px;
+        color: rgba(0, 212, 255, 0.5);
+        letter-spacing: 1px;
+        margin-top: 4px;
+      }
+      .detail-card {
+        width: 100%;
+        max-width: 680px;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        overflow: hidden;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55),
+          0 0 30px rgba(0, 212, 255, 0.07);
+        animation: slideUp 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+        position: relative;
+      }
+      .detail-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 10%;
+        width: 80%;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--accent),
+          transparent
+        );
+      }
+      .detail-body {
+        padding: 26px 28px 20px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px 24px;
+      }
+      .df {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+      .df.full {
+        grid-column: 1/-1;
+      }
+      .df-label {
+        font-family: var(--font-mono);
+        font-size: 9px;
+        letter-spacing: 2.5px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+      }
+      .df-value {
+        font-family: var(--font-mono);
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--text-primary);
+        word-break: break-word;
+      }
+      .df-value.main {
+        font-size: 18px;
+        color: var(--accent);
+        letter-spacing: 1px;
+      }
+      .df-value.obs {
+        font-size: 12px;
+        color: var(--text-secondary);
+        line-height: 1.7;
+      }
+      .df-value.by {
+        color: rgba(0, 212, 255, 0.7);
+        font-size: 12px;
+      }
+      .detail-actions {
+        display: flex;
+        gap: 8px;
+        padding: 0 28px 24px;
+        flex-wrap: wrap;
+      }
+      .btn-act {
+        flex: 1;
+        min-width: 100px;
+        padding: 10px;
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        border-radius: var(--radius-sm);
+        cursor: pointer;
+        transition: all 0.2s;
+        border: 1px solid;
+      }
+      .btn-edit-a {
+        background: rgba(0, 212, 255, 0.07);
+        color: var(--accent);
+        border-color: var(--border-strong);
+      }
+      .btn-edit-a:hover {
+        background: rgba(0, 212, 255, 0.15);
+      }
+      .btn-del-a {
+        background: rgba(239, 68, 68, 0.07);
+        color: var(--accent-red);
+        border-color: rgba(239, 68, 68, 0.28);
+      }
+      .btn-del-a:hover {
+        background: rgba(239, 68, 68, 0.15);
+      }
+      .btn-pdf-a {
+        background: rgba(245, 158, 11, 0.08);
+        color: var(--accent-amber);
+        border-color: rgba(245, 158, 11, 0.3);
+      }
+      .btn-pdf-a:hover {
+        background: rgba(245, 158, 11, 0.16);
+      }
+      .chips-wrap {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-top: 4px;
+      }
+      .chip {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        padding: 3px 10px;
+        border-radius: 999px;
+      }
+      .chip-accent {
+        background: rgba(0, 212, 255, 0.08);
+        border: 1px solid var(--border-strong);
+        color: var(--accent);
+      }
+      .chip-purple {
+        background: rgba(167, 139, 250, 0.1);
+        border: 1px solid rgba(167, 139, 250, 0.3);
+        color: var(--accent-purple);
+      }
+      .chip-muted {
+        background: rgba(0, 212, 255, 0.04);
+        border: 1px solid var(--border);
+        color: var(--text-secondary);
+      }
+      .modal-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.88);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+        backdrop-filter: blur(6px);
+        padding: 16px;
+      }
+      .modal-overlay.active {
+        display: flex;
+      }
+      .modal {
+        background: var(--bg-card);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius);
+        padding: 32px 30px 28px;
+        width: 100%;
+        max-width: 480px;
+        max-height: 90vh;
+        overflow-y: auto;
+        box-shadow: 0 30px 70px rgba(0, 0, 0, 0.7);
+        position: relative;
+        animation: slideUp 0.3s ease both;
+      }
+      .modal::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 10%;
+        width: 80%;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--accent),
+          transparent
+        );
+        border-radius: 2px;
+      }
+      .modal-title {
+        font-size: 20px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        margin-bottom: 20px;
+      }
+      .modal-close {
+        position: absolute;
+        top: 14px;
+        right: 16px;
+        background: none;
+        border: none;
+        color: var(--text-muted);
+        font-size: 18px;
+        cursor: pointer;
+        padding: 4px;
+        transition: color 0.2s;
+      }
+      .modal-close:hover {
+        color: var(--accent);
+      }
+      .btn-save {
+        width: 100%;
+        margin-top: 8px;
+        padding: 12px;
+        background: linear-gradient(135deg, #0a3d62, #1e5f8e);
+        color: var(--accent);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius-sm);
+        font-family: var(--font-display);
+        font-size: 14px;
+        font-weight: 700;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .btn-save:hover {
+        background: linear-gradient(135deg, #0d4e7a, #2470a8);
+        transform: translateY(-1px);
+      }
+      .empty-state {
+        text-align: center;
+        padding: 48px;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        width: 100%;
+        max-width: 680px;
+      }
+      .empty-state .empty-icon {
+        font-size: 40px;
+        margin-bottom: 14px;
+        opacity: 0.5;
+      }
+      .empty-state p {
+        font-family: var(--font-mono);
+        font-size: 12px;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+      }
+      .skeleton {
+        background: linear-gradient(
+          90deg,
+          rgba(0, 212, 255, 0.04) 25%,
+          rgba(0, 212, 255, 0.08) 50%,
+          rgba(0, 212, 255, 0.04) 75%
+        );
+        background-size: 200% 100%;
+        animation: shimmer 1.2s infinite;
+        border-radius: var(--radius-sm);
+        height: 64px;
+        margin-bottom: 8px;
+        width: 100%;
+        max-width: 680px;
+      }
+      .toast {
+        position: fixed;
+        bottom: 28px;
+        right: 28px;
+        padding: 12px 20px;
+        border-radius: var(--radius-sm);
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        opacity: 0;
+        transform: translateY(12px);
+        transition: all 0.3s ease;
+        pointer-events: none;
+        z-index: 9999;
+        max-width: 320px;
+      }
+      .toast.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .toast.success {
+        background: rgba(16, 185, 129, 0.12);
+        border: 1px solid rgba(16, 185, 129, 0.4);
+        color: var(--accent-green);
+      }
+      .toast.error {
+        background: rgba(239, 68, 68, 0.1);
+        border: 1px solid rgba(239, 68, 68, 0.35);
+        color: var(--accent-red);
+      }
+      .toast.info {
+        background: rgba(245, 158, 11, 0.1);
+        border: 1px solid rgba(245, 158, 11, 0.35);
+        color: var(--accent-amber);
+      }
+      .nav-link {
+        display: inline-block;
+        margin-top: 22px;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        text-decoration: none;
+        padding: 9px 20px;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        transition: all 0.2s ease;
+      }
+      .nav-link:hover {
+        color: var(--accent);
+        border-color: var(--border-strong);
+        background: var(--accent-glow);
+      }
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(24px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes slideDown {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      @keyframes shimmer {
+        0% {
+          background-position: 200% 0;
+        }
+        100% {
+          background-position: -200% 0;
+        }
+      }
+      @media (max-width: 560px) {
+        .grid-2 {
+          grid-template-columns: 1fr;
+        }
+        .detail-body {
+          grid-template-columns: 1fr;
+        }
+        .card {
+          padding: 22px 16px;
+        }
+        .modal {
+          padding: 24px 18px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="page-header">
+      <h1>Registro de <span>Novedades</span></h1>
+      <p>Gestion y seguimiento de novedades operativas</p>
+      <div class="accent-line"></div>
+    </header>
+
+    <div class="session-badge">
+      &nbsp;Sesion: <strong id="sessionLabel">—</strong>
+    </div>
+
+    <div class="tabs">
+      <button class="tab-btn active" id="tab1" onclick="switchTab('registrar')">
+        ➕ Registrar
+      </button>
+      <button class="tab-btn" id="tab2" onclick="switchTab('consultar')">
+        🔍 Consultar
+      </button>
+    </div>
+
+    <!-- ══ TAB REGISTRAR ══ -->
+    <div id="tabRegistrar" style="width: 100%; max-width: 680px">
+      <div class="card">
+        <p class="card-title">Nueva novedad</p>
+
+        <div class="grid-2">
+          <div class="field field-auto">
+            <label class="fl">Registrado por</label>
+            <input type="text" id="regPor" readonly />
+          </div>
+          <div class="field field-auto">
+            <label class="fl">Fecha de registro</label>
+            <input type="text" id="regFecha" readonly />
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="fl"
+            >Reclamo
+            <span style="color: var(--accent-red); font-size: 10px"
+              >*</span
+            ></label
+          >
+          <input
+            type="text"
+            id="reclamo"
+            placeholder="Numero o codigo de reclamo"
+          />
+          <div class="section-gap">
+            <button
+              type="button"
+              class="btn-opcional"
+              onclick="togglePanel('panelSubreclamo','btnSubreclamoTxt','subreclamos')"
+            >
+              <span id="btnSubreclamoTxt"
+                >＋ &nbsp;Agregar subreclamo / reclamo relacionado</span
+              >
+            </button>
+            <div class="panel-opcional panel-subreclamo" id="panelSubreclamo">
+              <div class="panel-header">
+                Subreclamos · reclamos relacionados (opcionales)
+              </div>
+              <div class="lista-dinamica" id="listaSubreclamos"></div>
+              <button
+                type="button"
+                class="btn-add-row"
+                onclick="addRow('listaSubreclamos','Ej: SUB-001 o reclamo relacionado')"
+              >
+                + Agregar
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="fl"
+            >Referencia(s)
+            <span style="color: var(--accent-red); font-size: 10px"
+              >*</span
+            ></label
+          >
+          <div class="lista-dinamica" id="listaReferencias"></div>
+          <button
+            type="button"
+            class="btn-add-row"
+            onclick="addRow('listaReferencias','Referencia del producto')"
+          >
+            + Agregar referencia
+          </button>
+        </div>
+
+        <div class="grid-2">
+          <div class="field">
+            <label class="fl"
+              >Cantidad
+              <span style="color: var(--accent-red); font-size: 10px"
+                >*</span
+              ></label
+            >
+            <input type="text" id="cantidad" placeholder="Ej: 12 unidades" />
+          </div>
+          <div class="field">
+            <label class="fl">Ubicacion</label>
+            <input type="text" id="ubicacion" placeholder="Ej: C240420260001" />
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="fl">Nota</label>
+          <div class="nota-toggle">
+            <div
+              class="nota-opt selected"
+              id="notaConBtn"
+              onclick="seleccionarNota('Con nota')"
+            >
+              ✔ Con nota
+            </div>
+            <div
+              class="nota-opt"
+              id="notaSinBtn"
+              onclick="seleccionarNota('Sin nota')"
+            >
+              ✕ Sin nota
+            </div>
+          </div>
+          <div class="nota-detalle-wrap visible" id="notaDetalleWrap">
+            <input
+              type="text"
+              id="notaDetalle"
+              placeholder="Ej: NRC-22321"
+              style="margin-top: 8px"
+            />
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="fl">Observaciones</label>
+          <textarea
+            id="observaciones"
+            placeholder="Describe la novedad presentada, causas, impacto, acciones tomadas..."
+          ></textarea>
+        </div>
+
+        <div class="section-gap">
+          <button
+            type="button"
+            class="btn-opcional"
+            style="
+              border-color: rgba(167, 139, 250, 0.3);
+              color: var(--accent-purple);
+            "
+            onclick="togglePanel('panelRefsExtras','btnRefsExtrasTxt','refsextras')"
+          >
+            <span id="btnRefsExtrasTxt"
+              >＋ &nbsp;Agregar referencias extras (sin identificacion)</span
+            >
+          </button>
+          <div class="panel-opcional panel-refs-extra" id="panelRefsExtras">
+            <div class="panel-header purple">
+              ⬡ &nbsp;Referencias extras · sin identificacion
+            </div>
+            <div class="lista-dinamica" id="listaRefsExtras"></div>
+            <button
+              type="button"
+              class="btn-add-row"
+              style="
+                border-color: rgba(167, 139, 250, 0.35);
+                color: var(--accent-purple);
+              "
+              onclick="addRowExtra('listaRefsExtras','Referencia sin identificacion...','Descripcion de la referencia...')"
+            >
+              + Agregar referencia extra
+            </button>
+          </div>
+        </div>
+
+        <button
+          class="btn-primary"
+          id="btnGuardar"
+          onclick="guardarNovedad()"
+          style="margin-top: 18px"
+        >
+          <div class="spinner"></div>
+          <span class="btn-text">Registrar Novedad</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ══ TAB CONSULTAR ══ -->
+    <div id="tabConsultar" style="display: none; width: 100%; max-width: 680px">
+      <div class="search-bar">
+        <input
+          type="text"
+          id="searchInput"
+          placeholder="Buscar por reclamo, subreclamo, referencia, usuario, nota, ubicacion..."
+        />
+        <span class="search-icon">⌕</span>
+      </div>
+      <div class="filter-row">
+        <select class="filter-sel" id="filterNota">
+          <option value="">Todas las notas</option>
+          <option value="Con nota">Con nota</option>
+          <option value="Sin nota">Sin nota</option>
+        </select>
+        <select class="filter-sel" id="filterUsuario">
+          <option value="">Todos los usuarios</option>
+        </select>
+        <button
+          onclick="exportarTodosPDF()"
+          style="
+            background: rgba(245, 158, 11, 0.08);
+            color: var(--accent-amber);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: var(--radius-sm);
+            font-family: var(--font-mono);
+            font-size: 10px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            padding: 9px 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+          "
+          onmouseover="this.style.background='rgba(245,158,11,0.16)'"
+          onmouseout="this.style.background='rgba(245,158,11,0.08)'"
+        >
+          Exportar PDF
+        </button>
+        <button
+          onclick="exportarExcel()"
+          style="
+            background: rgba(16, 185, 129, 0.08);
+            color: var(--accent-green);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: var(--radius-sm);
+            font-family: var(--font-mono);
+            font-size: 10px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            padding: 9px 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+          "
+          onmouseover="this.style.background='rgba(16,185,129,0.16)'"
+          onmouseout="this.style.background='rgba(16,185,129,0.08)'"
+        >
+          Exportar Excel
+        </button>
+      </div>
+      <div id="contador" style="display: none">—</div>
+      <div id="listaNovedades"></div>
+      <div id="detalleNovedad"></div>
+    </div>
+
+    <!-- ══ MODAL EDITAR ══ -->
+    <div class="modal-overlay" id="editModal">
+      <div class="modal">
+        <button class="modal-close" onclick="cerrarModal()">✕</button>
+        <p class="modal-title">Editar Novedad</p>
+        <input type="hidden" id="editId" />
+
+        <div class="field">
+          <label class="fl">Reclamo</label>
+          <input type="text" id="editReclamo" />
+          <div class="section-gap">
+            <button
+              type="button"
+              class="btn-opcional"
+              onclick="togglePanel('editPanelSubreclamo','editBtnSubreclamoTxt','subreclamos')"
+            >
+              <span id="editBtnSubreclamoTxt"
+                >＋ &nbsp;Subreclamo / reclamo relacionado</span
+              >
+            </button>
+            <div
+              class="panel-opcional panel-subreclamo"
+              id="editPanelSubreclamo"
+            >
+              <div class="panel-header">
+                Subreclamos · reclamos relacionados
+              </div>
+              <div class="lista-dinamica" id="editListaSubreclamos"></div>
+              <button
+                type="button"
+                class="btn-add-row"
+                onclick="addRow('editListaSubreclamos','Ej: SUB-001 o reclamo relacionado')"
+              >
+                + Agregar
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="fl">Referencia(s)</label>
+          <div class="lista-dinamica" id="editListaReferencias"></div>
+          <button
+            type="button"
+            class="btn-add-row"
+            onclick="addRow('editListaReferencias','Referencia del producto')"
+          >
+            + Agregar referencia
+          </button>
+        </div>
+
+        <div class="grid-2">
+          <div class="field">
+            <label class="fl">Cantidad</label>
+            <input type="text" id="editCantidad" />
+          </div>
+          <div class="field">
+            <label class="fl">Ubicacion</label>
+            <input
+              type="text"
+              id="editUbicacion"
+              placeholder="Ej: A1-23, B4-05"
+            />
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="fl">Nota</label>
+          <div class="nota-toggle">
+            <div
+              class="nota-opt"
+              id="editNotaConBtn"
+              onclick="seleccionarNotaEdit('Con nota')"
+            >
+              ✔ Con nota
+            </div>
+            <div
+              class="nota-opt"
+              id="editNotaSinBtn"
+              onclick="seleccionarNotaEdit('Sin nota')"
+            >
+              ✕ Sin nota
+            </div>
+          </div>
+          <div class="nota-detalle-wrap" id="editNotaDetalleWrap">
+            <input
+              type="text"
+              id="editNotaDetalle"
+              placeholder="Ej: Nota #4521, remision 009..."
+              style="margin-top: 8px"
+            />
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="fl">Observaciones</label>
+          <textarea id="editObservaciones" style="min-height: 100px"></textarea>
+        </div>
+
+        <div class="section-gap">
+          <button
+            type="button"
+            class="btn-opcional"
+            style="
+              border-color: rgba(167, 139, 250, 0.3);
+              color: var(--accent-purple);
+            "
+            onclick="togglePanel('editPanelRefsExtras','editBtnRefsExtrasTxt','refsextras')"
+          >
+            <span id="editBtnRefsExtrasTxt"
+              >＋ &nbsp;Referencias extras (sin identificacion)</span
+            >
+          </button>
+          <div class="panel-opcional panel-refs-extra" id="editPanelRefsExtras">
+            <div class="panel-header purple">
+              ⬡ &nbsp;Referencias extras · sin identificacion
+            </div>
+            <div class="lista-dinamica" id="editListaRefsExtras"></div>
+            <button
+              type="button"
+              class="btn-add-row"
+              style="
+                border-color: rgba(167, 139, 250, 0.35);
+                color: var(--accent-purple);
+              "
+              onclick="addRowExtra('editListaRefsExtras','Referencia sin identificacion...','Descripcion...')"
+            >
+              + Agregar referencia extra
+            </button>
+          </div>
+        </div>
+
+        <button
+          class="btn-save"
+          onclick="guardarEdicion()"
+          style="margin-top: 14px"
+        >
+          Guardar cambios
+        </button>
+      </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+    <a href="index.html" class="nav-link">&nbsp;Inicio</a>
+
+    <!-- ══════════════════════════════════════════════════
+         SCRIPT A — regular (NO module).
+         Define todas las funciones que los onclick="" del
+         HTML necesitan encontrar de inmediato.
+         Las funciones async de Firebase se asignan despues
+         desde el modulo a window.*, y switchTab las llama
+         con un pequeño polling si el modulo aun no cargo.
+    ══════════════════════════════════════════════════ -->
+    <script>
+      /* ─── Estado nota ─── */
+      var notaSeleccionada = "Con nota";
+      var notaEditSeleccionada = "Con nota";
+
+      /* ─── Toast ─── */
+      function showToast(msg, type) {
+        var t = document.getElementById("toast");
+        t.textContent = msg;
+        t.className = "toast " + type + " show";
+        setTimeout(function () {
+          t.classList.remove("show");
+        }, 3500);
+      }
+
+      /* ─── Tabs ─── */
+      function switchTab(tab) {
+        document.getElementById("tabRegistrar").style.display = "none";
+        document.getElementById("tabConsultar").style.display = "none";
+        document.getElementById("tab1").classList.remove("active");
+        document.getElementById("tab2").classList.remove("active");
+        if (tab === "registrar") {
+          document.getElementById("tabRegistrar").style.display = "block";
+          document.getElementById("tab1").classList.add("active");
+        } else {
+          document.getElementById("tabConsultar").style.display = "block";
+          document.getElementById("tab2").classList.add("active");
+          // cargarNovedades viene del modulo; esperar si aun no esta lista
+          if (typeof window._cargarNovedades === "function") {
+            window._cargarNovedades();
+          } else {
+            var t = setInterval(function () {
+              if (typeof window._cargarNovedades === "function") {
+                clearInterval(t);
+                window._cargarNovedades();
+              }
+            }, 40);
+          }
+        }
+      }
+
+      /* ─── Nota toggle (registro) ─── */
+      function seleccionarNota(val) {
+        notaSeleccionada = val;
+        document
+          .getElementById("notaConBtn")
+          .classList.toggle("selected", val === "Con nota");
+        document
+          .getElementById("notaSinBtn")
+          .classList.toggle("selected", val === "Sin nota");
+        var w = document.getElementById("notaDetalleWrap");
+        if (val === "Con nota") {
+          w.classList.add("visible");
+        } else {
+          w.classList.remove("visible");
+          document.getElementById("notaDetalle").value = "";
+        }
+      }
+
+      /* ─── Nota toggle (edicion) ─── */
+      function seleccionarNotaEdit(val) {
+        notaEditSeleccionada = val;
+        document
+          .getElementById("editNotaConBtn")
+          .classList.toggle("selected", val === "Con nota");
+        document
+          .getElementById("editNotaSinBtn")
+          .classList.toggle("selected", val === "Sin nota");
+        var w = document.getElementById("editNotaDetalleWrap");
+        if (val === "Con nota") {
+          w.classList.add("visible");
+        } else {
+          w.classList.remove("visible");
+          document.getElementById("editNotaDetalle").value = "";
+        }
+      }
+
+      /* ─── Panel opcional ─── */
+      function togglePanel(panelId, btnTxtId, tipo) {
+        var panel = document.getElementById(panelId);
+        var btnTxt = document.getElementById(btnTxtId);
+        var visible = panel.classList.toggle("visible");
+        if (tipo === "subreclamos") {
+          if (visible) {
+            btnTxt.textContent = "— Ocultar subreclamos";
+            var lista = panel.querySelector(".lista-dinamica");
+            if (lista && !lista.querySelector(".lista-dinamica-row"))
+              addRow(lista.id, "Ej: SUB-001 o reclamo relacionado");
+          } else {
+            btnTxt.textContent = "＋ Agregar subreclamo / reclamo relacionado";
+          }
+        } else {
+          if (visible) {
+            btnTxt.textContent = "— Ocultar referencias extras";
+            var lista2 = panel.querySelector(".lista-dinamica");
+            if (lista2 && !lista2.querySelector(".lista-dinamica-row"))
+              addRowExtra(
+                lista2.id,
+                "Ubicacion.",
+                "Descripcion de la referencia..."
+              );
+          } else {
+            btnTxt.textContent =
+              "＋ Agregar referencias extras (sin identificacion)";
+          }
+        }
+      }
+
+      /* ─── Listas dinamicas ─── */
+      function addRow(listId, placeholder) {
+        var list = document.getElementById(listId);
+        if (!list) return;
+        var row = document.createElement("div");
+        row.className = "lista-dinamica-row";
+        row.innerHTML =
+          '<input type="text" placeholder="' +
+          placeholder +
+          '" />' +
+          '<button type="button" class="btn-remove-row" onclick="removeRow(this)">✕</button>';
+        list.appendChild(row);
+        row.querySelector("input").focus();
+      }
+
+      function addRowExtra(listId, ph1, ph2) {
+        var list = document.getElementById(listId);
+        if (!list) return;
+        var row = document.createElement("div");
+        row.className = "lista-dinamica-row";
+        row.style.cssText = "flex-direction:column;align-items:stretch;gap:6px";
+        row.innerHTML =
+          '<div style="display:flex;gap:8px;align-items:center">' +
+          '<input type="text" placeholder="' +
+          ph1 +
+          '" style="flex:1" />' +
+          '<button type="button" class="btn-remove-row" onclick="removeRow(this.closest(\'.lista-dinamica-row\'))">✕</button>' +
+          "</div>" +
+          '<input type="text" placeholder="' +
+          ph2 +
+          '" style="border-color:rgba(167,139,250,0.2);font-size:11px;padding:8px 12px" />';
+        list.appendChild(row);
+        row.querySelector("input").focus();
+      }
+
+      function removeRow(el) {
+        var row = el && el.closest ? el.closest(".lista-dinamica-row") : el;
+        if (!row) return;
+        var list = row.parentElement;
+        if (
+          list &&
+          list.id === "listaReferencias" &&
+          list.children.length === 1
+        ) {
+          showToast("Debe haber al menos una referencia", "error");
+          return;
+        }
+        row.remove();
+      }
+
+      /* ─── Helpers de lectura ─── */
+      function getListValues(listId) {
+        return Array.from(
+          document.querySelectorAll("#" + listId + " .lista-dinamica-row input")
+        )
+          .map(function (i) {
+            return i.value.trim();
+          })
+          .filter(function (v) {
+            return v !== "";
+          });
+      }
+
+      function getRefsExtras(listId) {
+        var result = [];
+        document
+          .querySelectorAll("#" + listId + " .lista-dinamica-row")
+          .forEach(function (row) {
+            var inputs = row.querySelectorAll("input");
+            var ref = (inputs[0] && inputs[0].value.trim()) || "";
+            var desc = (inputs[1] && inputs[1].value.trim()) || "";
+            if (ref) result.push({ ref: ref, desc: desc });
+          });
+        return result;
+      }
+
+      /* ─── Helpers de poblado ─── */
+      function poblarLista(listId, valores, placeholder) {
+        valores = valores || [];
+        placeholder = placeholder || "";
+        var list = document.getElementById(listId);
+        if (!list) return;
+        list.innerHTML = "";
+        if (valores.length === 0) valores = [""];
+        valores.forEach(function (v) {
+          var row = document.createElement("div");
+          row.className = "lista-dinamica-row";
+          row.innerHTML =
+            '<input type="text" placeholder="' +
+            placeholder +
+            '" value="' +
+            (v || "") +
+            '" />' +
+            '<button type="button" class="btn-remove-row" onclick="removeRow(this)">✕</button>';
+          list.appendChild(row);
+        });
+      }
+
+      function poblarRefsExtras(listId, panelId, btnTxtId, items) {
+        items = items || [];
+        var list = document.getElementById(listId);
+        if (!list) return;
+        list.innerHTML = "";
+        if (items.length > 0) {
+          document.getElementById(panelId).classList.add("visible");
+          document.getElementById(btnTxtId).textContent =
+            "— Ocultar referencias extras";
+          items.forEach(function (item) {
+            var row = document.createElement("div");
+            row.className = "lista-dinamica-row";
+            row.style.cssText =
+              "flex-direction:column;align-items:stretch;gap:6px";
+            row.innerHTML =
+              '<div style="display:flex;gap:8px;align-items:center">' +
+              '<input type="text" value="' +
+              (item.ref || "") +
+              '" placeholder="ubicacion" style="flex:1" />' +
+              '<button type="button" class="btn-remove-row" onclick="removeRow(this.closest(\'.lista-dinamica-row\'))">✕</button>' +
+              "</div>" +
+              '<input type="text" value="' +
+              (item.desc || "") +
+              '" placeholder="Describe la referencia aqui..." style="border-color:rgba(167,139,250,0.2);font-size:11px;padding:8px 12px" />';
+            list.appendChild(row);
+          });
+        }
+      }
+
+      function poblarSubreclamos(listId, panelId, btnTxtId, valores) {
+        valores = valores || [];
+        var list = document.getElementById(listId);
+        if (!list) return;
+        list.innerHTML = "";
+        if (valores.length > 0) {
+          document.getElementById(panelId).classList.add("visible");
+          document.getElementById(btnTxtId).textContent =
+            "— Ocultar subreclamos";
+          valores.forEach(function (v) {
+            var row = document.createElement("div");
+            row.className = "lista-dinamica-row";
+            row.innerHTML =
+              '<input type="text" value="' +
+              v +
+              '" placeholder="Ej: SUB-001 o reclamo relacionado" />' +
+              '<button type="button" class="btn-remove-row" onclick="removeRow(this)">✕</button>';
+            list.appendChild(row);
+          });
+        }
+      }
+
+      /* ─── Modal ─── */
+      function cerrarModal() {
+        document.getElementById("editModal").classList.remove("active");
+      }
+
+      /* ─── Stubs para funciones async (el modulo las sobreescribe) ─── */
+      function guardarNovedad() {
+        showToast("Cargando...", "info");
+      }
+      function guardarEdicion() {
+        showToast("Cargando...", "info");
+      }
+      function abrirEditar(id) {
+        showToast("Cargando...", "info");
+      }
+      function eliminarNovedad(id) {
+        showToast("Cargando...", "info");
+      }
+      function mostrarDetalle(id) {
+        showToast("Cargando...", "info");
+      }
+      function renderLista(d) {
+        showToast("Cargando...", "info");
+      }
+      function exportarTodosPDF() {
+        showToast("Cargando...", "info");
+      }
+      function exportarExcel() {
+        showToast("Cargando...", "info");
+      }
+
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") cerrarModal();
+      });
+    </script>
+
+    <!-- ══════════════════════════════════════════════════
+         SCRIPT B — module Firebase.
+         Sobreescribe los stubs de arriba con las versiones
+         reales una vez que el modulo carga (siempre antes
+         de cualquier interaccion real del usuario).
+    ══════════════════════════════════════════════════ -->
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+      import {
+        getFirestore,
+        collection,
+        addDoc,
+        getDocs,
+        doc,
+        updateDoc,
+        deleteDoc,
+        query,
+        orderBy,
+      } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyBKLgOakBA2_2QqWC-APWeTGH2YRsClOXM",
+        authDomain: "reclamos-clh.firebaseapp.com",
+        projectId: "reclamos-clh",
+        storageBucket: "reclamos-clh.firebasestorage.app",
+        messagingSenderId: "893651222188",
+        appId: "1:893651222188:web:edb9d9963596255633e909",
+      };
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+
+      /* ─── Sesion ─── */
+      const sesionRaw = sessionStorage.getItem("clh_user");
+      if (!sesionRaw) window.location.href = "login.html";
+      const sesion = sesionRaw ? JSON.parse(sesionRaw) : {};
+
+      const ahora = new Date();
+      const fechaStr = ahora.toLocaleDateString("es-CO", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      });
+      const horaStr = ahora.toLocaleTimeString("es-CO", {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+
+      document.getElementById("regPor").value =
+        sesion.nombre || sesion.username || "—";
+      document.getElementById("regFecha").value = fechaStr + " " + horaStr;
+      document.getElementById("sessionLabel").textContent =
+        sesion.nombre || sesion.username || "—";
+
+      /* Primera fila de referencias */
+      addRow("listaReferencias", "Referencia del producto");
+
+      /* ─── Guardar novedad ─── */
+      window.guardarNovedad = async function () {
+        const reclamo = document.getElementById("reclamo").value.trim();
+        const referencias = getListValues("listaReferencias");
+        const cantidad = document.getElementById("cantidad").value.trim();
+        const observaciones = document
+          .getElementById("observaciones")
+          .value.trim();
+        const ubicacion = document.getElementById("ubicacion").value.trim();
+        const notaDetalle =
+          notaSeleccionada === "Con nota"
+            ? document.getElementById("notaDetalle").value.trim()
+            : "";
+        const subreclamos = getListValues("listaSubreclamos");
+        const refsExtras = getRefsExtras("listaRefsExtras");
+
+        if (!reclamo || referencias.length === 0 || !cantidad) {
+          showToast("Completa los campos obligatorios", "error");
+          return;
+        }
+        const btn = document.getElementById("btnGuardar");
+        btn.disabled = true;
+        btn.classList.add("loading");
+        btn.querySelector(".btn-text").textContent = "Guardando...";
+        const ts = Date.now();
+        const fechaHoraCompleta = new Date(ts).toLocaleString("es-CO");
+        try {
+          await addDoc(collection(db, "novedades"), {
+            reclamo,
+            referencia: referencias[0],
+            referencias,
+            subreclamos,
+            cantidad,
+            nota: notaSeleccionada,
+            notaDetalle,
+            observaciones,
+            ubicacion,
+            refsExtras,
+            registradoPor: sesion.nombre || sesion.username || "—",
+            registradoPorUsername: sesion.username || "—",
+            rol: sesion.rol || "—",
+            timestamp: ts,
+            fechaRegistro: fechaStr,
+            horaRegistro: horaStr,
+            fechaHoraCompleta,
+          });
+          showToast("✓ Novedad registrada correctamente", "success");
+          document.getElementById("reclamo").value = "";
+          document.getElementById("cantidad").value = "";
+          document.getElementById("observaciones").value = "";
+          document.getElementById("ubicacion").value = "";
+          document.getElementById("notaDetalle").value = "";
+          poblarLista("listaReferencias", [""], "Referencia del producto");
+          document.getElementById("listaSubreclamos").innerHTML = "";
+          document.getElementById("listaRefsExtras").innerHTML = "";
+          document
+            .getElementById("panelSubreclamo")
+            .classList.remove("visible");
+          document
+            .getElementById("panelRefsExtras")
+            .classList.remove("visible");
+          document.getElementById("btnSubreclamoTxt").textContent =
+            "＋ Agregar subreclamo / reclamo relacionado";
+          document.getElementById("btnRefsExtrasTxt").textContent =
+            "＋ Agregar referencias extras (sin identificacion)";
+          seleccionarNota("Con nota");
+          const n2 = new Date();
+          document.getElementById("regFecha").value =
+            n2.toLocaleDateString("es-CO", {
+              day: "2-digit",
+              month: "2-digit",
+              year: "numeric",
+            }) +
+            " " +
+            n2.toLocaleTimeString("es-CO", {
+              hour: "2-digit",
+              minute: "2-digit",
+            });
+        } catch (err) {
+          showToast("Error: " + err.message, "error");
+        } finally {
+          btn.disabled = false;
+          btn.classList.remove("loading");
+          btn.querySelector(".btn-text").textContent = "Registrar Novedad";
+        }
+      };
+
+      /* ─── Cargar novedades ─── */
+      let todasLasNovedades = [];
+
+      async function _cargarNovedades() {
+        const el = document.getElementById("listaNovedades");
+        el.innerHTML =
+          '<div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>';
+        document.getElementById("detalleNovedad").innerHTML = "";
+        document.getElementById("contador").style.display = "none";
+        try {
+          const snap = await getDocs(
+            query(collection(db, "novedades"), orderBy("timestamp", "desc"))
+          );
+          todasLasNovedades = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+          const usuarios = [
+            ...new Set(
+              todasLasNovedades
+                .map((n) => n.registradoPorUsername)
+                .filter(Boolean)
+            ),
+          ];
+          const sel = document.getElementById("filterUsuario");
+          sel.innerHTML = '<option value="">Todos los usuarios</option>';
+          usuarios.forEach((u) => {
+            const o = document.createElement("option");
+            o.value = u;
+            o.textContent = u;
+            sel.appendChild(o);
+          });
+          _renderLista();
+        } catch (err) {
+          el.innerHTML =
+            '<div class="empty-state"><div class="empty-icon">⚠️</div><p>' +
+            err.message +
+            "</p></div>";
+        }
+      }
+      window._cargarNovedades = _cargarNovedades;
+
+      /* ─── Filtrar ─── */
+      function _filtrar() {
+        const q = (document.getElementById("searchInput").value || "")
+          .trim()
+          .toLowerCase();
+        const nota = document.getElementById("filterNota").value;
+        const usuario = document.getElementById("filterUsuario").value;
+        return todasLasNovedades.filter((n) => {
+          const subrText = (n.subreclamos || []).join(" ");
+          const refsText = (n.referencias || [n.referencia || ""]).join(" ");
+          const refsExtrasText = (n.refsExtras || [])
+            .map((r) => r.ref + " " + r.desc)
+            .join(" ");
+          const mq =
+            !q ||
+            [
+              n.reclamo,
+              n.referencia,
+              refsText,
+              subrText,
+              n.cantidad,
+              n.observaciones,
+              n.registradoPor,
+              n.nota,
+              n.notaDetalle,
+              n.ubicacion,
+              refsExtrasText,
+            ]
+              .map((v) => (v || "").toLowerCase())
+              .some((v) => v.includes(q));
+          return (
+            mq &&
+            (!nota || n.nota === nota) &&
+            (!usuario || n.registradoPorUsername === usuario)
+          );
+        });
+      }
+
+      /* ─── Render lista ─── */
+      function _renderLista(datos) {
+        if (datos === undefined) datos = _filtrar();
+        const el = document.getElementById("listaNovedades");
+        const ctEl = document.getElementById("contador");
+        ctEl.style.display = "block";
+        ctEl.textContent = "Novedades: " + datos.length;
+        document.getElementById("detalleNovedad").innerHTML = "";
+        if (!datos.length) {
+          el.innerHTML =
+            '<div class="empty-state"><div class="empty-icon">📋</div><p>Sin resultados</p></div>';
+          return;
+        }
+        el.innerHTML =
+          '<div class="records-list">' +
+          datos
+            .map((n) => {
+              const refs = n.referencias || [n.referencia || "—"];
+              const refLabel =
+                refs.length > 1 ? refs[0] + " +" + (refs.length - 1) : refs[0];
+              const subrLabel =
+                n.subreclamos && n.subreclamos.length > 0
+                  ? '<div class="rr-user" style="color:rgba(0,212,255,0.4)">↳ ' +
+                    n.subreclamos.join(" · ") +
+                    "</div>"
+                  : "";
+              return (
+                '<div class="record-row" onclick="mostrarDetalle(\'' +
+                n.id +
+                "')\">" +
+                '<div class="record-top">' +
+                '<div class="rr-reclamo">' +
+                n.reclamo +
+                "</div>" +
+                '<div class="rr-ref">' +
+                refLabel +
+                "</div>" +
+                '<div class="rr-cant">' +
+                n.cantidad +
+                "</div>" +
+                '<span class="nota-badge ' +
+                (n.nota === "Con nota" ? "nota-con" : "nota-sin") +
+                '">' +
+                n.nota +
+                "</span>" +
+                '<div class="rr-date">' +
+                (n.fechaRegistro || "—") +
+                "</div>" +
+                "</div>" +
+                subrLabel +
+                '<div class="rr-user">👤 ' +
+                (n.registradoPor || "—") +
+                " · " +
+                (n.horaRegistro || "") +
+                "</div>" +
+                "</div>"
+              );
+            })
+            .join("") +
+          "</div>";
+      }
+      window.renderLista = _renderLista;
+
+      /* ─── Mostrar detalle ─── */
+      window.mostrarDetalle = function (id) {
+        const n = todasLasNovedades.find((x) => x.id === id);
+        if (!n) return;
+        document.getElementById("listaNovedades").innerHTML = "";
+        document.getElementById("contador").style.display = "none";
+        const refs = n.referencias || [n.referencia || "—"];
+        const refsHTML =
+          refs.length > 1
+            ? '<div class="chips-wrap">' +
+              refs
+                .map((r) => '<span class="chip chip-accent">' + r + "</span>")
+                .join("") +
+              "</div>"
+            : '<span class="df-value">' + refs[0] + "</span>";
+        const subrHTML =
+          n.subreclamos && n.subreclamos.length > 0
+            ? '<div class="df full"><span class="df-label">Subreclamos / relacionados</span><div class="chips-wrap">' +
+              n.subreclamos
+                .map((s) => '<span class="chip chip-muted">' + s + "</span>")
+                .join("") +
+              "</div></div>"
+            : "";
+        const refsExtrasHTML =
+          n.refsExtras && n.refsExtras.length > 0
+            ? '<div class="df full"><span class="df-label" style="color:var(--accent-purple)">⬡ Referencias extras</span>' +
+              '<div style="display:flex;flex-direction:column;gap:6px;margin-top:4px">' +
+              n.refsExtras
+                .map(
+                  (r) =>
+                    '<span style="font-family:var(--font-mono);font-size:12px;color:var(--text-secondary)">' +
+                    '<span class="chip chip-purple" style="margin-right:6px">' +
+                    r.ref +
+                    "</span>" +
+                    (r.desc
+                      ? '<span style="color:var(--text-muted);font-size:11px">' +
+                        r.desc +
+                        "</span>"
+                      : "") +
+                    "</span>"
+                )
+                .join("") +
+              "</div></div>"
+            : "";
+        const notaDetalleHTML = n.notaDetalle
+          ? '<span style="font-family:var(--font-mono);font-size:11px;color:var(--text-secondary);margin-left:8px">' +
+            n.notaDetalle +
+            "</span>"
+          : "";
+        document.getElementById("detalleNovedad").innerHTML =
+          '<div class="detail-card"><div class="detail-body">' +
+          '<div class="df full"><span class="df-label">Reclamo</span><span class="df-value main">' +
+          n.reclamo +
+          "</span></div>" +
+          subrHTML +
+          '<div class="df full"><span class="df-label">Referencia' +
+          (refs.length > 1 ? "s" : "") +
+          "</span>" +
+          refsHTML +
+          "</div>" +
+          '<div class="df"><span class="df-label">Cantidad</span><span class="df-value">' +
+          n.cantidad +
+          "</span></div>" +
+          '<div class="df"><span class="df-label">Nota</span><span class="df-value"><span class="nota-badge ' +
+          (n.nota === "Con nota" ? "nota-con" : "nota-sin") +
+          '">' +
+          n.nota +
+          "</span>" +
+          notaDetalleHTML +
+          "</span></div>" +
+          '<div class="df"><span class="df-label">Ubicacion</span><span class="df-value">' +
+          (n.ubicacion || "—") +
+          "</span></div>" +
+          '<div class="df"><span class="df-label">Fecha de registro</span><span class="df-value">' +
+          (n.fechaHoraCompleta || n.fechaRegistro || "—") +
+          "</span></div>" +
+          '<div class="df full"><span class="df-label">Registrado por</span><span class="df-value by">👤 ' +
+          (n.registradoPor || "—") +
+          " · " +
+          (n.rol || "—") +
+          "</span></div>" +
+          '<div class="df full"><span class="df-label">Observaciones</span><span class="df-value obs">' +
+          (n.observaciones || "—") +
+          "</span></div>" +
+          refsExtrasHTML +
+          "</div>" +
+          '<div class="detail-actions">' +
+          '<button class="btn-act btn-edit-a" onclick="abrirEditar(\'' +
+          n.id +
+          "')\">✏ Editar</button>" +
+          '<button class="btn-act btn-pdf-a" onclick="exportarPDFUno(\'' +
+          n.id +
+          "')\">📄 Exportar PDF</button>" +
+          '<button class="btn-act btn-del-a" onclick="eliminarNovedad(\'' +
+          n.id +
+          "')\">✕ Eliminar</button>" +
+          "</div></div>" +
+          "<button onclick=\"renderLista()\" style=\"margin-top:14px;width:100%;padding:10px;background:transparent;border:1px solid var(--border);color:var(--text-muted);border-radius:var(--radius-sm);font-family:var(--font-mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all 0.2s\" onmouseover=\"this.style.borderColor='var(--border-strong)';this.style.color='var(--accent)'\" onmouseout=\"this.style.borderColor='var(--border)';this.style.color='var(--text-muted)'\">← Volver a la lista</button>";
+      };
+
+      /* ─── Editar ─── */
+      window.abrirEditar = function (id) {
+        const n = todasLasNovedades.find((x) => x.id === id);
+        if (!n) return;
+        document.getElementById("editId").value = id;
+        document.getElementById("editReclamo").value = n.reclamo || "";
+        document.getElementById("editCantidad").value = n.cantidad || "";
+        document.getElementById("editObservaciones").value =
+          n.observaciones || "";
+        document.getElementById("editUbicacion").value = n.ubicacion || "";
+        document.getElementById("editNotaDetalle").value = n.notaDetalle || "";
+        poblarLista(
+          "editListaReferencias",
+          n.referencias || [n.referencia || ""],
+          "Referencia del producto"
+        );
+        poblarSubreclamos(
+          "editListaSubreclamos",
+          "editPanelSubreclamo",
+          "editBtnSubreclamoTxt",
+          n.subreclamos || []
+        );
+        poblarRefsExtras(
+          "editListaRefsExtras",
+          "editPanelRefsExtras",
+          "editBtnRefsExtrasTxt",
+          n.refsExtras || []
+        );
+        notaEditSeleccionada = n.nota || "Con nota";
+        seleccionarNotaEdit(notaEditSeleccionada);
+        document.getElementById("editModal").classList.add("active");
+      };
+
+      window.guardarEdicion = async function () {
+        const id = document.getElementById("editId").value;
+        const reclamo = document.getElementById("editReclamo").value.trim();
+        const referencias = getListValues("editListaReferencias");
+        const cantidad = document.getElementById("editCantidad").value.trim();
+        const observaciones = document
+          .getElementById("editObservaciones")
+          .value.trim();
+        const ubicacion = document.getElementById("editUbicacion").value.trim();
+        const notaDetalle =
+          notaEditSeleccionada === "Con nota"
+            ? document.getElementById("editNotaDetalle").value.trim()
+            : "";
+        const subreclamos = getListValues("editListaSubreclamos");
+        const refsExtras = getRefsExtras("editListaRefsExtras");
+        if (!reclamo || referencias.length === 0 || !cantidad) {
+          showToast("Completa los campos", "error");
+          return;
+        }
+        try {
+          await updateDoc(doc(db, "novedades", id), {
+            reclamo,
+            referencia: referencias[0],
+            referencias,
+            subreclamos,
+            cantidad,
+            observaciones,
+            nota: notaEditSeleccionada,
+            notaDetalle,
+            ubicacion,
+            refsExtras,
+            ultimaEdicion: Date.now(),
+            editadoPor: sesion.nombre || sesion.username || "—",
+            editadoPorUsername: sesion.username || "—",
+          });
+          const idx = todasLasNovedades.findIndex((x) => x.id === id);
+          if (idx >= 0)
+            Object.assign(todasLasNovedades[idx], {
+              reclamo,
+              referencia: referencias[0],
+              referencias,
+              subreclamos,
+              cantidad,
+              observaciones,
+              nota: notaEditSeleccionada,
+              notaDetalle,
+              ubicacion,
+              refsExtras,
+            });
+          showToast("✓ Novedad actualizada", "success");
+          cerrarModal();
+          window.mostrarDetalle(id);
+        } catch (err) {
+          showToast("Error: " + err.message, "error");
+        }
+      };
+
+      /* ─── Eliminar ─── */
+      window.eliminarNovedad = async function (id) {
+        if (
+          !confirm("¿Eliminar esta novedad? Esta accion no se puede deshacer.")
+        )
+          return;
+        try {
+          await deleteDoc(doc(db, "novedades", id));
+          todasLasNovedades = todasLasNovedades.filter((x) => x.id !== id);
+          showToast("✓ Novedad eliminada", "success");
+          _renderLista();
+        } catch (err) {
+          showToast("Error: " + err.message, "error");
+        }
+      };
+
+      /* ─── PDF ─── */
+      window.exportarPDFUno = function (id) {
+        const n = todasLasNovedades.find((x) => x.id === id);
+        if (!n) return;
+        _generarPDF([n], "Informe_Novedad_" + n.reclamo);
+      };
+      window.exportarTodosPDF = function () {
+        const datos = _filtrar();
+        if (!datos.length) {
+          showToast("No hay novedades para exportar", "error");
+          return;
+        }
+        _generarPDF(datos, "Informe_Novedades_CLH");
+      };
+
+      function _generarPDF(novedades, nombreArchivo) {
+        showToast("⏳ Generando informe PDF...", "info");
+        const { jsPDF } = window.jspdf;
+        const dp = new jsPDF({
+          orientation: "portrait",
+          unit: "mm",
+          format: "a4",
+        });
+        const W = 210,
+          H = 297,
+          marL = 25,
+          marR = 25,
+          marT = 25,
+          marB = 25,
+          cW = W - marL - marR;
+        let y = marT;
+        const azul = [10, 61, 98],
+          azulC = [30, 95, 142],
+          gris = [100, 116, 139],
+          grisC = [220, 228, 240],
+          negro = [30, 30, 40],
+          blanco = [255, 255, 255];
+        const pie = (p) => {
+          dp.setFillColor(...grisC);
+          dp.rect(0, H - 14, W, 14, "F");
+          dp.setFontSize(8);
+          dp.setTextColor(...gris);
+          dp.setFont("helvetica", "italic");
+          dp.text(
+            "Reclamos CLH — Informe de Novedades Operativas",
+            marL,
+            H - 5
+          );
+          dp.text("Pag. " + p, W - marR, H - 5, { align: "right" });
+        };
+        const nPag = () => {
+          dp.addPage();
+          y = marT;
+          pie(dp.internal.getNumberOfPages());
+        };
+        const chk = (n = 20) => {
+          if (y + n > H - marB - 14) nPag();
+        };
+        const par = (t, fs = 10, col = negro, ind = 0) => {
+          dp.setFontSize(fs);
+          dp.setTextColor(...col);
+          dp.setFont("helvetica", "normal");
+          const ls = dp.splitTextToSize(t, cW - ind);
+          chk(ls.length * (fs * 0.4) + 4);
+          dp.text(ls, marL + ind, y);
+          y += ls.length * (fs * 0.45) + 3;
+        };
+        // Portada
+        dp.setFillColor(...azul);
+        dp.rect(0, 0, W, 52, "F");
+        dp.setFillColor(...azulC);
+        dp.rect(0, 50, W, 4, "F");
+        dp.setFontSize(10);
+        dp.setTextColor(...blanco);
+        dp.setFont("helvetica", "bold");
+        dp.text("RECLAMOS CLH", marL, 18);
+        dp.setFontSize(8);
+        dp.setFont("helvetica", "normal");
+        dp.setTextColor(180, 210, 240);
+        dp.text("Sistema de Control y Gestion de Novedades", marL, 24);
+        dp.setFontSize(18);
+        dp.setTextColor(...blanco);
+        dp.setFont("helvetica", "bold");
+        dp.text("INFORME DE NOVEDADES", W / 2, 38, { align: "center" });
+        dp.setFontSize(11);
+        dp.setFont("helvetica", "normal");
+        dp.setTextColor(180, 210, 240);
+        dp.text("OPERATIVAS Y DE GESTIoN", W / 2, 45, { align: "center" });
+        y = 64;
+        dp.setFillColor(245, 248, 252);
+        dp.roundedRect(marL, y, cW, 44, 3, 3, "F");
+        dp.setDrawColor(...grisC);
+        dp.setLineWidth(0.5);
+        dp.roundedRect(marL, y, cW, 44, 3, 3, "S");
+        const fI = new Date().toLocaleDateString("es-CO", {
+          day: "2-digit",
+          month: "long",
+          year: "numeric",
+        });
+        [
+          ["Preparado por:", sesion.nombre || sesion.username || "—"],
+          ["Rol:", sesion.rol || "Operario"],
+          ["Fecha:", fI],
+          ["Registros:", novedades.length + " novedad(es)"],
+          ["Clasificacion:", "Informe Tecnico Operativo"],
+        ].forEach(([l, v], i) => {
+          const my = y + 7 + i * 7;
+          dp.setFontSize(9);
+          dp.setTextColor(...gris);
+          dp.setFont("helvetica", "bold");
+          dp.text(l, marL + 6, my);
+          dp.setTextColor(...negro);
+          dp.setFont("helvetica", "normal");
+          dp.text(v, marL + 52, my);
+        });
+        y += 56;
+        dp.setFillColor(...azulC);
+        dp.rect(marL, y, cW, 1.5, "F");
+        y += 8;
+        // Secciones
+        [
+          ["1. Resumen Ejecutivo", 40],
+          ["2. Marco de Referencia", 45],
+          ["3. Detalle de Novedades", 50],
+        ].forEach(([titulo, lw], si) => {
+          if (si > 0) {
+            chk(30);
+          }
+          dp.setFontSize(12);
+          dp.setTextColor(...azul);
+          dp.setFont("helvetica", "bold");
+          dp.text(titulo, marL, y);
+          y += 7;
+          dp.setDrawColor(...azulC);
+          dp.setLineWidth(1.5);
+          dp.line(marL, y, marL + lw, y);
+          y += 6;
+          if (si === 0) {
+            par(
+              novedades.length === 1
+                ? 'Novedad bajo reclamo "' +
+                    novedades[0].reclamo +
+                    '", ref(s): ' +
+                    (
+                      novedades[0].referencias || [novedades[0].referencia]
+                    ).join(", ") +
+                    ", cantidad: " +
+                    novedades[0].cantidad +
+                    (novedades[0].ubicacion
+                      ? ", ubicacion: " + novedades[0].ubicacion
+                      : "") +
+                    ". Registrado por " +
+                    novedades[0].registradoPor +
+                    " el " +
+                    (novedades[0].fechaHoraCompleta ||
+                      novedades[0].fechaRegistro) +
+                    "."
+                : "Informe de " +
+                    novedades.length +
+                    " novedades operativas. Preparado por " +
+                    (sesion.nombre || sesion.username) +
+                    ", fecha " +
+                    fI +
+                    ".",
+              10
+            );
+            y += 2;
+          } else if (si === 1) {
+            par(
+              "Documento elaborado siguiendo normativa APA 7.ª ed. (American Psychological Association, 2020). Informacion extraida del sistema Reclamos CLH.",
+              10
+            );
+            y += 4;
+          } else {
+            y += 2;
+            novedades.forEach((n, idx) => {
+              chk(60);
+              dp.setFillColor(...azul);
+              dp.roundedRect(marL, y, cW, 10, 2, 2, "F");
+              dp.setFontSize(10);
+              dp.setTextColor(...blanco);
+              dp.setFont("helvetica", "bold");
+              dp.text(
+                "Novedad " + (idx + 1) + " — Reclamo: " + n.reclamo,
+                marL + 4,
+                y + 6.5
+              );
+              y += 14;
+              const campos = [
+                ["Reclamo", n.reclamo],
+                ["Subreclamos", (n.subreclamos || []).join(", ") || "—"],
+                [
+                  "Referencia(s)",
+                  (n.referencias || [n.referencia || "—"]).join(", "),
+                ],
+                ["Cantidad", n.cantidad],
+                ["Nota", n.nota + (n.notaDetalle ? " — " + n.notaDetalle : "")],
+                ["Ubicacion", n.ubicacion || "—"],
+                ["Registrado por", n.registradoPor || "—"],
+                ["Fecha", n.fechaHoraCompleta || n.fechaRegistro || "—"],
+              ];
+              campos.forEach(([lb, vl], ci) => {
+                chk(8);
+                ci % 2 === 0
+                  ? dp.setFillColor(245, 248, 252)
+                  : dp.setFillColor(...blanco);
+                dp.rect(marL, y - 4, cW, 8, "F");
+                dp.setFontSize(9);
+                dp.setTextColor(...gris);
+                dp.setFont("helvetica", "bold");
+                dp.text(lb + ":", marL + 3, y + 1);
+                dp.setTextColor(...negro);
+                dp.setFont("helvetica", "normal");
+                dp.text(String(vl || "—"), marL + 50, y + 1);
+                dp.setDrawColor(...grisC);
+                dp.setLineWidth(0.2);
+                dp.line(marL, y + 4, W - marR, y + 4);
+                y += 8;
+              });
+              if (n.observaciones) {
+                y += 3;
+                chk(12);
+                dp.setFontSize(9);
+                dp.setTextColor(...azulC);
+                dp.setFont("helvetica", "bold");
+                dp.text("Observaciones:", marL + 3, y);
+                y += 5;
+                dp.setFillColor(248, 250, 253);
+                const oL = dp.splitTextToSize(n.observaciones, cW - 10),
+                  oH = oL.length * 5 + 8;
+                chk(oH);
+                dp.rect(marL, y - 2, cW, oH, "F");
+                dp.setDrawColor(200, 215, 235);
+                dp.setLineWidth(0.4);
+                dp.rect(marL, y - 2, cW, oH, "S");
+                dp.setFontSize(10);
+                dp.setTextColor(...negro);
+                dp.setFont("helvetica", "normal");
+                dp.text(oL, marL + 5, y + 4);
+                y += oH + 4;
+              }
+              if (n.refsExtras && n.refsExtras.length > 0) {
+                y += 3;
+                chk(12);
+                dp.setFontSize(9);
+                dp.setTextColor(167, 139, 250);
+                dp.setFont("helvetica", "bold");
+                dp.text("Referencias Extras:", marL + 3, y);
+                y += 5;
+                dp.setFillColor(245, 243, 255);
+                const rT = n.refsExtras
+                  .map((r) => r.ref + (r.desc ? " (" + r.desc + ")" : ""))
+                  .join(" · ");
+                const rL = dp.splitTextToSize(rT, cW - 10),
+                  rH = rL.length * 5 + 8;
+                chk(rH);
+                dp.rect(marL, y - 2, cW, rH, "F");
+                dp.setDrawColor(200, 190, 250);
+                dp.setLineWidth(0.4);
+                dp.rect(marL, y - 2, cW, rH, "S");
+                dp.setFontSize(10);
+                dp.setTextColor(...negro);
+                dp.setFont("helvetica", "normal");
+                dp.text(rL, marL + 5, y + 4);
+                y += rH + 4;
+              }
+              y += 8;
+            });
+          }
+        });
+        chk(40);
+        dp.setFontSize(12);
+        dp.setTextColor(...azul);
+        dp.setFont("helvetica", "bold");
+        dp.text("4. Conclusiones", marL, y);
+        y += 7;
+        dp.setDrawColor(...azulC);
+        dp.setLineWidth(1.5);
+        dp.line(marL, y, marL + 30, y);
+        y += 6;
+        const cN = novedades.filter((n) => n.nota === "Con nota").length;
+        par(
+          "De " +
+            novedades.length +
+            " novedades: " +
+            cN +
+            " con nota, " +
+            (novedades.length - cN) +
+            " sin nota. Se recomienda seguimiento y actualizacion de registros sin documentacion.",
+          10
+        );
+        chk(35);
+        y += 4;
+        dp.setFontSize(12);
+        dp.setTextColor(...azul);
+        dp.setFont("helvetica", "bold");
+        dp.text("5. Referencias Bibliograficas", marL, y);
+        y += 7;
+        dp.setDrawColor(...azulC);
+        dp.setLineWidth(1.5);
+        dp.line(marL, y, marL + 55, y);
+        y += 6;
+        par(
+          "American Psychological Association. (2020). Publication manual of the American Psychological Association (7th ed.). https://doi.org/10.1037/0000165-000",
+          10,
+          negro,
+          10
+        );
+        y += 2;
+        par(
+          "Reclamos CLH. (" +
+            new Date().getFullYear() +
+            "). Sistema de gestion de novedades [Software]. Desarrollado por Steven Realpe.",
+          10,
+          negro,
+          10
+        );
+        const tot = dp.internal.getNumberOfPages();
+        for (let p = 1; p <= tot; p++) {
+          dp.setPage(p);
+          pie(p);
+        }
+        dp.save(nombreArchivo + ".pdf");
+        showToast("✓ PDF generado correctamente", "success");
+      }
+
+      /* ─── Excel ─── */
+      window.exportarExcel = function () {
+        const datos = _filtrar();
+        if (!datos.length) {
+          showToast("No hay novedades para exportar", "error");
+          return;
+        }
+        const fI = new Date().toLocaleDateString("es-CO", {
+          day: "2-digit",
+          month: "long",
+          year: "numeric",
+        });
+        const pBy = sesion.nombre || sesion.username || "—";
+        const wsR = XLSX.utils.aoa_to_sheet([
+          ["RECLAMOS CLH — INFORME DE NOVEDADES OPERATIVAS"],
+          [],
+          ["Preparado por:", pBy],
+          ["Rol:", sesion.rol || "—"],
+          ["Fecha:", fI],
+          ["Total:", datos.length],
+          ["Con nota:", datos.filter((n) => n.nota === "Con nota").length],
+          ["Sin nota:", datos.filter((n) => n.nota === "Sin nota").length],
+          [],
+          [
+            "Usuarios:",
+            [
+              ...new Set(datos.map((n) => n.registradoPor).filter(Boolean)),
+            ].join(", "),
+          ],
+        ]);
+        wsR["!cols"] = [{ wch: 30 }, { wch: 55 }];
+        const enc = [
+          "N°",
+          "Reclamo",
+          "Subreclamos",
+          "Referencia(s)",
+          "Cantidad",
+          "Nota",
+          "Detalle nota",
+          "Ubicacion",
+          "Observaciones",
+          "Refs extras",
+          "Registrado por",
+          "Usuario",
+          "Rol",
+          "Fecha",
+          "Hora",
+        ];
+        const fil = datos.map((n, i) => [
+          i + 1,
+          n.reclamo || "—",
+          (n.subreclamos || []).join(", ") || "—",
+          (n.referencias || [n.referencia || "—"]).join(", "),
+          n.cantidad || "—",
+          n.nota || "—",
+          n.notaDetalle || "—",
+          n.ubicacion || "—",
+          n.observaciones || "—",
+          (n.refsExtras || [])
+            .map((r) => r.ref + (r.desc ? " (" + r.desc + ")" : ""))
+            .join(", ") || "—",
+          n.registradoPor || "—",
+          n.registradoPorUsername || "—",
+          n.rol || "—",
+          n.fechaRegistro || "—",
+          n.horaRegistro || "—",
+        ]);
+        const wsD = XLSX.utils.aoa_to_sheet([enc, ...fil]);
+        wsD["!cols"] = [
+          { wch: 4 },
+          { wch: 18 },
+          { wch: 22 },
+          { wch: 28 },
+          { wch: 12 },
+          { wch: 10 },
+          { wch: 20 },
+          { wch: 18 },
+          { wch: 45 },
+          { wch: 35 },
+          { wch: 20 },
+          { wch: 16 },
+          { wch: 12 },
+          { wch: 14 },
+          { wch: 10 },
+        ];
+        const cN2 = datos.filter((n) => n.nota === "Con nota").length;
+        const usU = [
+          ...new Set(datos.map((n) => n.registradoPor).filter(Boolean)),
+        ];
+        const wsS = XLSX.utils.aoa_to_sheet([
+          ["ESTADiSTICAS"],
+          [],
+          ["Indicador", "Valor"],
+          ["Total novedades", datos.length],
+          ["Con nota", cN2],
+          ["Sin nota", datos.length - cN2],
+          [
+            "% Con nota",
+            cN2 > 0 ? ((cN2 / datos.length) * 100).toFixed(1) + "%" : "0.0%",
+          ],
+          [],
+          ["USUARIOS"],
+          ["Usuario", "Registros"],
+          ...usU.map((u) => [
+            u,
+            datos.filter((n) => n.registradoPor === u).length,
+          ]),
+        ]);
+        wsS["!cols"] = [{ wch: 35 }, { wch: 20 }];
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, wsR, "Resumen Ejecutivo");
+        XLSX.utils.book_append_sheet(wb, wsD, "Novedades");
+        XLSX.utils.book_append_sheet(wb, wsS, "Estadisticas");
+        XLSX.writeFile(
+          wb,
+          "Informe_Novedades_CLH_" +
+            new Date().toISOString().slice(0, 10) +
+            ".xlsx"
+        );
+        showToast("✓ Excel generado correctamente", "success");
+      };
+
+      /* ─── Listeners ─── */
+      document
+        .getElementById("searchInput")
+        .addEventListener("input", () => _renderLista());
+      document
+        .getElementById("filterNota")
+        .addEventListener("change", () => _renderLista());
+      document
+        .getElementById("filterUsuario")
+        .addEventListener("change", () => _renderLista());
+    </script>
+  </body>
+</html>

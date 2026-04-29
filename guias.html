@@ -1,0 +1,2387 @@
+<!--<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Registro de Guías</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=DM+Mono:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg-deep: #0b0f1a;
+        --bg-card: #1a2235;
+        --bg-input: rgba(11, 15, 26, 0.75);
+        --accent: #00d4ff;
+        --accent-glow: rgba(0, 212, 255, 0.15);
+        --accent-green: #10b981;
+        --accent-red: #ef4444;
+        --accent-amber: #f59e0b;
+        --border: rgba(0, 212, 255, 0.12);
+        --border-strong: rgba(0, 212, 255, 0.35);
+        --text-primary: #e8edf5;
+        --text-secondary: #8fa3c0;
+        --text-muted: #4d6080;
+        --font-display: "Rajdhani", sans-serif;
+        --font-mono: "DM Mono", monospace;
+        --radius: 14px;
+        --radius-sm: 8px;
+      }
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: var(--font-display);
+        background-color: var(--bg-deep);
+        background-image: radial-gradient(
+            ellipse 70% 50% at 50% -5%,
+            rgba(0, 212, 255, 0.1),
+            transparent 65%
+          ),
+          repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 39px,
+            rgba(0, 212, 255, 0.022) 39px,
+            rgba(0, 212, 255, 0.022) 40px
+          ),
+          repeating-linear-gradient(
+            90deg,
+            transparent,
+            transparent 39px,
+            rgba(0, 212, 255, 0.022) 39px,
+            rgba(0, 212, 255, 0.022) 40px
+          );
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 48px 24px 64px;
+        color: var(--text-primary);
+      }
+      .page-header {
+        text-align: center;
+        margin-bottom: 36px;
+        animation: slideDown 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+      }
+      .page-header h1 {
+        font-size: 34px;
+        font-weight: 700;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+      }
+      .page-header h1 span {
+        color: var(--accent);
+      }
+      .page-header p {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 2px;
+        color: var(--text-muted);
+        margin-top: 6px;
+        text-transform: uppercase;
+      }
+      .accent-line {
+        width: 50px;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--accent),
+          transparent
+        );
+        margin: 12px auto 0;
+        border-radius: 2px;
+      }
+      .card {
+        width: 100%;
+        max-width: 520px;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 36px 36px 32px;
+        box-shadow: 0 24px 64px rgba(0, 0, 0, 0.65), 0 0 0 1px var(--border),
+          0 0 40px rgba(0, 212, 255, 0.08);
+        position: relative;
+        animation: slideUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+        animation-delay: 0.1s;
+      }
+      .card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 10%;
+        width: 80%;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--accent),
+          transparent
+        );
+        border-radius: 2px;
+      }
+      .image-choice-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-bottom: 24px;
+      }
+      .img-choice-btn {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 7px;
+        padding: 18px 12px;
+        background: rgba(0, 212, 255, 0.02);
+        border: 1px dashed var(--border-strong);
+        border-radius: var(--radius-sm);
+        color: var(--text-muted);
+        cursor: pointer;
+        font-family: var(--font-display);
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        transition: all 0.22s ease;
+      }
+      .img-choice-btn span.ico {
+        font-size: 26px;
+        line-height: 1;
+      }
+      .img-choice-btn span.sub {
+        font-family: var(--font-mono);
+        font-size: 9px;
+        letter-spacing: 1.5px;
+        color: var(--text-muted);
+        opacity: 0.7;
+      }
+      .img-choice-btn:hover {
+        border-color: var(--accent);
+        background: var(--accent-glow);
+        color: var(--accent);
+        box-shadow: 0 0 16px rgba(0, 212, 255, 0.1);
+      }
+      .img-choice-btn:hover span.sub {
+        color: var(--accent);
+        opacity: 0.6;
+      }
+      .cam-modal {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.9);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 18px;
+        backdrop-filter: blur(6px);
+      }
+      .cam-modal.active {
+        display: flex;
+      }
+      .cam-box {
+        border: 2px solid var(--border-strong);
+        border-radius: var(--radius);
+        overflow: hidden;
+        box-shadow: 0 0 40px rgba(0, 212, 255, 0.2);
+        position: relative;
+        max-width: 90vw;
+      }
+      #camVideo {
+        display: block;
+        width: 100%;
+        max-width: 500px;
+        height: auto;
+        max-height: 65vh;
+        background: #000;
+      }
+      .cam-controls {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 14px 16px;
+        background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+      }
+      .cam-btn {
+        font-family: var(--font-display);
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        border: none;
+        border-radius: var(--radius-sm);
+        padding: 10px 20px;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .cam-btn-snap {
+        background: var(--accent);
+        color: #0b0f1a;
+        box-shadow: 0 0 18px rgba(0, 212, 255, 0.35);
+      }
+      .cam-btn-snap:hover {
+        box-shadow: 0 0 28px rgba(0, 212, 255, 0.55);
+        transform: scale(1.04);
+      }
+      .cam-btn-cancel {
+        background: rgba(255, 255, 255, 0.08);
+        color: var(--text-secondary);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+      }
+      .cam-btn-cancel:hover {
+        background: rgba(255, 255, 255, 0.14);
+      }
+      .cam-label {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 2.5px;
+        text-transform: uppercase;
+        color: var(--accent);
+        opacity: 0.75;
+      }
+      #camCanvas {
+        display: none;
+      }
+      #imagePreview {
+        display: none;
+        margin-bottom: 20px;
+        border-radius: var(--radius-sm);
+        overflow: hidden;
+        border: 1px solid var(--border-strong);
+        max-height: 180px;
+      }
+      #imagePreview img {
+        width: 100%;
+        max-height: 180px;
+        object-fit: cover;
+        display: block;
+      }
+      .preview-remove {
+        display: block;
+        text-align: center;
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        color: var(--accent-red);
+        cursor: pointer;
+        padding: 6px;
+        background: rgba(239, 68, 68, 0.06);
+        border-top: 1px solid rgba(239, 68, 68, 0.2);
+        transition: background 0.2s;
+      }
+      .preview-remove:hover {
+        background: rgba(239, 68, 68, 0.12);
+      }
+      .field {
+        margin-bottom: 16px;
+      }
+      label.field-label {
+        display: block;
+        font-family: var(--font-mono);
+        font-size: 10px;
+        font-weight: 500;
+        letter-spacing: 2.5px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        margin-bottom: 6px;
+      }
+      input[type="text"],
+      input[type="date"],
+      textarea {
+        width: 100%;
+        background: var(--bg-input);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        color: var(--text-primary);
+        font-family: var(--font-mono);
+        font-size: 13px;
+        padding: 11px 14px;
+        outline: none;
+        transition: border-color 0.2s, box-shadow 0.2s;
+      }
+      input[type="text"]::placeholder,
+      textarea::placeholder {
+        color: var(--text-muted);
+        font-size: 12px;
+      }
+      input[type="date"] {
+        color-scheme: dark;
+      }
+      input:focus,
+      textarea:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1);
+      }
+      textarea {
+        resize: vertical;
+        min-height: 80px;
+        line-height: 1.6;
+      }
+      .btn-primary {
+        width: 100%;
+        margin-top: 10px;
+        padding: 14px;
+        background: linear-gradient(135deg, #0a3d62, #1e5f8e);
+        color: var(--accent);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius-sm);
+        font-family: var(--font-display);
+        font-size: 15px;
+        font-weight: 700;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        cursor: pointer;
+        box-shadow: 0 0 20px rgba(0, 212, 255, 0.1);
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+      }
+      .btn-primary:hover {
+        background: linear-gradient(135deg, #0d4e7a, #2470a8);
+        box-shadow: 0 0 35px rgba(0, 212, 255, 0.25);
+        transform: translateY(-2px);
+      }
+      .btn-primary:active {
+        transform: translateY(0) scale(0.98);
+      }
+      .btn-primary:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+      }
+      .spinner {
+        width: 14px;
+        height: 14px;
+        border: 2px solid rgba(0, 212, 255, 0.3);
+        border-top-color: var(--accent);
+        border-radius: 50%;
+        animation: spin 0.7s linear infinite;
+        display: none;
+      }
+      .loading .spinner {
+        display: block;
+      }
+      .toast {
+        position: fixed;
+        bottom: 28px;
+        right: 28px;
+        padding: 14px 22px;
+        border-radius: var(--radius-sm);
+        font-family: var(--font-mono);
+        font-size: 12px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        opacity: 0;
+        transform: translateY(16px);
+        transition: all 0.3s ease;
+        pointer-events: none;
+        z-index: 999;
+        max-width: 320px;
+      }
+      .toast.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .toast.success {
+        background: rgba(16, 185, 129, 0.12);
+        border: 1px solid rgba(16, 185, 129, 0.4);
+        color: var(--accent-green);
+        box-shadow: 0 0 20px rgba(16, 185, 129, 0.15);
+      }
+      .toast.error {
+        background: rgba(239, 68, 68, 0.1);
+        border: 1px solid rgba(239, 68, 68, 0.35);
+        color: var(--accent-red);
+      }
+      .nav-link {
+        display: inline-block;
+        margin-top: 22px;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        text-decoration: none;
+        padding: 9px 20px;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        transition: all 0.2s ease;
+      }
+      .nav-link:hover {
+        color: var(--accent);
+        border-color: var(--border-strong);
+        background: var(--accent-glow);
+      }
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(24px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes slideDown {
+        from {
+          opacity: 0;
+          transform: translateY(-16px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      @media (max-width: 560px) {
+        .card {
+          padding: 28px 18px 24px;
+        }
+        .page-header h1 {
+          font-size: 26px;
+          letter-spacing: 2px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="page-header">
+      <h1>Registro de <span>Guías</span></h1>
+      <p>Ingresa los datos del paquete recibido</p>
+      <div class="accent-line"></div>
+    </header>
+
+    <div class="card">
+      <div class="image-choice-row" id="imageChoiceRow">
+        <button
+          type="button"
+          class="img-choice-btn"
+          onclick="document.getElementById('imagenInput').click()"
+        >
+          <span class="ico">📁</span>
+          Subir imagen
+          <span class="sub">Desde galería</span>
+        </button>
+        <button type="button" class="img-choice-btn" onclick="abrirCamara()">
+          <span class="ico">📷</span>
+          Tomar foto
+          <span class="sub">Usar cámara</span>
+        </button>
+      </div>
+      <input
+        type="file"
+        id="imagenInput"
+        accept="image/*"
+        style="display: none"
+      />
+      <input
+        type="file"
+        id="imagenInputCapture"
+        accept="image/*"
+        capture="environment"
+        style="display: none"
+      />
+
+      <div id="imagePreview">
+        <img id="previewImg" src="" alt="Preview" />
+        <span class="preview-remove" onclick="removeImage()"
+          >✕ Quitar imagen</span
+        >
+      </div>
+
+      <div class="field">
+        <label class="field-label">Número de Guía</label>
+        <input type="text" id="guia" placeholder="Ej: 1234567890" />
+      </div>
+      <div class="field">
+        <label class="field-label">Fecha</label>
+        <input type="date" id="fecha" />
+      </div>
+      <div class="field">
+        <label class="field-label">Recibido Por</label>
+        <input
+          type="text"
+          id="recibidoPor"
+          placeholder="Nombre de quien recibe"
+        />
+      </div>
+      <div class="field">
+        <label class="field-label">Nota</label>
+        <textarea
+          id="nota"
+          placeholder="Observaciones, estado del paquete..."
+        ></textarea>
+      </div>
+
+      <button class="btn-primary" id="btnGuardar" onclick="guardarGuia()">
+        <div class="spinner"></div>
+        <span class="btn-text">Guardar Registro</span>
+      </button>
+    </div>
+
+    <a href="buscar_guia.html" class="nav-link">⬡ &nbsp;Ir al buscador</a>
+    <a href="index.html" class="nav-link">⬡ &nbsp;Inicio</a>
+
+    <div class="toast" id="toast"></div>
+
+    <div class="cam-modal" id="camModal">
+      <div class="cam-label">📷 &nbsp;Apunta al paquete y captura</div>
+      <div class="cam-box">
+        <video id="camVideo" autoplay playsinline></video>
+        <div class="cam-controls">
+          <button class="cam-btn cam-btn-cancel" onclick="cerrarCamara()">
+            Cancelar
+          </button>
+          <button class="cam-btn cam-btn-snap" onclick="capturarFoto()">
+            📸 &nbsp;Capturar
+          </button>
+        </div>
+      </div>
+      <canvas id="camCanvas"></canvas>
+    </div>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+      import {
+        getFirestore,
+        doc,
+        setDoc,
+      } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+      import {
+        getStorage,
+        ref,
+        uploadString,
+        getDownloadURL,
+      } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyBKLgOakBA2_2QqWC-APWeTGH2YRsClOXM",
+        authDomain: "reclamos-clh.firebaseapp.com",
+        projectId: "reclamos-clh",
+        storageBucket: "reclamos-clh.firebasestorage.app",
+        messagingSenderId: "893651222188",
+        appId: "1:893651222188:web:edb9d9963596255633e909",
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+      const storage = getStorage(app);
+
+      document.getElementById("fecha").valueAsDate = new Date();
+
+      let imagenBase64 = null;
+      let camStream = null;
+
+      // ── Comprimir imagen ──
+      function comprimirImagen(base64, callback) {
+        const img = new Image();
+        img.onload = function () {
+          const canvas = document.createElement("canvas");
+          const MAX = 800;
+          let w = img.width,
+            h = img.height;
+          if (w > MAX || h > MAX) {
+            if (w > h) {
+              h = Math.round((h * MAX) / w);
+              w = MAX;
+            } else {
+              w = Math.round((w * MAX) / h);
+              h = MAX;
+            }
+          }
+          canvas.width = w;
+          canvas.height = h;
+          canvas.getContext("2d").drawImage(img, 0, 0, w, h);
+          callback(canvas.toDataURL("image/jpeg", 0.6));
+        };
+        img.src = base64;
+      }
+
+      function mostrarPreview(base64) {
+        comprimirImagen(base64, function (c) {
+          imagenBase64 = c;
+          document.getElementById("previewImg").src = c;
+          document.getElementById("imagePreview").style.display = "block";
+          document.getElementById("imageChoiceRow").style.display = "none";
+        });
+      }
+
+      document
+        .getElementById("imagenInput")
+        .addEventListener("change", function (e) {
+          const file = e.target.files[0];
+          if (!file) return;
+          const reader = new FileReader();
+          reader.onload = (ev) => mostrarPreview(ev.target.result);
+          reader.readAsDataURL(file);
+          this.value = "";
+        });
+
+      document
+        .getElementById("imagenInputCapture")
+        .addEventListener("change", function (e) {
+          const file = e.target.files[0];
+          if (!file) return;
+          const reader = new FileReader();
+          reader.onload = (ev) => mostrarPreview(ev.target.result);
+          reader.readAsDataURL(file);
+          this.value = "";
+        });
+
+      window.removeImage = function () {
+        imagenBase64 = null;
+        document.getElementById("imagenInput").value = "";
+        document.getElementById("imagePreview").style.display = "none";
+        document.getElementById("imageChoiceRow").style.display = "grid";
+      };
+
+      // ── Cámara ──
+      window.abrirCamara = async function () {
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+          try {
+            camStream = await navigator.mediaDevices.getUserMedia({
+              video: { facingMode: "environment" },
+            });
+            document.getElementById("camVideo").srcObject = camStream;
+            document.getElementById("camModal").classList.add("active");
+            return;
+          } catch (err) {}
+        }
+        document.getElementById("imagenInputCapture").click();
+      };
+
+      window.cerrarCamara = function () {
+        if (camStream) {
+          camStream.getTracks().forEach((t) => t.stop());
+          camStream = null;
+        }
+        document.getElementById("camVideo").srcObject = null;
+        document.getElementById("camModal").classList.remove("active");
+      };
+
+      window.capturarFoto = function () {
+        const video = document.getElementById("camVideo");
+        const canvas = document.getElementById("camCanvas");
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        canvas.getContext("2d").drawImage(video, 0, 0);
+        mostrarPreview(canvas.toDataURL("image/jpeg", 0.88));
+        window.cerrarCamara();
+      };
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") window.cerrarCamara();
+      });
+
+      // ── Guardar en Firebase ──
+      window.guardarGuia = async function () {
+        const guia = document.getElementById("guia").value.trim();
+        const fecha = document.getElementById("fecha").value;
+        const recibidoPor = document.getElementById("recibidoPor").value.trim();
+        const nota = document.getElementById("nota").value.trim();
+
+        if (!guia || !fecha || !recibidoPor) {
+          showToast("Completa los campos obligatorios", "error");
+          return;
+        }
+
+        const btn = document.getElementById("btnGuardar");
+        btn.disabled = true;
+        btn.classList.add("loading");
+        btn.querySelector(".btn-text").textContent = "Guardando...";
+
+        try {
+          let imagenURL = null;
+
+          if (imagenBase64) {
+            const storageRef = ref(storage, `guias/${guia}_${Date.now()}.jpg`);
+            await uploadString(storageRef, imagenBase64, "data_url");
+            imagenURL = await getDownloadURL(storageRef);
+          }
+
+          await setDoc(doc(db, "guias", guia), {
+            guia,
+            fecha,
+            recibidoPor,
+            nota,
+            imagenURL,
+            timestamp: Date.now(),
+          });
+
+          showToast("✓ Registro guardado en la nube", "success");
+
+          setTimeout(() => {
+            document.getElementById("guia").value = "";
+            document.getElementById("recibidoPor").value = "";
+            document.getElementById("nota").value = "";
+            document.getElementById("fecha").valueAsDate = new Date();
+            window.removeImage();
+          }, 800);
+        } catch (err) {
+          console.error(err);
+          showToast("✕ Error: " + err.message, "error");
+        } finally {
+          btn.disabled = false;
+          btn.classList.remove("loading");
+          btn.querySelector(".btn-text").textContent = "Guardar Registro";
+        }
+      };
+
+      function showToast(msg, type) {
+        const t = document.getElementById("toast");
+        t.textContent = msg;
+        t.className = "toast " + type;
+        t.classList.add("show");
+        setTimeout(() => t.classList.remove("show"), 3500);
+      }
+    </script>
+  </body>
+</html>
+-->
+<!--<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Registro de Guías</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=DM+Mono:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg-deep: #0b0f1a;
+        --bg-card: #1a2235;
+        --bg-input: rgba(11, 15, 26, 0.75);
+        --accent: #00d4ff;
+        --accent-glow: rgba(0, 212, 255, 0.15);
+        --accent-green: #10b981;
+        --accent-red: #ef4444;
+        --accent-amber: #f59e0b;
+        --border: rgba(0, 212, 255, 0.12);
+        --border-strong: rgba(0, 212, 255, 0.35);
+        --text-primary: #e8edf5;
+        --text-secondary: #8fa3c0;
+        --text-muted: #4d6080;
+        --font-display: "Rajdhani", sans-serif;
+        --font-mono: "DM Mono", monospace;
+        --radius: 14px;
+        --radius-sm: 8px;
+      }
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: var(--font-display);
+        background-color: var(--bg-deep);
+        background-image: radial-gradient(
+            ellipse 70% 50% at 50% -5%,
+            rgba(0, 212, 255, 0.1),
+            transparent 65%
+          ),
+          repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 39px,
+            rgba(0, 212, 255, 0.022) 39px,
+            rgba(0, 212, 255, 0.022) 40px
+          ),
+          repeating-linear-gradient(
+            90deg,
+            transparent,
+            transparent 39px,
+            rgba(0, 212, 255, 0.022) 39px,
+            rgba(0, 212, 255, 0.022) 40px
+          );
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 48px 24px 64px;
+        color: var(--text-primary);
+      }
+      .page-header {
+        text-align: center;
+        margin-bottom: 36px;
+        animation: slideDown 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+      }
+      .page-header h1 {
+        font-size: 34px;
+        font-weight: 700;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+      }
+      .page-header h1 span {
+        color: var(--accent);
+      }
+      .page-header p {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 2px;
+        color: var(--text-muted);
+        margin-top: 6px;
+        text-transform: uppercase;
+      }
+      .accent-line {
+        width: 50px;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--accent),
+          transparent
+        );
+        margin: 12px auto 0;
+        border-radius: 2px;
+      }
+
+      /* sesión badge */
+      .session-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(0, 212, 255, 0.06);
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        padding: 6px 14px;
+        margin-bottom: 20px;
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        animation: slideDown 0.5s ease both;
+        animation-delay: 0.05s;
+      }
+      .session-badge strong {
+        color: var(--accent);
+      }
+
+      .card {
+        width: 100%;
+        max-width: 520px;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 36px 36px 32px;
+        box-shadow: 0 24px 64px rgba(0, 0, 0, 0.65), 0 0 0 1px var(--border),
+          0 0 40px rgba(0, 212, 255, 0.08);
+        position: relative;
+        animation: slideUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+        animation-delay: 0.1s;
+      }
+      .card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 10%;
+        width: 80%;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--accent),
+          transparent
+        );
+        border-radius: 2px;
+      }
+      .image-choice-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-bottom: 24px;
+      }
+      .img-choice-btn {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 7px;
+        padding: 18px 12px;
+        background: rgba(0, 212, 255, 0.02);
+        border: 1px dashed var(--border-strong);
+        border-radius: var(--radius-sm);
+        color: var(--text-muted);
+        cursor: pointer;
+        font-family: var(--font-display);
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        transition: all 0.22s ease;
+      }
+      .img-choice-btn span.ico {
+        font-size: 26px;
+        line-height: 1;
+      }
+      .img-choice-btn span.sub {
+        font-family: var(--font-mono);
+        font-size: 9px;
+        letter-spacing: 1.5px;
+        color: var(--text-muted);
+        opacity: 0.7;
+      }
+      .img-choice-btn:hover {
+        border-color: var(--accent);
+        background: var(--accent-glow);
+        color: var(--accent);
+        box-shadow: 0 0 16px rgba(0, 212, 255, 0.1);
+      }
+      .img-choice-btn:hover span.sub {
+        color: var(--accent);
+        opacity: 0.6;
+      }
+      .cam-modal {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.9);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 18px;
+        backdrop-filter: blur(6px);
+      }
+      .cam-modal.active {
+        display: flex;
+      }
+      .cam-box {
+        border: 2px solid var(--border-strong);
+        border-radius: var(--radius);
+        overflow: hidden;
+        box-shadow: 0 0 40px rgba(0, 212, 255, 0.2);
+        position: relative;
+        max-width: 90vw;
+      }
+      #camVideo {
+        display: block;
+        width: 100%;
+        max-width: 500px;
+        height: auto;
+        max-height: 65vh;
+        background: #000;
+      }
+      .cam-controls {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 14px 16px;
+        background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+      }
+      .cam-btn {
+        font-family: var(--font-display);
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        border: none;
+        border-radius: var(--radius-sm);
+        padding: 10px 20px;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .cam-btn-snap {
+        background: var(--accent);
+        color: #0b0f1a;
+        box-shadow: 0 0 18px rgba(0, 212, 255, 0.35);
+      }
+      .cam-btn-snap:hover {
+        box-shadow: 0 0 28px rgba(0, 212, 255, 0.55);
+        transform: scale(1.04);
+      }
+      .cam-btn-cancel {
+        background: rgba(255, 255, 255, 0.08);
+        color: var(--text-secondary);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+      }
+      .cam-label {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 2.5px;
+        text-transform: uppercase;
+        color: var(--accent);
+        opacity: 0.75;
+      }
+      #camCanvas {
+        display: none;
+      }
+      #imagePreview {
+        display: none;
+        margin-bottom: 20px;
+        border-radius: var(--radius-sm);
+        overflow: hidden;
+        border: 1px solid var(--border-strong);
+        max-height: 180px;
+      }
+      #imagePreview img {
+        width: 100%;
+        max-height: 180px;
+        object-fit: cover;
+        display: block;
+      }
+      .preview-remove {
+        display: block;
+        text-align: center;
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        color: var(--accent-red);
+        cursor: pointer;
+        padding: 6px;
+        background: rgba(239, 68, 68, 0.06);
+        border-top: 1px solid rgba(239, 68, 68, 0.2);
+        transition: background 0.2s;
+      }
+      .preview-remove:hover {
+        background: rgba(239, 68, 68, 0.12);
+      }
+      .field {
+        margin-bottom: 16px;
+      }
+      label.field-label {
+        display: block;
+        font-family: var(--font-mono);
+        font-size: 10px;
+        font-weight: 500;
+        letter-spacing: 2.5px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        margin-bottom: 6px;
+      }
+      input[type="text"],
+      input[type="date"],
+      textarea {
+        width: 100%;
+        background: var(--bg-input);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        color: var(--text-primary);
+        font-family: var(--font-mono);
+        font-size: 13px;
+        padding: 11px 14px;
+        outline: none;
+        transition: border-color 0.2s, box-shadow 0.2s;
+      }
+      input[type="text"]::placeholder,
+      textarea::placeholder {
+        color: var(--text-muted);
+        font-size: 12px;
+      }
+      input[type="date"] {
+        color-scheme: dark;
+      }
+      input:focus,
+      textarea:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1);
+      }
+      textarea {
+        resize: vertical;
+        min-height: 80px;
+        line-height: 1.6;
+      }
+
+      /* Campo "ingresado por" — solo lectura, estilo especial */
+      .field-ingresado input {
+        background: rgba(0, 212, 255, 0.04);
+        border-color: rgba(0, 212, 255, 0.2);
+        color: var(--accent);
+        cursor: default;
+      }
+      .field-ingresado .field-label {
+        color: var(--accent);
+        opacity: 0.7;
+      }
+
+      .btn-primary {
+        width: 100%;
+        margin-top: 10px;
+        padding: 14px;
+        background: linear-gradient(135deg, #0a3d62, #1e5f8e);
+        color: var(--accent);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius-sm);
+        font-family: var(--font-display);
+        font-size: 15px;
+        font-weight: 700;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        cursor: pointer;
+        box-shadow: 0 0 20px rgba(0, 212, 255, 0.1);
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+      }
+      .btn-primary:hover {
+        background: linear-gradient(135deg, #0d4e7a, #2470a8);
+        box-shadow: 0 0 35px rgba(0, 212, 255, 0.25);
+        transform: translateY(-2px);
+      }
+      .btn-primary:active {
+        transform: translateY(0) scale(0.98);
+      }
+      .btn-primary:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+      }
+      .spinner {
+        width: 14px;
+        height: 14px;
+        border: 2px solid rgba(0, 212, 255, 0.3);
+        border-top-color: var(--accent);
+        border-radius: 50%;
+        animation: spin 0.7s linear infinite;
+        display: none;
+      }
+      .loading .spinner {
+        display: block;
+      }
+      .toast {
+        position: fixed;
+        bottom: 28px;
+        right: 28px;
+        padding: 14px 22px;
+        border-radius: var(--radius-sm);
+        font-family: var(--font-mono);
+        font-size: 12px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        opacity: 0;
+        transform: translateY(16px);
+        transition: all 0.3s ease;
+        pointer-events: none;
+        z-index: 999;
+        max-width: 320px;
+      }
+      .toast.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .toast.success {
+        background: rgba(16, 185, 129, 0.12);
+        border: 1px solid rgba(16, 185, 129, 0.4);
+        color: var(--accent-green);
+        box-shadow: 0 0 20px rgba(16, 185, 129, 0.15);
+      }
+      .toast.error {
+        background: rgba(239, 68, 68, 0.1);
+        border: 1px solid rgba(239, 68, 68, 0.35);
+        color: var(--accent-red);
+      }
+      .nav-link {
+        display: inline-block;
+        margin-top: 22px;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        text-decoration: none;
+        padding: 9px 20px;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        transition: all 0.2s ease;
+      }
+      .nav-link:hover {
+        color: var(--accent);
+        border-color: var(--border-strong);
+        background: var(--accent-glow);
+      }
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(24px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes slideDown {
+        from {
+          opacity: 0;
+          transform: translateY(-16px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      @media (max-width: 560px) {
+        .card {
+          padding: 28px 18px 24px;
+        }
+        .page-header h1 {
+          font-size: 26px;
+          letter-spacing: 2px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="page-header">
+      <h1>Registro de <span>Guías</span></h1>
+      <p>Ingresa los datos del paquete recibido</p>
+      <div class="accent-line"></div>
+    </header>
+
+    <!-- Badge de sesión activa -->
+<!--   <div class="session-badge">
+      👤 &nbsp;Sesión: <strong id="sessionLabel">—</strong>
+    </div>
+
+    <div class="card">
+      <div class="image-choice-row" id="imageChoiceRow">
+        <button
+          type="button"
+          class="img-choice-btn"
+          onclick="document.getElementById('imagenInput').click()"
+        >
+          <span class="ico">📁</span>Subir imagen<span class="sub"
+            >Desde galería</span
+          >
+        </button>
+        <button type="button" class="img-choice-btn" onclick="abrirCamara()">
+          <span class="ico">📷</span>Tomar foto<span class="sub"
+            >Usar cámara</span
+          >
+        </button>
+      </div>
+      <input
+        type="file"
+        id="imagenInput"
+        accept="image/*"
+        style="display: none"
+      />
+      <input
+        type="file"
+        id="imagenInputCapture"
+        accept="image/*"
+        capture="environment"
+        style="display: none"
+      />
+
+      <div id="imagePreview">
+        <img id="previewImg" src="" alt="Preview" />
+        <span class="preview-remove" onclick="removeImage()"
+          >✕ Quitar imagen</span
+        >
+      </div>
+
+      <!-- Campo "Ingresado por" — solo lectura, relleno automático -->
+<!--  <div class="field field-ingresado">
+        <label class="field-label">Ingresado por</label>
+        <input type="text" id="ingresadoPor" readonly />
+      </div>
+
+      <div class="field">
+        <label class="field-label">Número de Guía</label>
+        <input type="text" id="guia" placeholder="Ej: 1234567890" />
+      </div>
+      <div class="field">
+        <label class="field-label">Fecha</label>
+        <input type="date" id="fecha" />
+      </div>
+      <div class="field">
+        <label class="field-label">Recibido Por</label>
+        <input
+          type="text"
+          id="recibidoPor"
+          placeholder="Nombre de quien recibe"
+        />
+      </div>
+      <div class="field">
+        <label class="field-label">Nota</label>
+        <textarea
+          id="nota"
+          placeholder="Observaciones, estado del paquete..."
+        ></textarea>
+      </div>
+
+      <button class="btn-primary" id="btnGuardar" onclick="guardarGuia()">
+        <div class="spinner"></div>
+        <span class="btn-text">Guardar Registro</span>
+      </button>
+    </div>
+
+    <a href="buscar_guia.html" class="nav-link">⬡ &nbsp;Ir al buscador</a>
+    <a href="index.html" class="nav-link">⬡ &nbsp;Inicio</a>
+
+    <div class="toast" id="toast"></div>
+
+    <div class="cam-modal" id="camModal">
+      <div class="cam-label">📷 &nbsp;Apunta al paquete y captura</div>
+      <div class="cam-box">
+        <video id="camVideo" autoplay playsinline></video>
+        <div class="cam-controls">
+          <button class="cam-btn cam-btn-cancel" onclick="cerrarCamara()">
+            Cancelar
+          </button>
+          <button class="cam-btn cam-btn-snap" onclick="capturarFoto()">
+            📸 &nbsp;Capturar
+          </button>
+        </div>
+      </div>
+      <canvas id="camCanvas"></canvas>
+    </div>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+      import {
+        getFirestore,
+        doc,
+        setDoc,
+      } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+      import {
+        getStorage,
+        ref,
+        uploadString,
+        getDownloadURL,
+      } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyBKLgOakBA2_2QqWC-APWeTGH2YRsClOXM",
+        authDomain: "reclamos-clh.firebaseapp.com",
+        projectId: "reclamos-clh",
+        storageBucket: "reclamos-clh.firebasestorage.app",
+        messagingSenderId: "893651222188",
+        appId: "1:893651222188:web:edb9d9963596255633e909",
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+      const storage = getStorage(app);
+
+      // ── Verificar sesión ──
+      const sesionRaw = sessionStorage.getItem("clh_user");
+      if (!sesionRaw) {
+        window.location.href = "login.html";
+      }
+
+      let sesionUsuario = null;
+      if (sesionRaw) {
+        sesionUsuario = JSON.parse(sesionRaw);
+        document.getElementById("ingresadoPor").value =
+          sesionUsuario.nombre || sesionUsuario.username;
+        document.getElementById("sessionLabel").textContent =
+          sesionUsuario.nombre || sesionUsuario.username;
+      }
+
+      document.getElementById("fecha").valueAsDate = new Date();
+
+      let imagenBase64 = null;
+      let camStream = null;
+
+      function comprimirImagen(base64, callback) {
+        const img = new Image();
+        img.onload = function () {
+          const canvas = document.createElement("canvas");
+          const MAX = 800;
+          let w = img.width,
+            h = img.height;
+          if (w > MAX || h > MAX) {
+            if (w > h) {
+              h = Math.round((h * MAX) / w);
+              w = MAX;
+            } else {
+              w = Math.round((w * MAX) / h);
+              h = MAX;
+            }
+          }
+          canvas.width = w;
+          canvas.height = h;
+          canvas.getContext("2d").drawImage(img, 0, 0, w, h);
+          callback(canvas.toDataURL("image/jpeg", 0.6));
+        };
+        img.src = base64;
+      }
+
+      function mostrarPreview(base64) {
+        comprimirImagen(base64, function (c) {
+          imagenBase64 = c;
+          document.getElementById("previewImg").src = c;
+          document.getElementById("imagePreview").style.display = "block";
+          document.getElementById("imageChoiceRow").style.display = "none";
+        });
+      }
+
+      document
+        .getElementById("imagenInput")
+        .addEventListener("change", function (e) {
+          const file = e.target.files[0];
+          if (!file) return;
+          const reader = new FileReader();
+          reader.onload = (ev) => mostrarPreview(ev.target.result);
+          reader.readAsDataURL(file);
+          this.value = "";
+        });
+      document
+        .getElementById("imagenInputCapture")
+        .addEventListener("change", function (e) {
+          const file = e.target.files[0];
+          if (!file) return;
+          const reader = new FileReader();
+          reader.onload = (ev) => mostrarPreview(ev.target.result);
+          reader.readAsDataURL(file);
+          this.value = "";
+        });
+
+      window.removeImage = function () {
+        imagenBase64 = null;
+        document.getElementById("imagenInput").value = "";
+        document.getElementById("imagePreview").style.display = "none";
+        document.getElementById("imageChoiceRow").style.display = "grid";
+      };
+
+      window.abrirCamara = async function () {
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+          try {
+            camStream = await navigator.mediaDevices.getUserMedia({
+              video: { facingMode: "environment" },
+            });
+            document.getElementById("camVideo").srcObject = camStream;
+            document.getElementById("camModal").classList.add("active");
+            return;
+          } catch (err) {}
+        }
+        document.getElementById("imagenInputCapture").click();
+      };
+
+      window.cerrarCamara = function () {
+        if (camStream) {
+          camStream.getTracks().forEach((t) => t.stop());
+          camStream = null;
+        }
+        document.getElementById("camVideo").srcObject = null;
+        document.getElementById("camModal").classList.remove("active");
+      };
+
+      window.capturarFoto = function () {
+        const video = document.getElementById("camVideo");
+        const canvas = document.getElementById("camCanvas");
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        canvas.getContext("2d").drawImage(video, 0, 0);
+        mostrarPreview(canvas.toDataURL("image/jpeg", 0.88));
+        window.cerrarCamara();
+      };
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") window.cerrarCamara();
+      });
+
+      window.guardarGuia = async function () {
+        const guia = document.getElementById("guia").value.trim();
+        const fecha = document.getElementById("fecha").value;
+        const recibidoPor = document.getElementById("recibidoPor").value.trim();
+        const nota = document.getElementById("nota").value.trim();
+
+        if (!guia || !fecha || !recibidoPor) {
+          showToast("Completa los campos obligatorios", "error");
+          return;
+        }
+
+        const btn = document.getElementById("btnGuardar");
+        btn.disabled = true;
+        btn.classList.add("loading");
+        btn.querySelector(".btn-text").textContent = "Guardando...";
+
+        try {
+          let imagenURL = null;
+          if (imagenBase64) {
+            const storageRef = ref(storage, `guias/${guia}_${Date.now()}.jpg`);
+            await uploadString(storageRef, imagenBase64, "data_url");
+            imagenURL = await getDownloadURL(storageRef);
+          }
+
+          // ✅ Se agrega ingresadoPor con el usuario de la sesión
+          await setDoc(doc(db, "guias", guia), {
+            guia,
+            fecha,
+            recibidoPor,
+            nota,
+            imagenURL,
+            timestamp: Date.now(),
+            ingresadoPor: sesionUsuario
+              ? sesionUsuario.nombre || sesionUsuario.username
+              : "Desconocido",
+            ingresadoPorUsername: sesionUsuario ? sesionUsuario.username : "",
+          });
+
+          showToast("✓ Registro guardado en la nube", "success");
+          setTimeout(() => {
+            document.getElementById("guia").value = "";
+            document.getElementById("recibidoPor").value = "";
+            document.getElementById("nota").value = "";
+            document.getElementById("fecha").valueAsDate = new Date();
+            window.removeImage();
+          }, 800);
+        } catch (err) {
+          console.error(err);
+          showToast("✕ Error: " + err.message, "error");
+        } finally {
+          btn.disabled = false;
+          btn.classList.remove("loading");
+          btn.querySelector(".btn-text").textContent = "Guardar Registro";
+        }
+      };
+
+      function showToast(msg, type) {
+        const t = document.getElementById("toast");
+        t.textContent = msg;
+        t.className = "toast " + type;
+        t.classList.add("show");
+        setTimeout(() => t.classList.remove("show"), 3500);
+      }
+    </script>
+  </body>
+</html>
+-->
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Registro de Guías</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=DM+Mono:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg-deep: #0b0f1a;
+        --bg-card: #1a2235;
+        --bg-input: rgba(11, 15, 26, 0.75);
+        --accent: #00d4ff;
+        --accent-glow: rgba(0, 212, 255, 0.15);
+        --accent-green: #10b981;
+        --accent-red: #ef4444;
+        --accent-amber: #f59e0b;
+        --border: rgba(0, 212, 255, 0.12);
+        --border-strong: rgba(0, 212, 255, 0.35);
+        --text-primary: #e8edf5;
+        --text-secondary: #8fa3c0;
+        --text-muted: #4d6080;
+        --font-display: "Rajdhani", sans-serif;
+        --font-mono: "DM Mono", monospace;
+        --radius: 14px;
+        --radius-sm: 8px;
+      }
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: var(--font-display);
+        background-color: var(--bg-deep);
+        background-image: radial-gradient(
+            ellipse 70% 50% at 50% -5%,
+            rgba(0, 212, 255, 0.1),
+            transparent 65%
+          ),
+          repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 39px,
+            rgba(0, 212, 255, 0.022) 39px,
+            rgba(0, 212, 255, 0.022) 40px
+          ),
+          repeating-linear-gradient(
+            90deg,
+            transparent,
+            transparent 39px,
+            rgba(0, 212, 255, 0.022) 39px,
+            rgba(0, 212, 255, 0.022) 40px
+          );
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 48px 24px 64px;
+        color: var(--text-primary);
+      }
+      .page-header {
+        text-align: center;
+        margin-bottom: 36px;
+        animation: slideDown 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+      }
+      .page-header h1 {
+        font-size: 34px;
+        font-weight: 700;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+      }
+      .page-header h1 span {
+        color: var(--accent);
+      }
+      .page-header p {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 2px;
+        color: var(--text-muted);
+        margin-top: 6px;
+        text-transform: uppercase;
+      }
+      .accent-line {
+        width: 50px;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--accent),
+          transparent
+        );
+        margin: 12px auto 0;
+        border-radius: 2px;
+      }
+      .session-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(0, 212, 255, 0.06);
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        padding: 6px 14px;
+        margin-bottom: 20px;
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+      }
+      .session-badge strong {
+        color: var(--accent);
+      }
+      .card {
+        width: 100%;
+        max-width: 520px;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 36px 36px 32px;
+        box-shadow: 0 24px 64px rgba(0, 0, 0, 0.65), 0 0 0 1px var(--border),
+          0 0 40px rgba(0, 212, 255, 0.08);
+        position: relative;
+        animation: slideUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+        animation-delay: 0.1s;
+      }
+      .card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 10%;
+        width: 80%;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--accent),
+          transparent
+        );
+        border-radius: 2px;
+      }
+      .image-choice-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-bottom: 24px;
+      }
+      .img-choice-btn {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 7px;
+        padding: 18px 12px;
+        background: rgba(0, 212, 255, 0.02);
+        border: 1px dashed var(--border-strong);
+        border-radius: var(--radius-sm);
+        color: var(--text-muted);
+        cursor: pointer;
+        font-family: var(--font-display);
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        transition: all 0.22s ease;
+      }
+      .img-choice-btn span.ico {
+        font-size: 26px;
+        line-height: 1;
+      }
+      .img-choice-btn span.sub {
+        font-family: var(--font-mono);
+        font-size: 9px;
+        letter-spacing: 1.5px;
+        color: var(--text-muted);
+        opacity: 0.7;
+      }
+      .img-choice-btn:hover {
+        border-color: var(--accent);
+        background: var(--accent-glow);
+        color: var(--accent);
+      }
+      .cam-modal {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.9);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 18px;
+        backdrop-filter: blur(6px);
+      }
+      .cam-modal.active {
+        display: flex;
+      }
+      .cam-box {
+        border: 2px solid var(--border-strong);
+        border-radius: var(--radius);
+        overflow: hidden;
+        box-shadow: 0 0 40px rgba(0, 212, 255, 0.2);
+        position: relative;
+        max-width: 90vw;
+      }
+      #camVideo {
+        display: block;
+        width: 100%;
+        max-width: 500px;
+        height: auto;
+        max-height: 65vh;
+        background: #000;
+      }
+      .cam-controls {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 14px 16px;
+        background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+      }
+      .cam-btn {
+        font-family: var(--font-display);
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        border: none;
+        border-radius: var(--radius-sm);
+        padding: 10px 20px;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .cam-btn-snap {
+        background: var(--accent);
+        color: #0b0f1a;
+      }
+      .cam-btn-cancel {
+        background: rgba(255, 255, 255, 0.08);
+        color: var(--text-secondary);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+      }
+      .cam-label {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 2.5px;
+        text-transform: uppercase;
+        color: var(--accent);
+        opacity: 0.75;
+      }
+      #camCanvas {
+        display: none;
+      }
+      #imagePreview {
+        display: none;
+        margin-bottom: 20px;
+        border-radius: var(--radius-sm);
+        overflow: hidden;
+        border: 1px solid var(--border-strong);
+        max-height: 180px;
+      }
+      #imagePreview img {
+        width: 100%;
+        max-height: 180px;
+        object-fit: cover;
+        display: block;
+      }
+      .preview-remove {
+        display: block;
+        text-align: center;
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        color: var(--accent-red);
+        cursor: pointer;
+        padding: 6px;
+        background: rgba(239, 68, 68, 0.06);
+        border-top: 1px solid rgba(239, 68, 68, 0.2);
+      }
+      .field {
+        margin-bottom: 16px;
+      }
+      label.field-label {
+        display: block;
+        font-family: var(--font-mono);
+        font-size: 10px;
+        font-weight: 500;
+        letter-spacing: 2.5px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        margin-bottom: 6px;
+      }
+      input[type="text"],
+      input[type="date"],
+      textarea {
+        width: 100%;
+        background: var(--bg-input);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        color: var(--text-primary);
+        font-family: var(--font-mono);
+        font-size: 13px;
+        padding: 11px 14px;
+        outline: none;
+        transition: border-color 0.2s, box-shadow 0.2s;
+      }
+      input[type="text"]::placeholder,
+      textarea::placeholder {
+        color: var(--text-muted);
+        font-size: 12px;
+      }
+      input[type="date"] {
+        color-scheme: dark;
+      }
+      input:focus,
+      textarea:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1);
+      }
+      textarea {
+        resize: vertical;
+        min-height: 80px;
+        line-height: 1.6;
+      }
+      .field-ingresado input {
+        background: rgba(0, 212, 255, 0.04);
+        border-color: rgba(0, 212, 255, 0.2);
+        color: var(--accent);
+        cursor: default;
+      }
+      .field-ingresado .field-label {
+        color: var(--accent);
+        opacity: 0.7;
+      }
+      .btn-primary {
+        width: 100%;
+        margin-top: 10px;
+        padding: 14px;
+        background: linear-gradient(135deg, #0a3d62, #1e5f8e);
+        color: var(--accent);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius-sm);
+        font-family: var(--font-display);
+        font-size: 15px;
+        font-weight: 700;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        cursor: pointer;
+        box-shadow: 0 0 20px rgba(0, 212, 255, 0.1);
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+      }
+      .btn-primary:hover {
+        background: linear-gradient(135deg, #0d4e7a, #2470a8);
+        box-shadow: 0 0 35px rgba(0, 212, 255, 0.25);
+        transform: translateY(-2px);
+      }
+      .btn-primary:active {
+        transform: translateY(0) scale(0.98);
+      }
+      .btn-primary:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+      }
+      .spinner {
+        width: 14px;
+        height: 14px;
+        border: 2px solid rgba(0, 212, 255, 0.3);
+        border-top-color: var(--accent);
+        border-radius: 50%;
+        animation: spin 0.7s linear infinite;
+        display: none;
+      }
+      .loading .spinner {
+        display: block;
+      }
+      .toast {
+        position: fixed;
+        bottom: 28px;
+        right: 28px;
+        padding: 14px 22px;
+        border-radius: var(--radius-sm);
+        font-family: var(--font-mono);
+        font-size: 12px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        opacity: 0;
+        transform: translateY(16px);
+        transition: all 0.3s ease;
+        pointer-events: none;
+        z-index: 999;
+        max-width: 320px;
+      }
+      .toast.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .toast.success {
+        background: rgba(16, 185, 129, 0.12);
+        border: 1px solid rgba(16, 185, 129, 0.4);
+        color: var(--accent-green);
+      }
+      .toast.error {
+        background: rgba(239, 68, 68, 0.1);
+        border: 1px solid rgba(239, 68, 68, 0.35);
+        color: var(--accent-red);
+      }
+      .nav-link {
+        display: inline-block;
+        margin-top: 22px;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        text-decoration: none;
+        padding: 9px 20px;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        transition: all 0.2s ease;
+      }
+      .nav-link:hover {
+        color: var(--accent);
+        border-color: var(--border-strong);
+        background: var(--accent-glow);
+      }
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(24px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes slideDown {
+        from {
+          opacity: 0;
+          transform: translateY(-16px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="page-header">
+      <h1>Registro de <span>Guías</span></h1>
+      <p>Ingresa los datos del paquete recibido</p>
+      <div class="accent-line"></div>
+    </header>
+    <div class="session-badge">
+      👤 &nbsp;Sesión: <strong id="sessionLabel">—</strong>
+    </div>
+    <div class="card">
+      <div class="image-choice-row" id="imageChoiceRow">
+        <button
+          type="button"
+          class="img-choice-btn"
+          onclick="document.getElementById('imagenInput').click()"
+        >
+          <span class="ico">📁</span>Subir imagen<span class="sub"
+            >Desde galería</span
+          >
+        </button>
+        <button type="button" class="img-choice-btn" onclick="abrirCamara()">
+          <span class="ico">📷</span>Tomar foto<span class="sub"
+            >Usar cámara</span
+          >
+        </button>
+      </div>
+      <input
+        type="file"
+        id="imagenInput"
+        accept="image/*"
+        style="display: none"
+      />
+      <input
+        type="file"
+        id="imagenInputCapture"
+        accept="image/*"
+        capture="environment"
+        style="display: none"
+      />
+      <div id="imagePreview">
+        <img id="previewImg" src="" alt="Preview" />
+        <span class="preview-remove" onclick="removeImage()"
+          >✕ Quitar imagen</span
+        >
+      </div>
+      <div class="field field-ingresado">
+        <label class="field-label">Ingresado por</label>
+        <input type="text" id="ingresadoPor" readonly />
+      </div>
+      <div class="field">
+        <label class="field-label">Número de Guía</label>
+        <input type="text" id="guia" placeholder="Ej: 1234567890" />
+      </div>
+      <div class="field">
+        <label class="field-label">Fecha</label>
+        <input type="date" id="fecha" />
+      </div>
+      <div class="field">
+        <label class="field-label">Recibido Por</label>
+        <input
+          type="text"
+          id="recibidoPor"
+          placeholder="Nombre de quien recibe"
+        />
+      </div>
+      <div class="field">
+        <label class="field-label">Nota</label>
+        <textarea
+          id="nota"
+          placeholder="Observaciones, estado del paquete..."
+        ></textarea>
+      </div>
+      <button class="btn-primary" id="btnGuardar" onclick="guardarGuia()">
+        <div class="spinner"></div>
+        <span class="btn-text">Guardar Registro</span>
+      </button>
+    </div>
+    <a href="buscar_guia.html" class="nav-link">⬡ &nbsp;Ir al buscador</a>
+    <a href="index.html" class="nav-link">⬡ &nbsp;Inicio</a>
+    <div class="toast" id="toast"></div>
+    <div class="cam-modal" id="camModal">
+      <div class="cam-label">📷 &nbsp;Apunta al paquete y captura</div>
+      <div class="cam-box">
+        <video id="camVideo" autoplay playsinline></video>
+        <div class="cam-controls">
+          <button class="cam-btn cam-btn-cancel" onclick="cerrarCamara()">
+            Cancelar
+          </button>
+          <button class="cam-btn cam-btn-snap" onclick="capturarFoto()">
+            📸 &nbsp;Capturar
+          </button>
+        </div>
+      </div>
+      <canvas id="camCanvas"></canvas>
+    </div>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+      import {
+        getFirestore,
+        doc,
+        setDoc,
+        addDoc,
+        collection,
+      } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+      import {
+        getStorage,
+        ref,
+        uploadString,
+        getDownloadURL,
+      } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyBKLgOakBA2_2QqWC-APWeTGH2YRsClOXM",
+        authDomain: "reclamos-clh.firebaseapp.com",
+        projectId: "reclamos-clh",
+        storageBucket: "reclamos-clh.firebasestorage.app",
+        messagingSenderId: "893651222188",
+        appId: "1:893651222188:web:edb9d9963596255633e909",
+      };
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+      const storage = getStorage(app);
+
+      const sesionRaw = sessionStorage.getItem("clh_user");
+      if (!sesionRaw) {
+        window.location.href = "login.html";
+      }
+      let sesion = null;
+      if (sesionRaw) {
+        sesion = JSON.parse(sesionRaw);
+        document.getElementById("ingresadoPor").value =
+          sesion.nombre || sesion.username;
+        document.getElementById("sessionLabel").textContent =
+          sesion.nombre || sesion.username;
+      }
+
+      document.getElementById("fecha").valueAsDate = new Date();
+
+      // ── Auditoría centralizada ──
+      async function auditar({
+        accion,
+        guiaId,
+        datosAntes = null,
+        datosDespues = null,
+        detalle = "",
+      }) {
+        try {
+          await addDoc(collection(db, "auditoria"), {
+            accion,
+            modulo: "guias",
+            guiaId,
+            datosAntes,
+            datosDespues,
+            detalle,
+            usuario: sesion?.username || "—",
+            nombreUsuario: sesion?.nombre || sesion?.username || "—",
+            rol: sesion?.rol || "—",
+            timestamp: Date.now(),
+            fechaHora: new Date().toLocaleString("es-CO"),
+          });
+        } catch (e) {
+          console.warn("Auditoría fallida:", e.message);
+        }
+      }
+
+      let imagenBase64 = null,
+        camStream = null;
+
+      function comprimirImagen(base64, callback) {
+        const img = new Image();
+        img.onload = function () {
+          const canvas = document.createElement("canvas");
+          const MAX = 800;
+          let w = img.width,
+            h = img.height;
+          if (w > MAX || h > MAX) {
+            if (w > h) {
+              h = Math.round((h * MAX) / w);
+              w = MAX;
+            } else {
+              w = Math.round((w * MAX) / h);
+              h = MAX;
+            }
+          }
+          canvas.width = w;
+          canvas.height = h;
+          canvas.getContext("2d").drawImage(img, 0, 0, w, h);
+          callback(canvas.toDataURL("image/jpeg", 0.6));
+        };
+        img.src = base64;
+      }
+
+      function mostrarPreview(base64) {
+        comprimirImagen(base64, function (c) {
+          imagenBase64 = c;
+          document.getElementById("previewImg").src = c;
+          document.getElementById("imagePreview").style.display = "block";
+          document.getElementById("imageChoiceRow").style.display = "none";
+        });
+      }
+
+      document
+        .getElementById("imagenInput")
+        .addEventListener("change", function (e) {
+          const file = e.target.files[0];
+          if (!file) return;
+          const reader = new FileReader();
+          reader.onload = (ev) => mostrarPreview(ev.target.result);
+          reader.readAsDataURL(file);
+          this.value = "";
+        });
+      document
+        .getElementById("imagenInputCapture")
+        .addEventListener("change", function (e) {
+          const file = e.target.files[0];
+          if (!file) return;
+          const reader = new FileReader();
+          reader.onload = (ev) => mostrarPreview(ev.target.result);
+          reader.readAsDataURL(file);
+          this.value = "";
+        });
+
+      window.removeImage = function () {
+        imagenBase64 = null;
+        document.getElementById("imagenInput").value = "";
+        document.getElementById("imagePreview").style.display = "none";
+        document.getElementById("imageChoiceRow").style.display = "grid";
+      };
+
+      window.abrirCamara = async function () {
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+          try {
+            camStream = await navigator.mediaDevices.getUserMedia({
+              video: { facingMode: "environment" },
+            });
+            document.getElementById("camVideo").srcObject = camStream;
+            document.getElementById("camModal").classList.add("active");
+            return;
+          } catch (err) {}
+        }
+        document.getElementById("imagenInputCapture").click();
+      };
+      window.cerrarCamara = function () {
+        if (camStream) {
+          camStream.getTracks().forEach((t) => t.stop());
+          camStream = null;
+        }
+        document.getElementById("camVideo").srcObject = null;
+        document.getElementById("camModal").classList.remove("active");
+      };
+      window.capturarFoto = function () {
+        const video = document.getElementById("camVideo"),
+          canvas = document.getElementById("camCanvas");
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        canvas.getContext("2d").drawImage(video, 0, 0);
+        mostrarPreview(canvas.toDataURL("image/jpeg", 0.88));
+        window.cerrarCamara();
+      };
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") window.cerrarCamara();
+      });
+
+      window.guardarGuia = async function () {
+        const guia = document.getElementById("guia").value.trim();
+        const fecha = document.getElementById("fecha").value;
+        const recibidoPor = document.getElementById("recibidoPor").value.trim();
+        const nota = document.getElementById("nota").value.trim();
+        if (!guia || !fecha || !recibidoPor) {
+          showToast("Completa los campos obligatorios", "error");
+          return;
+        }
+
+        const btn = document.getElementById("btnGuardar");
+        btn.disabled = true;
+        btn.classList.add("loading");
+        btn.querySelector(".btn-text").textContent = "Guardando...";
+
+        try {
+          let imagenURL = null;
+          if (imagenBase64) {
+            const storageRef = ref(storage, `guias/${guia}_${Date.now()}.jpg`);
+            await uploadString(storageRef, imagenBase64, "data_url");
+            imagenURL = await getDownloadURL(storageRef);
+          }
+          const datos = {
+            guia,
+            fecha,
+            recibidoPor,
+            nota,
+            imagenURL,
+            timestamp: Date.now(),
+            ingresadoPor: sesion?.nombre || sesion?.username || "Desconocido",
+            ingresadoPorUsername: sesion?.username || "",
+          };
+          await setDoc(doc(db, "guias", guia), datos);
+
+          // ✅ AUDITORÍA: CREAR
+          await auditar({
+            accion: "CREAR",
+            guiaId: guia,
+            datosDespues: {
+              guia,
+              fecha,
+              recibidoPor,
+              nota,
+              tieneImagen: !!imagenURL,
+            },
+            detalle: `Guía ${guia} registrada`,
+          });
+
+          showToast("✓ Registro guardado en la nube", "success");
+          setTimeout(() => {
+            document.getElementById("guia").value = "";
+            document.getElementById("recibidoPor").value = "";
+            document.getElementById("nota").value = "";
+            document.getElementById("fecha").valueAsDate = new Date();
+            window.removeImage();
+          }, 800);
+        } catch (err) {
+          console.error(err);
+          showToast("✕ Error: " + err.message, "error");
+        } finally {
+          btn.disabled = false;
+          btn.classList.remove("loading");
+          btn.querySelector(".btn-text").textContent = "Guardar Registro";
+        }
+      };
+
+      function showToast(msg, type) {
+        const t = document.getElementById("toast");
+        t.textContent = msg;
+        t.className = "toast " + type + " show";
+        setTimeout(() => t.classList.remove("show"), 3500);
+      }
+    </script>
+  </body>
+</html>

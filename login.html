@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Acceso · Reclamos CLH</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=DM+Mono:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg-deep: #0b0f1a;
+        --bg-card: #1a2235;
+        --bg-input: rgba(11, 15, 26, 0.75);
+        --accent: #00d4ff;
+        --accent-glow: rgba(0, 212, 255, 0.15);
+        --accent-green: #10b981;
+        --accent-red: #ef4444;
+        --border: rgba(0, 212, 255, 0.12);
+        --border-strong: rgba(0, 212, 255, 0.35);
+        --text-primary: #e8edf5;
+        --text-secondary: #8fa3c0;
+        --text-muted: #4d6080;
+        --font-display: "Rajdhani", sans-serif;
+        --font-mono: "DM Mono", monospace;
+        --radius: 16px;
+        --radius-sm: 8px;
+      }
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: var(--font-display);
+        background-color: var(--bg-deep);
+        background-image: radial-gradient(
+            ellipse 70% 50% at 50% -5%,
+            rgba(0, 212, 255, 0.12),
+            transparent 65%
+          ),
+          repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 39px,
+            rgba(0, 212, 255, 0.022) 39px,
+            rgba(0, 212, 255, 0.022) 40px
+          ),
+          repeating-linear-gradient(
+            90deg,
+            transparent,
+            transparent 39px,
+            rgba(0, 212, 255, 0.022) 39px,
+            rgba(0, 212, 255, 0.022) 40px
+          );
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        color: var(--text-primary);
+      }
+
+      .brand {
+        text-align: center;
+        margin-bottom: 40px;
+        animation: slideDown 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+      }
+      .brand-logo {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 5px;
+        text-transform: uppercase;
+        color: var(--accent);
+        opacity: 0.7;
+        margin-bottom: 12px;
+      }
+      .brand h1 {
+        font-size: 42px;
+        font-weight: 700;
+        letter-spacing: 5px;
+        text-transform: uppercase;
+      }
+      .brand h1 span {
+        color: var(--accent);
+      }
+      .brand-sub {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        margin-top: 10px;
+      }
+      .accent-bar {
+        width: 60px;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--accent),
+          transparent
+        );
+        margin: 14px auto 0;
+        border-radius: 2px;
+        box-shadow: 0 0 10px rgba(0, 212, 255, 0.4);
+      }
+
+      .card {
+        width: 100%;
+        max-width: 420px;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 40px 36px 36px;
+        box-shadow: 0 30px 70px rgba(0, 0, 0, 0.7),
+          0 0 50px rgba(0, 212, 255, 0.06);
+        position: relative;
+        animation: slideUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+        animation-delay: 0.1s;
+      }
+      .card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 10%;
+        width: 80%;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--accent),
+          transparent
+        );
+        border-radius: 2px;
+      }
+
+      .card-title {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        margin-bottom: 28px;
+        text-align: center;
+      }
+
+      .field {
+        margin-bottom: 18px;
+      }
+      label.field-label {
+        display: block;
+        font-family: var(--font-mono);
+        font-size: 9px;
+        letter-spacing: 2.5px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        margin-bottom: 7px;
+      }
+      .input-wrap {
+        position: relative;
+      }
+      .input-icon {
+        position: absolute;
+        left: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 14px;
+        pointer-events: none;
+        opacity: 0.5;
+      }
+      input[type="text"],
+      input[type="password"] {
+        width: 100%;
+        background: var(--bg-input);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        color: var(--text-primary);
+        font-family: var(--font-mono);
+        font-size: 13px;
+        padding: 12px 14px 12px 40px;
+        outline: none;
+        transition: border-color 0.2s, box-shadow 0.2s;
+      }
+      input::placeholder {
+        color: var(--text-muted);
+        font-size: 11px;
+        letter-spacing: 1px;
+      }
+      input:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1);
+      }
+
+      .eye-toggle {
+        position: absolute;
+        right: 13px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        color: var(--text-muted);
+        cursor: pointer;
+        font-size: 14px;
+        padding: 4px;
+        transition: color 0.2s;
+        width: auto;
+        margin: 0;
+      }
+      .eye-toggle:hover {
+        color: var(--accent);
+      }
+
+      .btn-login {
+        width: 100%;
+        margin-top: 8px;
+        padding: 14px;
+        background: linear-gradient(135deg, #0a3d62, #1e5f8e);
+        color: var(--accent);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius-sm);
+        font-family: var(--font-display);
+        font-size: 15px;
+        font-weight: 700;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        cursor: pointer;
+        box-shadow: 0 0 20px rgba(0, 212, 255, 0.1);
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+      }
+      .btn-login:hover {
+        background: linear-gradient(135deg, #0d4e7a, #2470a8);
+        box-shadow: 0 0 35px rgba(0, 212, 255, 0.25);
+        transform: translateY(-2px);
+      }
+      .btn-login:active {
+        transform: translateY(0) scale(0.98);
+      }
+      .btn-login:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .spinner {
+        width: 14px;
+        height: 14px;
+        border: 2px solid rgba(0, 212, 255, 0.3);
+        border-top-color: var(--accent);
+        border-radius: 50%;
+        animation: spin 0.7s linear infinite;
+        display: none;
+      }
+      .loading .spinner {
+        display: block;
+      }
+
+      .error-msg {
+        background: rgba(239, 68, 68, 0.08);
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        border-radius: var(--radius-sm);
+        color: var(--accent-red);
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 1px;
+        padding: 10px 14px;
+        margin-top: 14px;
+        display: none;
+        animation: shake 0.35s ease;
+      }
+      .error-msg.show {
+        display: block;
+      }
+
+      .footer-note {
+        margin-top: 20px;
+        text-align: center;
+        font-family: var(--font-mono);
+        font-size: 9px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        opacity: 0.5;
+      }
+
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(28px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes slideDown {
+        from {
+          opacity: 0;
+          transform: translateY(-16px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      @keyframes shake {
+        0%,
+        100% {
+          transform: translateX(0);
+        }
+        20%,
+        60% {
+          transform: translateX(-6px);
+        }
+        40%,
+        80% {
+          transform: translateX(6px);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="brand">
+      <div class="brand-logo">⬡ &nbsp;Sistema de control</div>
+      <h1>Reclamos <span>CLH</span></h1>
+      <p class="brand-sub">Acceso al panel principal</p>
+      <div class="accent-bar"></div>
+    </div>
+
+    <div class="card">
+      <p class="card-title">Identificación de usuario</p>
+
+      <div class="field">
+        <label class="field-label">Usuario</label>
+        <div class="input-wrap">
+          <span class="input-icon">👤</span>
+          <input
+            type="text"
+            id="userInput"
+            placeholder="Tu nombre de usuario"
+            autocomplete="username"
+          />
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label">Contraseña</label>
+        <div class="input-wrap">
+          <span class="input-icon">🔒</span>
+          <input
+            type="password"
+            id="passInput"
+            placeholder="••••••••"
+            autocomplete="current-password"
+          />
+          <button
+            class="eye-toggle"
+            type="button"
+            onclick="togglePass()"
+            id="eyeBtn"
+          >
+            👁
+          </button>
+        </div>
+      </div>
+
+      <button class="btn-login" id="btnLogin" onclick="iniciarSesion()">
+        <div class="spinner"></div>
+        <span class="btn-text">Ingresar al sistema</span>
+      </button>
+
+      <div class="error-msg" id="errorMsg"></div>
+      <p class="footer-note">Steven Realpe · v1.0</p>
+    </div>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+      import {
+        getFirestore,
+        doc,
+        getDoc,
+      } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyBKLgOakBA2_2QqWC-APWeTGH2YRsClOXM",
+        authDomain: "reclamos-clh.firebaseapp.com",
+        projectId: "reclamos-clh",
+        storageBucket: "reclamos-clh.firebasestorage.app",
+        messagingSenderId: "893651222188",
+        appId: "1:893651222188:web:edb9d9963596255633e909",
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+
+      // ── Redirigir si ya hay sesión ──
+      const sesion = sessionStorage.getItem("clh_user");
+      if (sesion) window.location.href = "index.html";
+
+      window.togglePass = function () {
+        const inp = document.getElementById("passInput");
+        const btn = document.getElementById("eyeBtn");
+        if (inp.type === "password") {
+          inp.type = "text";
+          btn.textContent = "🙈";
+        } else {
+          inp.type = "password";
+          btn.textContent = "👁";
+        }
+      };
+
+      function showError(msg) {
+        const el = document.getElementById("errorMsg");
+        el.textContent = "✕ " + msg;
+        el.classList.add("show");
+        setTimeout(() => el.classList.remove("show"), 4000);
+      }
+
+      window.iniciarSesion = async function () {
+        const usuario = document
+          .getElementById("userInput")
+          .value.trim()
+          .toLowerCase();
+        const clave = document.getElementById("passInput").value;
+
+        if (!usuario || !clave) {
+          showError("Completa todos los campos");
+          return;
+        }
+
+        const btn = document.getElementById("btnLogin");
+        btn.disabled = true;
+        btn.classList.add("loading");
+        btn.querySelector(".btn-text").textContent = "Verificando...";
+
+        try {
+          const ref = doc(db, "usuarios", usuario);
+          const snap = await getDoc(ref);
+
+          if (!snap.exists()) {
+            showError("Usuario no encontrado");
+            return;
+          }
+
+          const data = snap.data();
+          if (data.clave !== clave) {
+            showError("Contraseña incorrecta");
+            return;
+          }
+
+          if (data.activo === false) {
+            showError("Usuario desactivado. Contacta al administrador.");
+            return;
+          }
+
+          // Guardar sesión
+          sessionStorage.setItem(
+            "clh_user",
+            JSON.stringify({
+              username: usuario,
+              nombre: data.nombre || usuario,
+              rol: data.rol || "operario",
+            })
+          );
+
+          btn.querySelector(".btn-text").textContent = "✓ Acceso concedido";
+          btn.style.background = "linear-gradient(135deg, #064e3b, #065f46)";
+          btn.style.borderColor = "rgba(16,185,129,0.5)";
+          btn.style.color = "#10b981";
+
+          setTimeout(() => {
+            window.location.href = "index.html";
+          }, 600);
+        } catch (err) {
+          showError("Error de conexión: " + err.message);
+        } finally {
+          if (btn.querySelector(".btn-text").textContent === "Verificando...") {
+            btn.disabled = false;
+            btn.classList.remove("loading");
+            btn.querySelector(".btn-text").textContent = "Ingresar al sistema";
+          }
+        }
+      };
+
+      // Enter para iniciar sesión
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") window.iniciarSesion();
+      });
+    </script>
+  </body>
+</html>

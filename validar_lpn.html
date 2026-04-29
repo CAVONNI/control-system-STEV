@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="styles.css" />
+    <title>Consulta LPN</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+  </head>
+
+  <body>
+    <style>
+      /* ================================================
+      VALIDAR LPN — Corporate Warehouse UI
+      Aesthetic: Industrial Precision / Dark Command Center
+      ================================================ */
+
+      @import url("https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=DM+Mono:wght@300;400;500&display=swap");
+
+      /* ── CSS VARIABLES ── */
+      :root {
+        --bg-deep: #0b0f1a;
+        --bg-panel: #111827;
+        --bg-card: #1a2235;
+        --accent-primary: #00d4ff;
+        --accent-glow: rgba(0, 212, 255, 0.15);
+        --accent-amber: #f59e0b;
+        --accent-green: #10b981;
+        --accent-red: #ef4444;
+        --border: rgba(0, 212, 255, 0.12);
+        --border-strong: rgba(0, 212, 255, 0.35);
+        --text-primary: #e8edf5;
+        --text-secondary: #8fa3c0;
+        --text-muted: #4d6080;
+        --shadow-card: 0 24px 64px rgba(0, 0, 0, 0.65), 0 0 0 1px var(--border);
+        --shadow-glow: 0 0 40px rgba(0, 212, 255, 0.12);
+        --font-display: "Rajdhani", sans-serif;
+        --font-mono: "DM Mono", monospace;
+        --radius: 14px;
+        --radius-sm: 8px;
+      }
+
+      /* ── RESET ── */
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      /* ── BODY ── */
+      body {
+        font-family: var(--font-display);
+        background-color: var(--bg-deep);
+        background-image: radial-gradient(
+            ellipse 70% 50% at 50% -5%,
+            rgba(0, 212, 255, 0.1),
+            transparent 65%
+          ),
+          repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 39px,
+            rgba(0, 212, 255, 0.022) 39px,
+            rgba(0, 212, 255, 0.022) 40px
+          ),
+          repeating-linear-gradient(
+            90deg,
+            transparent,
+            transparent 39px,
+            rgba(0, 212, 255, 0.022) 39px,
+            rgba(0, 212, 255, 0.022) 40px
+          );
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 48px 24px;
+        color: var(--text-primary);
+      }
+
+      /* ── CARD CONTENEDOR ── */
+      .contenedor {
+        width: 100%;
+        max-width: 460px;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 40px 36px 36px;
+        box-shadow: var(--shadow-card), var(--shadow-glow);
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        position: relative;
+        animation: slideUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+      }
+
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(24px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Línea decorativa superior */
+      .contenedor::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 10%;
+        width: 80%;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--accent-primary),
+          transparent
+        );
+        border-radius: 2px;
+      }
+
+      /* ── TÍTULO ── */
+      h2 {
+        font-family: var(--font-display);
+        font-size: 30px;
+        font-weight: 700;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        color: var(--text-primary);
+        text-align: center;
+        margin-bottom: 28px;
+        position: relative;
+      }
+
+      h2::after {
+        content: "";
+        display: block;
+        width: 40px;
+        height: 2px;
+        background: var(--accent-primary);
+        margin: 10px auto 0;
+        border-radius: 2px;
+        box-shadow: 0 0 10px var(--accent-primary);
+      }
+
+      /* ── LABELS ── */
+      label {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        font-weight: 500;
+        letter-spacing: 2.5px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        margin-top: 14px;
+        margin-bottom: 4px;
+      }
+
+      /* ── INPUTS ── */
+      input[type="text"],
+      input[type="file"] {
+        width: 100%;
+        background: rgba(11, 15, 26, 0.7);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        color: var(--text-primary);
+        font-family: var(--font-mono);
+        font-size: 13px;
+        padding: 12px 16px;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        outline: none;
+      }
+
+      input[type="text"]::placeholder {
+        color: var(--text-muted);
+        font-size: 12px;
+      }
+
+      input[type="text"]:focus,
+      input[type="file"]:focus {
+        border-color: var(--accent-primary);
+        box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1);
+      }
+
+      /* File input styling */
+      input[type="file"] {
+        cursor: pointer;
+        padding: 10px 16px;
+        color: var(--text-secondary);
+      }
+
+      input[type="file"]::-webkit-file-upload-button {
+        background: rgba(0, 212, 255, 0.08);
+        color: var(--accent-primary);
+        border: 1px solid var(--border-strong);
+        border-radius: 4px;
+        padding: 5px 12px;
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        cursor: pointer;
+        margin-right: 12px;
+        transition: background 0.2s;
+      }
+
+      input[type="file"]::-webkit-file-upload-button:hover {
+        background: rgba(0, 212, 255, 0.16);
+      }
+
+      /* ── BUTTON BUSCAR ── */
+      button {
+        width: 100%;
+        margin-top: 22px;
+        padding: 14px;
+        background: linear-gradient(135deg, #0a3d62, #1e5f8e);
+        color: var(--accent-primary);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius-sm);
+        font-family: var(--font-display);
+        font-size: 15px;
+        font-weight: 700;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        cursor: pointer;
+        box-shadow: 0 0 20px rgba(0, 212, 255, 0.1);
+        transition: all 0.2s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      button::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          135deg,
+          transparent 40%,
+          rgba(0, 212, 255, 0.08)
+        );
+        opacity: 0;
+        transition: opacity 0.2s;
+      }
+
+      button:hover {
+        background: linear-gradient(135deg, #0d4e7a, #2470a8);
+        box-shadow: 0 0 35px rgba(0, 212, 255, 0.25);
+        transform: translateY(-2px);
+      }
+
+      button:hover::before {
+        opacity: 1;
+      }
+
+      button:active {
+        transform: translateY(0px) scale(0.98);
+        box-shadow: 0 0 15px rgba(0, 212, 255, 0.15);
+      }
+
+      /* ── RESULTADO ── */
+      .resultado {
+        margin-top: 22px;
+        min-height: 0;
+        border-radius: var(--radius-sm);
+        font-family: var(--font-mono);
+        font-size: 13px;
+        line-height: 1.7;
+        transition: all 0.3s ease;
+        overflow: hidden;
+      }
+
+      .resultado:not(:empty) {
+        padding: 16px 18px;
+        border: 1px solid var(--border);
+        background: rgba(11, 15, 26, 0.6);
+        color: var(--text-secondary);
+        animation: fadeIn 0.35s ease;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(6px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Estados semánticos — agregar clase via JS al div#resultado */
+      .resultado.encontrado {
+        border-color: rgba(16, 185, 129, 0.4);
+        background: rgba(16, 185, 129, 0.06);
+        color: var(--accent-green);
+        box-shadow: 0 0 20px rgba(16, 185, 129, 0.08);
+      }
+
+      .resultado.no-encontrado {
+        border-color: rgba(239, 68, 68, 0.35);
+        background: rgba(239, 68, 68, 0.06);
+        color: var(--accent-red);
+        box-shadow: 0 0 20px rgba(239, 68, 68, 0.08);
+      }
+
+      .resultado.advertencia {
+        border-color: rgba(245, 158, 11, 0.35);
+        background: rgba(245, 158, 11, 0.06);
+        color: var(--accent-amber);
+        box-shadow: 0 0 20px rgba(245, 158, 11, 0.08);
+      }
+
+      /* ── LINK VER REGISTROS ── */
+      .boton-registro {
+        display: inline-block;
+        margin-top: 24px;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        font-weight: 500;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        text-decoration: none;
+        padding: 10px 22px;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        background: rgba(0, 212, 255, 0.02);
+        transition: all 0.2s ease;
+      }
+
+      .boton-registro::before {
+        content: "⬡ ";
+        font-size: 10px;
+        opacity: 0.6;
+      }
+
+      .boton-registro:hover {
+        color: var(--accent-primary);
+        border-color: var(--border-strong);
+        background: var(--accent-glow);
+        box-shadow: 0 0 20px rgba(0, 212, 255, 0.08);
+        transform: translateY(-1px);
+      }
+      .boton-registro_volver {
+        position: fixed; /* lo fija en pantalla */
+        bottom: 20px; /* distancia desde abajo */
+        left: 20px; /* distancia desde la izquierda */
+
+        display: inline-block;
+        margin-top: 24px;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        font-weight: 500;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        text-decoration: none;
+        padding: 10px 22px;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        background: rgba(0, 212, 255, 0.02);
+        transition: all 0.2s ease;
+      }
+
+      .boton-registro_volver::before {
+        content: "⬡ ";
+        font-size: 10px;
+        opacity: 0.6;
+      }
+
+      .boton-registro_volver:hover {
+        color: var(--accent-primary);
+        border-color: var(--border-strong);
+        background: var(--accent-glow);
+        box-shadow: 0 0 20px rgba(0, 212, 255, 0.08);
+        transform: translateY(-1px);
+      }
+
+      /* ── RESPONSIVE ── */
+      @media (max-width: 520px) {
+        .contenedor {
+          padding: 30px 22px 28px;
+        }
+
+        h2 {
+          font-size: 24px;
+          letter-spacing: 2px;
+        }
+
+        button {
+          font-size: 13px;
+          letter-spacing: 2px;
+        }
+      }
+      select {
+        width: 100%;
+        background: rgba(11, 15, 26, 0.7);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        color: var(--text-primary);
+        font-family: var(--font-mono);
+        font-size: 13px;
+        padding: 12px 16px;
+        outline: none;
+        margin-bottom: 5px;
+      }
+
+      select:focus {
+        border-color: var(--accent-primary);
+        box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1);
+      }
+      #btnTop {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        border: 1px solid var(--border-strong);
+        background: var(--bg-card);
+        color: var(--accent-primary);
+        font-size: 20px;
+        cursor: pointer;
+        display: none; /* oculto al inicio */
+        z-index: 999;
+        box-shadow: var(--shadow-card);
+        transition: all 0.3s ease;
+      }
+
+      #btnTop:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+      }
+    </style>
+    <div class="contenedor">
+      <h2>Validar LPN</h2>
+
+      <label>Subir archivo Excel</label>
+      <input type="file" id="excelFile" />
+
+      <label>Ingresar LPN</label>
+      <input type="text" id="lpnInput" placeholder="Ej: R060120268656" />
+      <label>Filtrar por</label>
+      <select id="filtroCampo">
+        <option value="LPN">LPN</option>
+        <option value="NOTA">NOTA</option>
+        <option value="REFERENCIA">REFERENCIA</option>
+        <option value="TIPO">TIPO</option>
+      </select>
+      <button onclick="buscarLPN()">Buscar</button>
+
+      <div class="resultado" id="resultado"></div>
+    </div>
+    <script>
+      const lpnInput = document.getElementById("lpnInput");
+      const resultado = document.getElementById("resultado");
+
+      let buscado = false;
+
+      lpnInput.addEventListener("keydown", function (e) {
+        if (e.key !== "Enter") return;
+
+        if (!buscado) {
+          // Primera vez: buscar
+          buscarLPN();
+          buscado = true;
+        } else {
+          // Segunda vez: limpiar
+          lpnInput.value = "";
+          resultado.textContent = "";
+          resultado.className = "resultado";
+          buscado = false;
+          lpnInput.focus();
+        }
+      });
+    </script>
+    <a href="registro.html" class="boton-registro">Ver Registros de LPN</a>
+    <a href="index.html" class="boton-registro_volver">Volver</a>
+    <button id="btnTop" onclick="irArriba()">↑</button>
+    <script src="funciones.js"></script>
+  </body>
+</html>
