@@ -1839,12 +1839,6 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/png" href="./favicon-96x96.png" sizes="96x96" />
-    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
-    <link rel="shortcut icon" href="./favicon.ico" />
-    <link rel="apple-touch-icon" sizes="180x180" href="./icono-touch-de-apple.png" />
-    <meta name="apple-mobile-web-app-title" content="SCI-STEV" />
-    <link rel="manifest" href="./sitio.manifiesto web" />
     <title>Novedades · Reclamos CLH</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link
@@ -2095,6 +2089,7 @@
       .nota-toggle {
         display: flex;
         gap: 8px;
+        margin-bottom: 0;
       }
       .nota-opt {
         flex: 1;
@@ -2116,14 +2111,6 @@
         border-color: var(--accent);
         color: var(--accent);
         border-style: solid;
-      }
-      .nota-detalle-wrap {
-        display: none;
-        margin-top: 10px;
-        animation: slideDown 0.2s ease both;
-      }
-      .nota-detalle-wrap.visible {
-        display: block;
       }
       .btn-primary {
         width: 100%;
@@ -2170,126 +2157,6 @@
       }
       .loading .spinner {
         display: block;
-      }
-      .lista-dinamica {
-        display: flex;
-        flex-direction: column;
-        gap: 6px;
-        margin-bottom: 8px;
-      }
-      .lista-dinamica-row {
-        display: flex;
-        gap: 8px;
-        align-items: center;
-      }
-      .lista-dinamica-row input {
-        flex: 1;
-      }
-      .btn-remove-row {
-        background: rgba(239, 68, 68, 0.07);
-        border: 1px solid rgba(239, 68, 68, 0.25);
-        color: var(--accent-red);
-        border-radius: var(--radius-sm);
-        width: 32px;
-        height: 32px;
-        font-size: 13px;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
-        transition: all 0.2s;
-        padding: 0;
-      }
-      .btn-remove-row:hover {
-        background: rgba(239, 68, 68, 0.15);
-      }
-      .btn-add-row {
-        width: 100%;
-        padding: 8px;
-        background: none;
-        border: 1px dashed var(--border-strong);
-        border-radius: var(--radius-sm);
-        color: var(--text-muted);
-        font-family: var(--font-mono);
-        font-size: 10px;
-        letter-spacing: 1.5px;
-        text-transform: uppercase;
-        cursor: pointer;
-        transition: all 0.2s;
-        margin-top: 2px;
-      }
-      .btn-add-row:hover {
-        border-color: var(--accent);
-        color: var(--accent);
-        background: rgba(0, 212, 255, 0.04);
-      }
-      .btn-opcional {
-        width: 100%;
-        padding: 10px;
-        background: none;
-        border: 1px dashed var(--border);
-        border-radius: var(--radius-sm);
-        font-family: var(--font-mono);
-        font-size: 10px;
-        letter-spacing: 2px;
-        text-transform: uppercase;
-        color: var(--text-muted);
-        cursor: pointer;
-        transition: all 0.2s;
-        text-align: center;
-      }
-      .btn-opcional:hover {
-        border-color: var(--border-strong);
-        color: var(--text-secondary);
-      }
-      .panel-opcional {
-        display: none;
-        margin-top: 10px;
-        padding: 14px 16px;
-        border-radius: var(--radius-sm);
-        animation: slideDown 0.2s ease both;
-      }
-      .panel-opcional.visible {
-        display: block;
-      }
-      .panel-subreclamo {
-        background: rgba(0, 212, 255, 0.03);
-        border: 1px solid rgba(0, 212, 255, 0.15);
-      }
-      .panel-refs-extra {
-        background: rgba(167, 139, 250, 0.04);
-        border: 1px solid rgba(167, 139, 250, 0.2);
-      }
-      .panel-refs-extra .btn-add-row {
-        border-color: rgba(167, 139, 250, 0.35);
-        color: var(--accent-purple);
-      }
-      .panel-refs-extra .btn-add-row:hover {
-        border-color: var(--accent-purple);
-        color: var(--accent-purple);
-        background: rgba(167, 139, 250, 0.06);
-      }
-      .panel-refs-extra .lista-dinamica-row input {
-        border-color: rgba(167, 139, 250, 0.2);
-      }
-      .panel-refs-extra .lista-dinamica-row input:focus {
-        border-color: var(--accent-purple);
-        box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.1);
-      }
-      .panel-header {
-        font-family: var(--font-mono);
-        font-size: 9px;
-        letter-spacing: 2.5px;
-        text-transform: uppercase;
-        color: var(--text-muted);
-        margin-bottom: 10px;
-      }
-      .panel-header.purple {
-        color: var(--accent-purple);
-      }
-      .section-gap {
-        margin-top: 14px;
       }
       .search-bar {
         position: relative;
@@ -2556,33 +2423,6 @@
       .btn-pdf-a:hover {
         background: rgba(245, 158, 11, 0.16);
       }
-      .chips-wrap {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 6px;
-        margin-top: 4px;
-      }
-      .chip {
-        font-family: var(--font-mono);
-        font-size: 11px;
-        padding: 3px 10px;
-        border-radius: 999px;
-      }
-      .chip-accent {
-        background: rgba(0, 212, 255, 0.08);
-        border: 1px solid var(--border-strong);
-        color: var(--accent);
-      }
-      .chip-purple {
-        background: rgba(167, 139, 250, 0.1);
-        border: 1px solid rgba(167, 139, 250, 0.3);
-        color: var(--accent-purple);
-      }
-      .chip-muted {
-        background: rgba(0, 212, 255, 0.04);
-        border: 1px solid var(--border);
-        color: var(--text-secondary);
-      }
       .modal-overlay {
         display: none;
         position: fixed;
@@ -2758,6 +2598,235 @@
         border-color: var(--border-strong);
         background: var(--accent-glow);
       }
+
+      /* ══════════════════════════════════════════
+         NUEVOS ESTILOS — Campo nota detalle,
+         multi-referencias, subreclamos, refs extras
+      ══════════════════════════════════════════ */
+
+      /* Campo detalle de nota (aparece al seleccionar "Con nota") */
+      .nota-detalle-wrap {
+        display: none;
+        margin-top: 10px;
+        animation: slideDown 0.2s ease both;
+      }
+      .nota-detalle-wrap.visible {
+        display: block;
+      }
+
+      /* Bloque de lista dinámica (referencias, subreclamos, refs extras) */
+      .lista-dinamica {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        margin-bottom: 8px;
+      }
+      .lista-dinamica-row {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+      .lista-dinamica-row input {
+        flex: 1;
+      }
+      .btn-remove-row {
+        background: rgba(239, 68, 68, 0.07);
+        border: 1px solid rgba(239, 68, 68, 0.25);
+        color: var(--accent-red);
+        border-radius: var(--radius-sm);
+        width: 32px;
+        height: 32px;
+        font-size: 13px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        transition: all 0.2s;
+        padding: 0;
+      }
+      .btn-remove-row:hover {
+        background: rgba(239, 68, 68, 0.15);
+      }
+
+      /* Botón añadir fila */
+      .btn-add-row {
+        width: 100%;
+        padding: 8px;
+        background: none;
+        border: 1px dashed var(--border-strong);
+        border-radius: var(--radius-sm);
+        color: var(--text-muted);
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: all 0.2s;
+        margin-top: 2px;
+      }
+      .btn-add-row:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+        background: rgba(0, 212, 255, 0.04);
+      }
+
+      /* Botón opcional que despliega sección (subreclamos, refs extras) */
+      .btn-opcional {
+        width: 100%;
+        padding: 10px;
+        background: none;
+        border: 1px dashed var(--border);
+        border-radius: var(--radius-sm);
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        cursor: pointer;
+        transition: all 0.2s;
+        text-align: center;
+        margin-bottom: 0;
+      }
+      .btn-opcional:hover {
+        border-color: var(--border-strong);
+        color: var(--text-secondary);
+      }
+
+      /* Panel opcional colapsable */
+      .panel-opcional {
+        display: none;
+        margin-top: 10px;
+        padding: 14px 16px;
+        border-radius: var(--radius-sm);
+        animation: slideDown 0.2s ease both;
+      }
+      .panel-opcional.visible {
+        display: block;
+      }
+
+      /* Colores por tipo de panel */
+      .panel-subreclamo {
+        background: rgba(0, 212, 255, 0.03);
+        border: 1px solid rgba(0, 212, 255, 0.15);
+      }
+      .panel-refs-extra {
+        background: rgba(167, 139, 250, 0.04);
+        border: 1px solid rgba(167, 139, 250, 0.2);
+      }
+      .panel-refs-extra .btn-add-row {
+        border-color: rgba(167, 139, 250, 0.35);
+        color: var(--accent-purple);
+      }
+      .panel-refs-extra .btn-add-row:hover {
+        border-color: var(--accent-purple);
+        color: var(--accent-purple);
+        background: rgba(167, 139, 250, 0.06);
+      }
+      .panel-refs-extra .lista-dinamica-row input {
+        border-color: rgba(167, 139, 250, 0.2);
+      }
+      .panel-refs-extra .lista-dinamica-row input:focus {
+        border-color: var(--accent-purple);
+        box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.1);
+      }
+
+      .panel-header {
+        font-family: var(--font-mono);
+        font-size: 9px;
+        letter-spacing: 2.5px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        margin-bottom: 10px;
+      }
+      .panel-header.purple {
+        color: var(--accent-purple);
+      }
+
+      /* Separador opcional entre secciones */
+      .section-gap {
+        margin-top: 14px;
+      }
+
+      /* Chips en detalle */
+      .chips-wrap {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-top: 4px;
+      }
+      .chip {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        padding: 3px 10px;
+        border-radius: 999px;
+      }
+      .chip-accent {
+        background: rgba(0, 212, 255, 0.08);
+        border: 1px solid var(--border-strong);
+        color: var(--accent);
+      }
+      .chip-purple {
+        background: rgba(167, 139, 250, 0.1);
+        border: 1px solid rgba(167, 139, 250, 0.3);
+        color: var(--accent-purple);
+      }
+      .chip-muted {
+        background: rgba(0, 212, 255, 0.04);
+        border: 1px solid var(--border);
+        color: var(--text-secondary);
+      }
+
+      /* ── REUBICAR TAB ── */
+      .reub-row {
+        background: var(--bg-card2);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        padding: 12px 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        animation: slideUp 0.3s ease both;
+      }
+      .reub-reclamo {
+        font-family: var(--font-mono);
+        font-size: 13px;
+        color: var(--accent);
+        font-weight: 500;
+      }
+      .reub-meta {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        color: var(--text-muted);
+        letter-spacing: 1px;
+      }
+      .reub-arrow {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 4px;
+        font-family: var(--font-mono);
+        font-size: 11px;
+      }
+      .reub-from {
+        color: var(--accent-red);
+        padding: 2px 8px;
+        background: rgba(239, 68, 68, 0.08);
+        border: 1px solid rgba(239, 68, 68, 0.25);
+        border-radius: 999px;
+      }
+      .reub-to {
+        color: var(--accent-green);
+        padding: 2px 8px;
+        background: rgba(16, 185, 129, 0.08);
+        border: 1px solid rgba(16, 185, 129, 0.25);
+        border-radius: 999px;
+      }
+      .reub-chevron {
+        color: var(--text-muted);
+        font-size: 14px;
+      }
+
       @keyframes slideUp {
         from {
           opacity: 0;
@@ -2789,6 +2858,14 @@
         }
         100% {
           background-position: -200% 0;
+        }
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
         }
       }
       @media (max-width: 560px) {
@@ -2825,13 +2902,17 @@
       <button class="tab-btn" id="tab2" onclick="switchTab('consultar')">
         🔍 Consultar
       </button>
+      <button class="tab-btn" id="tab3" onclick="switchTab('reubicar')">
+        📦 Reubicar
+      </button>
     </div>
 
-    <!-- ══ TAB REGISTRAR ══ -->
+    <!-- ── TAB REGISTRAR ── -->
     <div id="tabRegistrar" style="width: 100%; max-width: 680px">
       <div class="card">
         <p class="card-title">Nueva novedad</p>
 
+        <!-- Auto-relleno -->
         <div class="grid-2">
           <div class="field field-auto">
             <label class="fl">Registrado por</label>
@@ -2843,6 +2924,7 @@
           </div>
         </div>
 
+        <!-- Reclamo + botón subreclamo -->
         <div class="field">
           <label class="fl"
             >Reclamo
@@ -2853,8 +2935,9 @@
           <input
             type="text"
             id="reclamo"
-            placeholder="Numero o codigo de reclamo"
+            placeholder="Número o código de reclamo"
           />
+          <!-- Botón opcional subreclamos -->
           <div class="section-gap">
             <button
               type="button"
@@ -2881,6 +2964,7 @@
           </div>
         </div>
 
+        <!-- Referencias múltiples -->
         <div class="field">
           <label class="fl"
             >Referencia(s)
@@ -2888,7 +2972,9 @@
               >*</span
             ></label
           >
-          <div class="lista-dinamica" id="listaReferencias"></div>
+          <div class="lista-dinamica" id="listaReferencias">
+            <!-- primera fila se crea con JS -->
+          </div>
           <button
             type="button"
             class="btn-add-row"
@@ -2898,6 +2984,7 @@
           </button>
         </div>
 
+        <!-- Cantidad y Ubicación -->
         <div class="grid-2">
           <div class="field">
             <label class="fl"
@@ -2909,11 +2996,12 @@
             <input type="text" id="cantidad" placeholder="Ej: 12 unidades" />
           </div>
           <div class="field">
-            <label class="fl">Ubicacion</label>
+            <label class="fl">Ubicación</label>
             <input type="text" id="ubicacion" placeholder="Ej: C240420260001" />
           </div>
         </div>
 
+        <!-- Nota toggle + campo detalle -->
         <div class="field">
           <label class="fl">Nota</label>
           <div class="nota-toggle">
@@ -2936,12 +3024,13 @@
             <input
               type="text"
               id="notaDetalle"
-              placeholder="Ej: NRC-22321"
+              placeholder="Ej: Nota #4521, remisión 009..."
               style="margin-top: 8px"
             />
           </div>
         </div>
 
+        <!-- Observaciones -->
         <div class="field">
           <label class="fl">Observaciones</label>
           <textarea
@@ -2950,6 +3039,7 @@
           ></textarea>
         </div>
 
+        <!-- Botón opcional Referencias Extras -->
         <div class="section-gap">
           <button
             type="button"
@@ -2961,12 +3051,12 @@
             onclick="togglePanel('panelRefsExtras','btnRefsExtrasTxt','refsextras')"
           >
             <span id="btnRefsExtrasTxt"
-              >＋ &nbsp;Agregar referencias extras (sin identificacion)</span
+              >＋ &nbsp;Agregar referencias extras (sin identificación)</span
             >
           </button>
           <div class="panel-opcional panel-refs-extra" id="panelRefsExtras">
             <div class="panel-header purple">
-              ⬡ &nbsp;Referencias extras · sin identificacion
+              ⬡ &nbsp;Referencias extras · sin identificación
             </div>
             <div class="lista-dinamica" id="listaRefsExtras"></div>
             <button
@@ -2976,7 +3066,7 @@
                 border-color: rgba(167, 139, 250, 0.35);
                 color: var(--accent-purple);
               "
-              onclick="addRowExtra('listaRefsExtras','Referencia sin identificacion...','Descripcion de la referencia...')"
+              onclick="addRowExtra('listaRefsExtras','Referencia sin identificación...','Descripción de la referencia...')"
             >
               + Agregar referencia extra
             </button>
@@ -2995,13 +3085,13 @@
       </div>
     </div>
 
-    <!-- ══ TAB CONSULTAR ══ -->
+    <!-- ── TAB CONSULTAR ── -->
     <div id="tabConsultar" style="display: none; width: 100%; max-width: 680px">
       <div class="search-bar">
         <input
           type="text"
           id="searchInput"
-          placeholder="Buscar por reclamo, subreclamo, referencia, usuario, nota, ubicacion..."
+          placeholder="Buscar por reclamo, subreclamo, referencia, usuario, nota, ubicación..."
         />
         <span class="search-icon">⌕</span>
       </div>
@@ -3060,13 +3150,105 @@
       <div id="detalleNovedad"></div>
     </div>
 
-    <!-- ══ MODAL EDITAR ══ -->
+    <!-- ── TAB REUBICAR ── -->
+    <div id="tabReubicar" style="display: none; width: 100%; max-width: 680px">
+      <div class="card">
+        <p class="card-title">Cambio masivo de ubicación</p>
+        <div class="grid-2">
+          <div class="field">
+            <label class="fl">Ubicación origen</label>
+            <input
+              type="text"
+              id="reubOrigen"
+              placeholder="Ej: LPN-001, A1-23..."
+            />
+          </div>
+          <div class="field">
+            <label class="fl">Ubicación destino</label>
+            <input
+              type="text"
+              id="reubDestino"
+              placeholder="Ej: LPN-002, B4-05..."
+            />
+          </div>
+        </div>
+        <button
+          type="button"
+          class="btn-primary"
+          onclick="buscarParaReubicar()"
+          style="margin-top: 0"
+        >
+          <span>🔍 &nbsp;Buscar novedades en esta ubicación</span>
+        </button>
+
+        <!-- Preview resultados -->
+        <div id="reubPreview" style="display: none; margin-top: 20px">
+          <div
+            id="reubContador"
+            style="
+              font-family: var(--font-mono);
+              font-size: 11px;
+              letter-spacing: 2px;
+              text-transform: uppercase;
+              color: var(--text-muted);
+              margin-bottom: 14px;
+              padding: 5px 14px;
+              border: 1px solid var(--border);
+              border-radius: 999px;
+              background: rgba(0, 212, 255, 0.03);
+              text-align: center;
+            "
+          ></div>
+          <div
+            id="reubLista"
+            style="
+              display: flex;
+              flex-direction: column;
+              gap: 8px;
+              margin-bottom: 16px;
+            "
+          ></div>
+          <button
+            type="button"
+            class="btn-primary"
+            id="btnConfirmarReub"
+            onclick="confirmarReubicacion()"
+            style="
+              background: linear-gradient(135deg, #064e3b, #065f46);
+              border-color: rgba(16, 185, 129, 0.4);
+              color: var(--accent-green);
+            "
+          >
+            <div class="spinner" id="reubSpinner"></div>
+            <span id="reubBtnTxt">✓ &nbsp;Confirmar cambio de ubicación</span>
+          </button>
+        </div>
+        <div
+          id="reubEmpty"
+          style="
+            display: none;
+            text-align: center;
+            padding: 32px;
+            font-family: var(--font-mono);
+            font-size: 11px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+          "
+        >
+          No se encontraron novedades con esa ubicación
+        </div>
+      </div>
+    </div>
+
+    <!-- ── MODAL EDITAR ── -->
     <div class="modal-overlay" id="editModal">
       <div class="modal">
         <button class="modal-close" onclick="cerrarModal()">✕</button>
         <p class="modal-title">Editar Novedad</p>
         <input type="hidden" id="editId" />
 
+        <!-- Reclamo + subreclamos -->
         <div class="field">
           <label class="fl">Reclamo</label>
           <input type="text" id="editReclamo" />
@@ -3099,6 +3281,7 @@
           </div>
         </div>
 
+        <!-- Referencias múltiples -->
         <div class="field">
           <label class="fl">Referencia(s)</label>
           <div class="lista-dinamica" id="editListaReferencias"></div>
@@ -3117,7 +3300,7 @@
             <input type="text" id="editCantidad" />
           </div>
           <div class="field">
-            <label class="fl">Ubicacion</label>
+            <label class="fl">Ubicación</label>
             <input
               type="text"
               id="editUbicacion"
@@ -3126,6 +3309,7 @@
           </div>
         </div>
 
+        <!-- Nota toggle + detalle -->
         <div class="field">
           <label class="fl">Nota</label>
           <div class="nota-toggle">
@@ -3148,7 +3332,7 @@
             <input
               type="text"
               id="editNotaDetalle"
-              placeholder="Ej: Nota #4521, remision 009..."
+              placeholder="Ej: Nota #4521, remisión 009..."
               style="margin-top: 8px"
             />
           </div>
@@ -3159,6 +3343,7 @@
           <textarea id="editObservaciones" style="min-height: 100px"></textarea>
         </div>
 
+        <!-- Referencias extras en modal -->
         <div class="section-gap">
           <button
             type="button"
@@ -3170,12 +3355,12 @@
             onclick="togglePanel('editPanelRefsExtras','editBtnRefsExtrasTxt','refsextras')"
           >
             <span id="editBtnRefsExtrasTxt"
-              >＋ &nbsp;Referencias extras (sin identificacion)</span
+              >＋ &nbsp;Referencias extras (sin identificación)</span
             >
           </button>
           <div class="panel-opcional panel-refs-extra" id="editPanelRefsExtras">
             <div class="panel-header purple">
-              ⬡ &nbsp;Referencias extras · sin identificacion
+              ⬡ &nbsp;Referencias extras · sin identificación
             </div>
             <div class="lista-dinamica" id="editListaRefsExtras"></div>
             <button
@@ -3185,7 +3370,7 @@
                 border-color: rgba(167, 139, 250, 0.35);
                 color: var(--accent-purple);
               "
-              onclick="addRowExtra('editListaRefsExtras','Referencia sin identificacion...','Descripcion...')"
+              onclick="addRowExtra('editListaRefsExtras','Referencia sin identificación...','Descripción...')"
             >
               + Agregar referencia extra
             </button>
@@ -3205,327 +3390,10 @@
     <div class="toast" id="toast"></div>
     <a href="index.html" class="nav-link">&nbsp;Inicio</a>
 
-    <!-- ══════════════════════════════════════════════════
-         SCRIPT A — regular (NO module).
-         Define todas las funciones que los onclick="" del
-         HTML necesitan encontrar de inmediato.
-         Las funciones async de Firebase se asignan despues
-         desde el modulo a window.*, y switchTab las llama
-         con un pequeño polling si el modulo aun no cargo.
-    ══════════════════════════════════════════════════ -->
+    <!-- Firebase compat (global scope, no module needed) -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
     <script>
-      /* ─── Estado nota ─── */
-      var notaSeleccionada = "Con nota";
-      var notaEditSeleccionada = "Con nota";
-
-      /* ─── Toast ─── */
-      function showToast(msg, type) {
-        var t = document.getElementById("toast");
-        t.textContent = msg;
-        t.className = "toast " + type + " show";
-        setTimeout(function () {
-          t.classList.remove("show");
-        }, 3500);
-      }
-
-      /* ─── Tabs ─── */
-      function switchTab(tab) {
-        document.getElementById("tabRegistrar").style.display = "none";
-        document.getElementById("tabConsultar").style.display = "none";
-        document.getElementById("tab1").classList.remove("active");
-        document.getElementById("tab2").classList.remove("active");
-        if (tab === "registrar") {
-          document.getElementById("tabRegistrar").style.display = "block";
-          document.getElementById("tab1").classList.add("active");
-        } else {
-          document.getElementById("tabConsultar").style.display = "block";
-          document.getElementById("tab2").classList.add("active");
-          // cargarNovedades viene del modulo; esperar si aun no esta lista
-          if (typeof window._cargarNovedades === "function") {
-            window._cargarNovedades();
-          } else {
-            var t = setInterval(function () {
-              if (typeof window._cargarNovedades === "function") {
-                clearInterval(t);
-                window._cargarNovedades();
-              }
-            }, 40);
-          }
-        }
-      }
-
-      /* ─── Nota toggle (registro) ─── */
-      function seleccionarNota(val) {
-        notaSeleccionada = val;
-        document
-          .getElementById("notaConBtn")
-          .classList.toggle("selected", val === "Con nota");
-        document
-          .getElementById("notaSinBtn")
-          .classList.toggle("selected", val === "Sin nota");
-        var w = document.getElementById("notaDetalleWrap");
-        if (val === "Con nota") {
-          w.classList.add("visible");
-        } else {
-          w.classList.remove("visible");
-          document.getElementById("notaDetalle").value = "";
-        }
-      }
-
-      /* ─── Nota toggle (edicion) ─── */
-      function seleccionarNotaEdit(val) {
-        notaEditSeleccionada = val;
-        document
-          .getElementById("editNotaConBtn")
-          .classList.toggle("selected", val === "Con nota");
-        document
-          .getElementById("editNotaSinBtn")
-          .classList.toggle("selected", val === "Sin nota");
-        var w = document.getElementById("editNotaDetalleWrap");
-        if (val === "Con nota") {
-          w.classList.add("visible");
-        } else {
-          w.classList.remove("visible");
-          document.getElementById("editNotaDetalle").value = "";
-        }
-      }
-
-      /* ─── Panel opcional ─── */
-      function togglePanel(panelId, btnTxtId, tipo) {
-        var panel = document.getElementById(panelId);
-        var btnTxt = document.getElementById(btnTxtId);
-        var visible = panel.classList.toggle("visible");
-        if (tipo === "subreclamos") {
-          if (visible) {
-            btnTxt.textContent = "— Ocultar subreclamos";
-            var lista = panel.querySelector(".lista-dinamica");
-            if (lista && !lista.querySelector(".lista-dinamica-row"))
-              addRow(lista.id, "Ej: SUB-001 o reclamo relacionado");
-          } else {
-            btnTxt.textContent = "＋ Agregar subreclamo / reclamo relacionado";
-          }
-        } else {
-          if (visible) {
-            btnTxt.textContent = "— Ocultar referencias extras";
-            var lista2 = panel.querySelector(".lista-dinamica");
-            if (lista2 && !lista2.querySelector(".lista-dinamica-row"))
-              addRowExtra(
-                lista2.id,
-                "Ubicacion.",
-                "Descripcion de la referencia..."
-              );
-          } else {
-            btnTxt.textContent =
-              "＋ Agregar referencias extras (sin identificacion)";
-          }
-        }
-      }
-
-      /* ─── Listas dinamicas ─── */
-      function addRow(listId, placeholder) {
-        var list = document.getElementById(listId);
-        if (!list) return;
-        var row = document.createElement("div");
-        row.className = "lista-dinamica-row";
-        row.innerHTML =
-          '<input type="text" placeholder="' +
-          placeholder +
-          '" />' +
-          '<button type="button" class="btn-remove-row" onclick="removeRow(this)">✕</button>';
-        list.appendChild(row);
-        row.querySelector("input").focus();
-      }
-
-      function addRowExtra(listId, ph1, ph2) {
-        var list = document.getElementById(listId);
-        if (!list) return;
-        var row = document.createElement("div");
-        row.className = "lista-dinamica-row";
-        row.style.cssText = "flex-direction:column;align-items:stretch;gap:6px";
-        row.innerHTML =
-          '<div style="display:flex;gap:8px;align-items:center">' +
-          '<input type="text" placeholder="' +
-          ph1 +
-          '" style="flex:1" />' +
-          '<button type="button" class="btn-remove-row" onclick="removeRow(this.closest(\'.lista-dinamica-row\'))">✕</button>' +
-          "</div>" +
-          '<input type="text" placeholder="' +
-          ph2 +
-          '" style="border-color:rgba(167,139,250,0.2);font-size:11px;padding:8px 12px" />';
-        list.appendChild(row);
-        row.querySelector("input").focus();
-      }
-
-      function removeRow(el) {
-        var row = el && el.closest ? el.closest(".lista-dinamica-row") : el;
-        if (!row) return;
-        var list = row.parentElement;
-        if (
-          list &&
-          list.id === "listaReferencias" &&
-          list.children.length === 1
-        ) {
-          showToast("Debe haber al menos una referencia", "error");
-          return;
-        }
-        row.remove();
-      }
-
-      /* ─── Helpers de lectura ─── */
-      function getListValues(listId) {
-        return Array.from(
-          document.querySelectorAll("#" + listId + " .lista-dinamica-row input")
-        )
-          .map(function (i) {
-            return i.value.trim();
-          })
-          .filter(function (v) {
-            return v !== "";
-          });
-      }
-
-      function getRefsExtras(listId) {
-        var result = [];
-        document
-          .querySelectorAll("#" + listId + " .lista-dinamica-row")
-          .forEach(function (row) {
-            var inputs = row.querySelectorAll("input");
-            var ref = (inputs[0] && inputs[0].value.trim()) || "";
-            var desc = (inputs[1] && inputs[1].value.trim()) || "";
-            if (ref) result.push({ ref: ref, desc: desc });
-          });
-        return result;
-      }
-
-      /* ─── Helpers de poblado ─── */
-      function poblarLista(listId, valores, placeholder) {
-        valores = valores || [];
-        placeholder = placeholder || "";
-        var list = document.getElementById(listId);
-        if (!list) return;
-        list.innerHTML = "";
-        if (valores.length === 0) valores = [""];
-        valores.forEach(function (v) {
-          var row = document.createElement("div");
-          row.className = "lista-dinamica-row";
-          row.innerHTML =
-            '<input type="text" placeholder="' +
-            placeholder +
-            '" value="' +
-            (v || "") +
-            '" />' +
-            '<button type="button" class="btn-remove-row" onclick="removeRow(this)">✕</button>';
-          list.appendChild(row);
-        });
-      }
-
-      function poblarRefsExtras(listId, panelId, btnTxtId, items) {
-        items = items || [];
-        var list = document.getElementById(listId);
-        if (!list) return;
-        list.innerHTML = "";
-        if (items.length > 0) {
-          document.getElementById(panelId).classList.add("visible");
-          document.getElementById(btnTxtId).textContent =
-            "— Ocultar referencias extras";
-          items.forEach(function (item) {
-            var row = document.createElement("div");
-            row.className = "lista-dinamica-row";
-            row.style.cssText =
-              "flex-direction:column;align-items:stretch;gap:6px";
-            row.innerHTML =
-              '<div style="display:flex;gap:8px;align-items:center">' +
-              '<input type="text" value="' +
-              (item.ref || "") +
-              '" placeholder="ubicacion" style="flex:1" />' +
-              '<button type="button" class="btn-remove-row" onclick="removeRow(this.closest(\'.lista-dinamica-row\'))">✕</button>' +
-              "</div>" +
-              '<input type="text" value="' +
-              (item.desc || "") +
-              '" placeholder="Describe la referencia aqui..." style="border-color:rgba(167,139,250,0.2);font-size:11px;padding:8px 12px" />';
-            list.appendChild(row);
-          });
-        }
-      }
-
-      function poblarSubreclamos(listId, panelId, btnTxtId, valores) {
-        valores = valores || [];
-        var list = document.getElementById(listId);
-        if (!list) return;
-        list.innerHTML = "";
-        if (valores.length > 0) {
-          document.getElementById(panelId).classList.add("visible");
-          document.getElementById(btnTxtId).textContent =
-            "— Ocultar subreclamos";
-          valores.forEach(function (v) {
-            var row = document.createElement("div");
-            row.className = "lista-dinamica-row";
-            row.innerHTML =
-              '<input type="text" value="' +
-              v +
-              '" placeholder="Ej: SUB-001 o reclamo relacionado" />' +
-              '<button type="button" class="btn-remove-row" onclick="removeRow(this)">✕</button>';
-            list.appendChild(row);
-          });
-        }
-      }
-
-      /* ─── Modal ─── */
-      function cerrarModal() {
-        document.getElementById("editModal").classList.remove("active");
-      }
-
-      /* ─── Stubs para funciones async (el modulo las sobreescribe) ─── */
-      function guardarNovedad() {
-        showToast("Cargando...", "info");
-      }
-      function guardarEdicion() {
-        showToast("Cargando...", "info");
-      }
-      function abrirEditar(id) {
-        showToast("Cargando...", "info");
-      }
-      function eliminarNovedad(id) {
-        showToast("Cargando...", "info");
-      }
-      function mostrarDetalle(id) {
-        showToast("Cargando...", "info");
-      }
-      function renderLista(d) {
-        showToast("Cargando...", "info");
-      }
-      function exportarTodosPDF() {
-        showToast("Cargando...", "info");
-      }
-      function exportarExcel() {
-        showToast("Cargando...", "info");
-      }
-
-      document.addEventListener("keydown", function (e) {
-        if (e.key === "Escape") cerrarModal();
-      });
-    </script>
-
-    <!-- ══════════════════════════════════════════════════
-         SCRIPT B — module Firebase.
-         Sobreescribe los stubs de arriba con las versiones
-         reales una vez que el modulo carga (siempre antes
-         de cualquier interaccion real del usuario).
-    ══════════════════════════════════════════════════ -->
-    <script type="module">
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-      import {
-        getFirestore,
-        collection,
-        addDoc,
-        getDocs,
-        doc,
-        updateDoc,
-        deleteDoc,
-        query,
-        orderBy,
-      } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
       const firebaseConfig = {
         apiKey: "AIzaSyBKLgOakBA2_2QqWC-APWeTGH2YRsClOXM",
         authDomain: "reclamos-clh.firebaseapp.com",
@@ -3534,10 +3402,9 @@
         messagingSenderId: "893651222188",
         appId: "1:893651222188:web:edb9d9963596255633e909",
       };
-      const app = initializeApp(firebaseConfig);
-      const db = getFirestore(app);
+      firebase.initializeApp(firebaseConfig);
+      const db = firebase.firestore();
 
-      /* ─── Sesion ─── */
       const sesionRaw = sessionStorage.getItem("clh_user");
       if (!sesionRaw) window.location.href = "login.html";
       const sesion = sesionRaw ? JSON.parse(sesionRaw) : {};
@@ -3555,14 +3422,244 @@
 
       document.getElementById("regPor").value =
         sesion.nombre || sesion.username || "—";
-      document.getElementById("regFecha").value = fechaStr + " " + horaStr;
+      document.getElementById("regFecha").value = `${fechaStr} ${horaStr}`;
       document.getElementById("sessionLabel").textContent =
         sesion.nombre || sesion.username || "—";
 
-      /* Primera fila de referencias */
+      // ══════════════════════════════════════════
+      // HELPERS LISTAS DINÁMICAS
+      // ══════════════════════════════════════════
+
+      window.addRow = function (listId, placeholder) {
+        const list = document.getElementById(listId);
+        const row = document.createElement("div");
+        row.className = "lista-dinamica-row";
+        row.innerHTML = `
+          <input type="text" placeholder="${placeholder}" />
+          <button type="button" class="btn-remove-row" onclick="removeRow(this)">✕</button>`;
+        list.appendChild(row);
+        row.querySelector("input").focus();
+      };
+
+      // Fila con dos campos: referencia + descripción (para refs extras)
+      window.addRowExtra = function (listId, ph1, ph2) {
+        const list = document.getElementById(listId);
+        const row = document.createElement("div");
+        row.className = "lista-dinamica-row";
+        row.style.flexDirection = "column";
+        row.style.alignItems = "stretch";
+        row.style.gap = "6px";
+        row.innerHTML = `
+          <div style="display:flex;gap:8px;align-items:center">
+            <input type="text" placeholder="${ph1}" style="flex:1" />
+            <button type="button" class="btn-remove-row" onclick="removeRow(this.closest('.lista-dinamica-row'))">✕</button>
+          </div>
+          <input type="text" placeholder="${ph2}" style="border-color:rgba(167,139,250,0.2);font-size:11px;padding:8px 12px" />`;
+        list.appendChild(row);
+        row.querySelector("input").focus();
+      };
+
+      window.removeRow = function (el) {
+        const row = el.closest ? el.closest(".lista-dinamica-row") : el;
+        const list = row.parentElement;
+        if (
+          list &&
+          list.id === "listaReferencias" &&
+          list.children.length === 1
+        ) {
+          alert("Debe haber al menos una referencia");
+          return;
+        }
+        row.remove();
+      };
+
+      // ── Inicializar primera fila de referencias (después de definir funciones) ──
       addRow("listaReferencias", "Referencia del producto");
 
-      /* ─── Guardar novedad ─── */
+      // Obtener valores de lista simple
+      function getListValues(listId) {
+        return Array.from(
+          document.querySelectorAll(`#${listId} .lista-dinamica-row input`)
+        )
+          .map((i) => i.value.trim())
+          .filter((v) => v !== "");
+      }
+
+      // Obtener refs extras (par: ref + descripción)
+      function getRefsExtras(listId) {
+        const rows = document.querySelectorAll(
+          `#${listId} .lista-dinamica-row`
+        );
+        const result = [];
+        rows.forEach((row) => {
+          const inputs = row.querySelectorAll("input");
+          const ref = inputs[0]?.value.trim() || "";
+          const desc = inputs[1]?.value.trim() || "";
+          if (ref) result.push({ ref, desc });
+        });
+        return result;
+      }
+
+      // Poblar lista simple
+      function poblarLista(listId, valores = [], placeholder = "") {
+        const list = document.getElementById(listId);
+        list.innerHTML = "";
+        if (valores.length === 0) valores = [""];
+        valores.forEach((v) => {
+          const row = document.createElement("div");
+          row.className = "lista-dinamica-row";
+          row.innerHTML = `
+            <input type="text" placeholder="${placeholder}" value="${v}" />
+            <button type="button" class="btn-remove-row" onclick="removeRow(this)">✕</button>`;
+          list.appendChild(row);
+        });
+      }
+
+      // Poblar refs extras
+      function poblarRefsExtras(listId, panelId, btnTxtId, items = []) {
+        const list = document.getElementById(listId);
+        list.innerHTML = "";
+        if (items.length > 0) {
+          document.getElementById(panelId).classList.add("visible");
+          document.getElementById(btnTxtId).textContent =
+            "— Ocultar referencias extras";
+          items.forEach((item) => {
+            const row = document.createElement("div");
+            row.className = "lista-dinamica-row";
+            row.style.flexDirection = "column";
+            row.style.alignItems = "stretch";
+            row.style.gap = "6px";
+            row.innerHTML = `
+              <div style="display:flex;gap:8px;align-items:center">
+                <input type="text" value="${
+                  item.ref || ""
+                }" placeholder="Referencia sin identificación..." style="flex:1" />
+                <button type="button" class="btn-remove-row" onclick="removeRow(this.closest('.lista-dinamica-row'))">✕</button>
+              </div>
+              <input type="text" value="${
+                item.desc || ""
+              }" placeholder="Descripción de la referencia..." style="border-color:rgba(167,139,250,0.2);font-size:11px;padding:8px 12px" />`;
+            list.appendChild(row);
+          });
+        }
+      }
+
+      // Poblar subreclamos
+      function poblarSubreclamos(listId, panelId, btnTxtId, valores = []) {
+        const list = document.getElementById(listId);
+        list.innerHTML = "";
+        if (valores.length > 0) {
+          document.getElementById(panelId).classList.add("visible");
+          document.getElementById(btnTxtId).textContent =
+            "— Ocultar subreclamos";
+          valores.forEach((v) => {
+            const row = document.createElement("div");
+            row.className = "lista-dinamica-row";
+            row.innerHTML = `
+              <input type="text" value="${v}" placeholder="Ej: SUB-001 o reclamo relacionado" />
+              <button type="button" class="btn-remove-row" onclick="removeRow(this)">✕</button>`;
+            list.appendChild(row);
+          });
+        }
+      }
+
+      // Toggle panel opcional
+      window.togglePanel = function (panelId, btnTxtId, tipo) {
+        const panel = document.getElementById(panelId);
+        const btnTxt = document.getElementById(btnTxtId);
+        const isVisible = panel.classList.toggle("visible");
+        if (tipo === "subreclamos") {
+          if (isVisible) {
+            btnTxt.textContent = "— Ocultar subreclamos";
+            if (!panel.querySelector(".lista-dinamica-row")) {
+              addRow(
+                panel.querySelector(".lista-dinamica").id,
+                "Ej: SUB-001 o reclamo relacionado"
+              );
+            }
+          } else {
+            btnTxt.textContent = "＋ Agregar subreclamo / reclamo relacionado";
+          }
+        } else {
+          if (isVisible) {
+            btnTxt.textContent = "— Ocultar referencias extras";
+            if (!panel.querySelector(".lista-dinamica-row")) {
+              addRowExtra(
+                panel.querySelector(".lista-dinamica").id,
+                "Referencia sin identificación...",
+                "Descripción de la referencia..."
+              );
+            }
+          } else {
+            btnTxt.textContent =
+              "＋ Agregar referencias extras (sin identificación)";
+          }
+        }
+      };
+
+      // ── Nota toggle ──
+      let notaSeleccionada = "Con nota";
+      window.seleccionarNota = function (val) {
+        notaSeleccionada = val;
+        document
+          .getElementById("notaConBtn")
+          .classList.toggle("selected", val === "Con nota");
+        document
+          .getElementById("notaSinBtn")
+          .classList.toggle("selected", val === "Sin nota");
+        const w = document.getElementById("notaDetalleWrap");
+        if (val === "Con nota") {
+          w.classList.add("visible");
+        } else {
+          w.classList.remove("visible");
+          document.getElementById("notaDetalle").value = "";
+        }
+      };
+      let notaEditSeleccionada = "Con nota";
+      window.seleccionarNotaEdit = function (val) {
+        notaEditSeleccionada = val;
+        document
+          .getElementById("editNotaConBtn")
+          .classList.toggle("selected", val === "Con nota");
+        document
+          .getElementById("editNotaSinBtn")
+          .classList.toggle("selected", val === "Sin nota");
+        const w = document.getElementById("editNotaDetalleWrap");
+        if (val === "Con nota") {
+          w.classList.add("visible");
+        } else {
+          w.classList.remove("visible");
+          document.getElementById("editNotaDetalle").value = "";
+        }
+      };
+
+      // ── Tabs ──
+      window.switchTab = function (tab) {
+        document.getElementById("tabRegistrar").style.display = "none";
+        document.getElementById("tabConsultar").style.display = "none";
+        document.getElementById("tabReubicar").style.display = "none";
+        document.getElementById("tab1").classList.remove("active");
+        document.getElementById("tab2").classList.remove("active");
+        document.getElementById("tab3").classList.remove("active");
+        if (tab === "registrar") {
+          document.getElementById("tabRegistrar").style.display = "block";
+          document.getElementById("tab1").classList.add("active");
+        } else if (tab === "consultar") {
+          document.getElementById("tabConsultar").style.display = "block";
+          document.getElementById("tab2").classList.add("active");
+          cargarNovedades();
+        } else {
+          document.getElementById("tabReubicar").style.display = "block";
+          document.getElementById("tab3").classList.add("active");
+          // reset reubicar panel
+          document.getElementById("reubPreview").style.display = "none";
+          document.getElementById("reubEmpty").style.display = "none";
+          document.getElementById("reubOrigen").value = "";
+          document.getElementById("reubDestino").value = "";
+        }
+      };
+
+      // ── Guardar novedad ──
       window.guardarNovedad = async function () {
         const reclamo = document.getElementById("reclamo").value.trim();
         const referencias = getListValues("listaReferencias");
@@ -3582,17 +3679,20 @@
           showToast("Completa los campos obligatorios", "error");
           return;
         }
+
         const btn = document.getElementById("btnGuardar");
         btn.disabled = true;
         btn.classList.add("loading");
         btn.querySelector(".btn-text").textContent = "Guardando...";
+
         const ts = Date.now();
         const fechaHoraCompleta = new Date(ts).toLocaleString("es-CO");
+
         try {
-          await addDoc(collection(db, "novedades"), {
+          await db.collection("novedades").add({
             reclamo,
-            referencia: referencias[0],
-            referencias,
+            referencia: referencias[0], // primera para compatibilidad
+            referencias, // lista completa
             subreclamos,
             cantidad,
             nota: notaSeleccionada,
@@ -3609,6 +3709,7 @@
             fechaHoraCompleta,
           });
           showToast("✓ Novedad registrada correctamente", "success");
+          // Limpiar formulario
           document.getElementById("reclamo").value = "";
           document.getElementById("cantidad").value = "";
           document.getElementById("observaciones").value = "";
@@ -3626,20 +3727,16 @@
           document.getElementById("btnSubreclamoTxt").textContent =
             "＋ Agregar subreclamo / reclamo relacionado";
           document.getElementById("btnRefsExtrasTxt").textContent =
-            "＋ Agregar referencias extras (sin identificacion)";
+            "＋ Agregar referencias extras (sin identificación)";
           seleccionarNota("Con nota");
-          const n2 = new Date();
-          document.getElementById("regFecha").value =
-            n2.toLocaleDateString("es-CO", {
-              day: "2-digit",
-              month: "2-digit",
-              year: "numeric",
-            }) +
-            " " +
-            n2.toLocaleTimeString("es-CO", {
-              hour: "2-digit",
-              minute: "2-digit",
-            });
+          const n = new Date();
+          document.getElementById("regFecha").value = `${n.toLocaleDateString(
+            "es-CO",
+            { day: "2-digit", month: "2-digit", year: "numeric" }
+          )} ${n.toLocaleTimeString("es-CO", {
+            hour: "2-digit",
+            minute: "2-digit",
+          })}`;
         } catch (err) {
           showToast("Error: " + err.message, "error");
         } finally {
@@ -3649,20 +3746,21 @@
         }
       };
 
-      /* ─── Cargar novedades ─── */
+      // ── Cargar novedades ──
       let todasLasNovedades = [];
 
-      async function _cargarNovedades() {
+      async function cargarNovedades() {
         const el = document.getElementById("listaNovedades");
-        el.innerHTML =
-          '<div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>';
+        el.innerHTML = `<div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>`;
         document.getElementById("detalleNovedad").innerHTML = "";
         document.getElementById("contador").style.display = "none";
         try {
-          const snap = await getDocs(
-            query(collection(db, "novedades"), orderBy("timestamp", "desc"))
-          );
+          const snap = await db
+            .collection("novedades")
+            .orderBy("timestamp", "desc")
+            .get();
           todasLasNovedades = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+
           const usuarios = [
             ...new Set(
               todasLasNovedades
@@ -3671,35 +3769,31 @@
             ),
           ];
           const sel = document.getElementById("filterUsuario");
-          sel.innerHTML = '<option value="">Todos los usuarios</option>';
+          sel.innerHTML = `<option value="">Todos los usuarios</option>`;
           usuarios.forEach((u) => {
             const o = document.createElement("option");
             o.value = u;
             o.textContent = u;
             sel.appendChild(o);
           });
-          _renderLista();
+          renderLista();
         } catch (err) {
-          el.innerHTML =
-            '<div class="empty-state"><div class="empty-icon">⚠️</div><p>' +
-            err.message +
-            "</p></div>";
+          el.innerHTML = `<div class="empty-state"><div class="empty-icon">⚠️</div><p>${err.message}</p></div>`;
         }
       }
-      window._cargarNovedades = _cargarNovedades;
 
-      /* ─── Filtrar ─── */
-      function _filtrar() {
+      function filtrar() {
         const q = (document.getElementById("searchInput").value || "")
           .trim()
           .toLowerCase();
         const nota = document.getElementById("filterNota").value;
         const usuario = document.getElementById("filterUsuario").value;
         return todasLasNovedades.filter((n) => {
+          // Busca en reclamo, subreclamos, todas las referencias, y demás campos
           const subrText = (n.subreclamos || []).join(" ");
           const refsText = (n.referencias || [n.referencia || ""]).join(" ");
           const refsExtrasText = (n.refsExtras || [])
-            .map((r) => r.ref + " " + r.desc)
+            .map((r) => `${r.ref} ${r.desc}`)
             .join(" ");
           const mq =
             !q ||
@@ -3718,178 +3812,174 @@
             ]
               .map((v) => (v || "").toLowerCase())
               .some((v) => v.includes(q));
-          return (
-            mq &&
-            (!nota || n.nota === nota) &&
-            (!usuario || n.registradoPorUsername === usuario)
-          );
+          const mn = !nota || n.nota === nota;
+          const mu = !usuario || n.registradoPorUsername === usuario;
+          return mq && mn && mu;
         });
       }
 
-      /* ─── Render lista ─── */
-      function _renderLista(datos) {
-        if (datos === undefined) datos = _filtrar();
+      function renderLista(datos = filtrar()) {
         const el = document.getElementById("listaNovedades");
         const ctEl = document.getElementById("contador");
         ctEl.style.display = "block";
-        ctEl.textContent = "Novedades: " + datos.length;
+        ctEl.textContent = `Novedades: ${datos.length}`;
         document.getElementById("detalleNovedad").innerHTML = "";
         if (!datos.length) {
-          el.innerHTML =
-            '<div class="empty-state"><div class="empty-icon">📋</div><p>Sin resultados</p></div>';
+          el.innerHTML = `<div class="empty-state"><div class="empty-icon">📋</div><p>Sin resultados</p></div>`;
           return;
         }
-        el.innerHTML =
-          '<div class="records-list">' +
-          datos
-            .map((n) => {
-              const refs = n.referencias || [n.referencia || "—"];
-              const refLabel =
-                refs.length > 1 ? refs[0] + " +" + (refs.length - 1) : refs[0];
-              const subrLabel =
-                n.subreclamos && n.subreclamos.length > 0
-                  ? '<div class="rr-user" style="color:rgba(0,212,255,0.4)">↳ ' +
-                    n.subreclamos.join(" · ") +
-                    "</div>"
-                  : "";
-              return (
-                '<div class="record-row" onclick="mostrarDetalle(\'' +
-                n.id +
-                "')\">" +
-                '<div class="record-top">' +
-                '<div class="rr-reclamo">' +
-                n.reclamo +
-                "</div>" +
-                '<div class="rr-ref">' +
-                refLabel +
-                "</div>" +
-                '<div class="rr-cant">' +
-                n.cantidad +
-                "</div>" +
-                '<span class="nota-badge ' +
-                (n.nota === "Con nota" ? "nota-con" : "nota-sin") +
-                '">' +
-                n.nota +
-                "</span>" +
-                '<div class="rr-date">' +
-                (n.fechaRegistro || "—") +
-                "</div>" +
-                "</div>" +
-                subrLabel +
-                '<div class="rr-user">👤 ' +
-                (n.registradoPor || "—") +
-                " · " +
-                (n.horaRegistro || "") +
-                "</div>" +
-                "</div>"
-              );
-            })
-            .join("") +
-          "</div>";
+        el.innerHTML = `<div class="records-list">${datos
+          .map((n) => {
+            const refs = n.referencias || [n.referencia || "—"];
+            const refLabel =
+              refs.length > 1 ? `${refs[0]} +${refs.length - 1}` : refs[0];
+            const subrLabel =
+              n.subreclamos?.length > 0
+                ? `<div class="rr-user" style="color:rgba(0,212,255,0.4)">↳ ${n.subreclamos.join(
+                    " · "
+                  )}</div>`
+                : "";
+            return `
+          <div class="record-row" onclick="mostrarDetalle('${n.id}')">
+            <div class="record-top">
+              <div class="rr-reclamo">${n.reclamo}</div>
+              <div class="rr-ref">${refLabel}</div>
+              <div class="rr-cant">${n.cantidad}</div>
+              <span class="nota-badge ${
+                n.nota === "Con nota" ? "nota-con" : "nota-sin"
+              }">${n.nota}</span>
+              <div class="rr-date">${n.fechaRegistro || "—"}</div>
+            </div>
+            ${subrLabel}
+            <div class="rr-user">👤 ${n.registradoPor || "—"} · ${
+              n.horaRegistro || ""
+            }</div>
+          </div>`;
+          })
+          .join("")}</div>`;
       }
-      window.renderLista = _renderLista;
 
-      /* ─── Mostrar detalle ─── */
       window.mostrarDetalle = function (id) {
         const n = todasLasNovedades.find((x) => x.id === id);
         if (!n) return;
         document.getElementById("listaNovedades").innerHTML = "";
         document.getElementById("contador").style.display = "none";
+
         const refs = n.referencias || [n.referencia || "—"];
         const refsHTML =
           refs.length > 1
-            ? '<div class="chips-wrap">' +
-              refs
-                .map((r) => '<span class="chip chip-accent">' + r + "</span>")
-                .join("") +
-              "</div>"
-            : '<span class="df-value">' + refs[0] + "</span>";
+            ? `<div class="chips-wrap">${refs
+                .map((r) => `<span class="chip chip-accent">${r}</span>`)
+                .join("")}</div>`
+            : `<span class="df-value">${refs[0]}</span>`;
+
         const subrHTML =
-          n.subreclamos && n.subreclamos.length > 0
-            ? '<div class="df full"><span class="df-label">Subreclamos / relacionados</span><div class="chips-wrap">' +
-              n.subreclamos
-                .map((s) => '<span class="chip chip-muted">' + s + "</span>")
-                .join("") +
-              "</div></div>"
+          n.subreclamos?.length > 0
+            ? `<div class="df full">
+              <span class="df-label">Subreclamos / relacionados</span>
+              <div class="chips-wrap">${n.subreclamos
+                .map((s) => `<span class="chip chip-muted">${s}</span>`)
+                .join("")}</div>
+             </div>`
             : "";
+
         const refsExtrasHTML =
-          n.refsExtras && n.refsExtras.length > 0
-            ? '<div class="df full"><span class="df-label" style="color:var(--accent-purple)">⬡ Referencias extras</span>' +
-              '<div style="display:flex;flex-direction:column;gap:6px;margin-top:4px">' +
-              n.refsExtras
-                .map(
-                  (r) =>
-                    '<span style="font-family:var(--font-mono);font-size:12px;color:var(--text-secondary)">' +
-                    '<span class="chip chip-purple" style="margin-right:6px">' +
-                    r.ref +
-                    "</span>" +
-                    (r.desc
-                      ? '<span style="color:var(--text-muted);font-size:11px">' +
-                        r.desc +
-                        "</span>"
-                      : "") +
-                    "</span>"
-                )
-                .join("") +
-              "</div></div>"
+          n.refsExtras?.length > 0
+            ? `<div class="df full">
+              <span class="df-label" style="color:var(--accent-purple)">⬡ Referencias extras</span>
+              <div style="display:flex;flex-direction:column;gap:6px;margin-top:4px">
+                ${n.refsExtras
+                  .map(
+                    (
+                      r
+                    ) => `<span style="font-family:var(--font-mono);font-size:12px;color:var(--text-secondary)">
+                  <span class="chip chip-purple" style="margin-right:6px">${
+                    r.ref
+                  }</span>${
+                      r.desc
+                        ? `<span style="color:var(--text-muted);font-size:11px">${r.desc}</span>`
+                        : ""
+                    }
+                </span>`
+                  )
+                  .join("")}
+              </div>
+             </div>`
             : "";
+
         const notaDetalleHTML = n.notaDetalle
-          ? '<span style="font-family:var(--font-mono);font-size:11px;color:var(--text-secondary);margin-left:8px">' +
-            n.notaDetalle +
-            "</span>"
+          ? `<span style="font-family:var(--font-mono);font-size:11px;color:var(--text-secondary);margin-left:8px">${n.notaDetalle}</span>`
           : "";
-        document.getElementById("detalleNovedad").innerHTML =
-          '<div class="detail-card"><div class="detail-body">' +
-          '<div class="df full"><span class="df-label">Reclamo</span><span class="df-value main">' +
-          n.reclamo +
-          "</span></div>" +
-          subrHTML +
-          '<div class="df full"><span class="df-label">Referencia' +
-          (refs.length > 1 ? "s" : "") +
-          "</span>" +
-          refsHTML +
-          "</div>" +
-          '<div class="df"><span class="df-label">Cantidad</span><span class="df-value">' +
-          n.cantidad +
-          "</span></div>" +
-          '<div class="df"><span class="df-label">Nota</span><span class="df-value"><span class="nota-badge ' +
-          (n.nota === "Con nota" ? "nota-con" : "nota-sin") +
-          '">' +
-          n.nota +
-          "</span>" +
-          notaDetalleHTML +
-          "</span></div>" +
-          '<div class="df"><span class="df-label">Ubicacion</span><span class="df-value">' +
-          (n.ubicacion || "—") +
-          "</span></div>" +
-          '<div class="df"><span class="df-label">Fecha de registro</span><span class="df-value">' +
-          (n.fechaHoraCompleta || n.fechaRegistro || "—") +
-          "</span></div>" +
-          '<div class="df full"><span class="df-label">Registrado por</span><span class="df-value by">👤 ' +
-          (n.registradoPor || "—") +
-          " · " +
-          (n.rol || "—") +
-          "</span></div>" +
-          '<div class="df full"><span class="df-label">Observaciones</span><span class="df-value obs">' +
-          (n.observaciones || "—") +
-          "</span></div>" +
-          refsExtrasHTML +
-          "</div>" +
-          '<div class="detail-actions">' +
-          '<button class="btn-act btn-edit-a" onclick="abrirEditar(\'' +
-          n.id +
-          "')\">✏ Editar</button>" +
-          '<button class="btn-act btn-pdf-a" onclick="exportarPDFUno(\'' +
-          n.id +
-          "')\">📄 Exportar PDF</button>" +
-          '<button class="btn-act btn-del-a" onclick="eliminarNovedad(\'' +
-          n.id +
-          "')\">✕ Eliminar</button>" +
-          "</div></div>" +
-          "<button onclick=\"renderLista()\" style=\"margin-top:14px;width:100%;padding:10px;background:transparent;border:1px solid var(--border);color:var(--text-muted);border-radius:var(--radius-sm);font-family:var(--font-mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all 0.2s\" onmouseover=\"this.style.borderColor='var(--border-strong)';this.style.color='var(--accent)'\" onmouseout=\"this.style.borderColor='var(--border)';this.style.color='var(--text-muted)'\">← Volver a la lista</button>";
+
+        document.getElementById("detalleNovedad").innerHTML = `
+          <div class="detail-card">
+            <div class="detail-body">
+              <div class="df full">
+                <span class="df-label">Reclamo</span>
+                <span class="df-value main">${n.reclamo}</span>
+              </div>
+              ${subrHTML}
+              <div class="df full">
+                <span class="df-label">Referencia${
+                  refs.length > 1 ? "s" : ""
+                }</span>
+                ${refsHTML}
+              </div>
+              <div class="df">
+                <span class="df-label">Cantidad</span>
+                <span class="df-value">${n.cantidad}</span>
+              </div>
+              <div class="df">
+                <span class="df-label">Nota</span>
+                <span class="df-value">
+                  <span class="nota-badge ${
+                    n.nota === "Con nota" ? "nota-con" : "nota-sin"
+                  }">${n.nota}</span>
+                  ${notaDetalleHTML}
+                </span>
+              </div>
+              <div class="df">
+                <span class="df-label">Ubicación</span>
+                <span class="df-value">${n.ubicacion || "—"}</span>
+              </div>
+              <div class="df">
+                <span class="df-label">Fecha de registro</span>
+                <span class="df-value">${
+                  n.fechaHoraCompleta || n.fechaRegistro || "—"
+                }</span>
+              </div>
+              <div class="df full">
+                <span class="df-label">Registrado por</span>
+                <span class="df-value by">👤 ${n.registradoPor || "—"} · ${
+          n.rol || "—"
+        }</span>
+              </div>
+              <div class="df full">
+                <span class="df-label">Observaciones</span>
+                <span class="df-value obs">${n.observaciones || "—"}</span>
+              </div>
+              ${refsExtrasHTML}
+            </div>
+            <div class="detail-actions">
+              <button class="btn-act btn-edit-a" onclick="abrirEditar('${
+                n.id
+              }')">✏ Editar</button>
+              <button class="btn-act btn-pdf-a" onclick="exportarPDFUno('${
+                n.id
+              }')">📄 Exportar PDF</button>
+              <button class="btn-act btn-del-a" onclick="eliminarNovedad('${
+                n.id
+              }')">✕ Eliminar</button>
+            </div>
+          </div>
+          <button onclick="renderLista()" style="margin-top:14px;width:100%;padding:10px;background:transparent;border:1px solid var(--border);color:var(--text-muted);border-radius:var(--radius-sm);font-family:var(--font-mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all 0.2s"
+            onmouseover="this.style.borderColor='var(--border-strong)';this.style.color='var(--accent)'"
+            onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-muted)'">
+            ← Volver a la lista
+          </button>`;
       };
 
-      /* ─── Editar ─── */
+      // ── Editar ──
       window.abrirEditar = function (id) {
         const n = todasLasNovedades.find((x) => x.id === id);
         if (!n) return;
@@ -3900,26 +3990,35 @@
           n.observaciones || "";
         document.getElementById("editUbicacion").value = n.ubicacion || "";
         document.getElementById("editNotaDetalle").value = n.notaDetalle || "";
+
+        // Poblar referencias
         poblarLista(
           "editListaReferencias",
           n.referencias || [n.referencia || ""],
           "Referencia del producto"
         );
+        // Poblar subreclamos
         poblarSubreclamos(
           "editListaSubreclamos",
           "editPanelSubreclamo",
           "editBtnSubreclamoTxt",
           n.subreclamos || []
         );
+        // Poblar refs extras
         poblarRefsExtras(
           "editListaRefsExtras",
           "editPanelRefsExtras",
           "editBtnRefsExtrasTxt",
           n.refsExtras || []
         );
+
         notaEditSeleccionada = n.nota || "Con nota";
         seleccionarNotaEdit(notaEditSeleccionada);
         document.getElementById("editModal").classList.add("active");
+      };
+
+      window.cerrarModal = function () {
+        document.getElementById("editModal").classList.remove("active");
       };
 
       window.guardarEdicion = async function () {
@@ -3937,26 +4036,30 @@
             : "";
         const subreclamos = getListValues("editListaSubreclamos");
         const refsExtras = getRefsExtras("editListaRefsExtras");
+
         if (!reclamo || referencias.length === 0 || !cantidad) {
           showToast("Completa los campos", "error");
           return;
         }
         try {
-          await updateDoc(doc(db, "novedades", id), {
-            reclamo,
-            referencia: referencias[0],
-            referencias,
-            subreclamos,
-            cantidad,
-            observaciones,
-            nota: notaEditSeleccionada,
-            notaDetalle,
-            ubicacion,
-            refsExtras,
-            ultimaEdicion: Date.now(),
-            editadoPor: sesion.nombre || sesion.username || "—",
-            editadoPorUsername: sesion.username || "—",
-          });
+          await db
+            .collection("novedades")
+            .doc(id)
+            .update({
+              reclamo,
+              referencia: referencias[0],
+              referencias,
+              subreclamos,
+              cantidad,
+              observaciones,
+              nota: notaEditSeleccionada,
+              notaDetalle,
+              ubicacion,
+              refsExtras,
+              ultimaEdicion: Date.now(),
+              editadoPor: sesion.nombre || sesion.username || "—",
+              editadoPorUsername: sesion.username || "—",
+            });
           const idx = todasLasNovedades.findIndex((x) => x.id === id);
           if (idx >= 0)
             Object.assign(todasLasNovedades[idx], {
@@ -3973,47 +4076,47 @@
             });
           showToast("✓ Novedad actualizada", "success");
           cerrarModal();
-          window.mostrarDetalle(id);
+          mostrarDetalle(id);
         } catch (err) {
           showToast("Error: " + err.message, "error");
         }
       };
 
-      /* ─── Eliminar ─── */
+      // ── Eliminar ──
       window.eliminarNovedad = async function (id) {
         if (
-          !confirm("¿Eliminar esta novedad? Esta accion no se puede deshacer.")
+          !confirm("¿Eliminar esta novedad? Esta acción no se puede deshacer.")
         )
           return;
         try {
-          await deleteDoc(doc(db, "novedades", id));
+          await db.collection("novedades").doc(id).delete();
           todasLasNovedades = todasLasNovedades.filter((x) => x.id !== id);
           showToast("✓ Novedad eliminada", "success");
-          _renderLista();
+          renderLista();
         } catch (err) {
           showToast("Error: " + err.message, "error");
         }
       };
 
-      /* ─── PDF ─── */
+      // ── PDF ──
       window.exportarPDFUno = function (id) {
         const n = todasLasNovedades.find((x) => x.id === id);
         if (!n) return;
-        _generarPDF([n], "Informe_Novedad_" + n.reclamo);
+        generarPDF([n], `Informe_Novedad_${n.reclamo}`);
       };
       window.exportarTodosPDF = function () {
-        const datos = _filtrar();
+        const datos = filtrar();
         if (!datos.length) {
           showToast("No hay novedades para exportar", "error");
           return;
         }
-        _generarPDF(datos, "Informe_Novedades_CLH");
+        generarPDF(datos, "Informe_Novedades_CLH");
       };
 
-      function _generarPDF(novedades, nombreArchivo) {
+      function generarPDF(novedades, nombreArchivo) {
         showToast("⏳ Generando informe PDF...", "info");
         const { jsPDF } = window.jspdf;
-        const dp = new jsPDF({
+        const doc = new jsPDF({
           orientation: "portrait",
           unit: "mm",
           format: "a4",
@@ -4024,322 +4127,322 @@
           marR = 25,
           marT = 25,
           marB = 25,
-          cW = W - marL - marR;
+          contentW = W - marL - marR;
         let y = marT;
         const azul = [10, 61, 98],
-          azulC = [30, 95, 142],
+          azulClaro = [30, 95, 142],
           gris = [100, 116, 139],
-          grisC = [220, 228, 240],
+          grisClaro = [220, 228, 240],
           negro = [30, 30, 40],
           blanco = [255, 255, 255];
-        const pie = (p) => {
-          dp.setFillColor(...grisC);
-          dp.rect(0, H - 14, W, 14, "F");
-          dp.setFontSize(8);
-          dp.setTextColor(...gris);
-          dp.setFont("helvetica", "italic");
-          dp.text(
+
+        function nuevaPagina() {
+          doc.addPage();
+          y = marT;
+          piePagina(doc.internal.getNumberOfPages());
+        }
+        function piePagina(p) {
+          doc.setFillColor(...grisClaro);
+          doc.rect(0, H - 14, W, 14, "F");
+          doc.setFontSize(8);
+          doc.setTextColor(...gris);
+          doc.setFont("helvetica", "italic");
+          doc.text(
             "Reclamos CLH — Informe de Novedades Operativas",
             marL,
             H - 5
           );
-          dp.text("Pag. " + p, W - marR, H - 5, { align: "right" });
-        };
-        const nPag = () => {
-          dp.addPage();
-          y = marT;
-          pie(dp.internal.getNumberOfPages());
-        };
-        const chk = (n = 20) => {
-          if (y + n > H - marB - 14) nPag();
-        };
-        const par = (t, fs = 10, col = negro, ind = 0) => {
-          dp.setFontSize(fs);
-          dp.setTextColor(...col);
-          dp.setFont("helvetica", "normal");
-          const ls = dp.splitTextToSize(t, cW - ind);
-          chk(ls.length * (fs * 0.4) + 4);
-          dp.text(ls, marL + ind, y);
-          y += ls.length * (fs * 0.45) + 3;
-        };
+          doc.text(`Pág. ${p}`, W - marR, H - 5, { align: "right" });
+        }
+        function checkY(n = 20) {
+          if (y + n > H - marB - 14) nuevaPagina();
+        }
+        function parrafo(t, fs = 10, color = negro, indent = 0) {
+          doc.setFontSize(fs);
+          doc.setTextColor(...color);
+          doc.setFont("helvetica", "normal");
+          const lines = doc.splitTextToSize(t, contentW - indent);
+          checkY(lines.length * (fs * 0.4) + 4);
+          doc.text(lines, marL + indent, y);
+          y += lines.length * (fs * 0.45) + 3;
+        }
+
         // Portada
-        dp.setFillColor(...azul);
-        dp.rect(0, 0, W, 52, "F");
-        dp.setFillColor(...azulC);
-        dp.rect(0, 50, W, 4, "F");
-        dp.setFontSize(10);
-        dp.setTextColor(...blanco);
-        dp.setFont("helvetica", "bold");
-        dp.text("RECLAMOS CLH", marL, 18);
-        dp.setFontSize(8);
-        dp.setFont("helvetica", "normal");
-        dp.setTextColor(180, 210, 240);
-        dp.text("Sistema de Control y Gestion de Novedades", marL, 24);
-        dp.setFontSize(18);
-        dp.setTextColor(...blanco);
-        dp.setFont("helvetica", "bold");
-        dp.text("INFORME DE NOVEDADES", W / 2, 38, { align: "center" });
-        dp.setFontSize(11);
-        dp.setFont("helvetica", "normal");
-        dp.setTextColor(180, 210, 240);
-        dp.text("OPERATIVAS Y DE GESTIoN", W / 2, 45, { align: "center" });
+        doc.setFillColor(...azul);
+        doc.rect(0, 0, W, 52, "F");
+        doc.setFillColor(...azulClaro);
+        doc.rect(0, 50, W, 4, "F");
+        doc.setFontSize(10);
+        doc.setTextColor(...blanco);
+        doc.setFont("helvetica", "bold");
+        doc.text("RECLAMOS CLH", marL, 18);
+        doc.setFontSize(8);
+        doc.setFont("helvetica", "normal");
+        doc.setTextColor(180, 210, 240);
+        doc.text("Sistema de Control y Gestión de Novedades", marL, 24);
+        doc.setFontSize(18);
+        doc.setTextColor(...blanco);
+        doc.setFont("helvetica", "bold");
+        doc.text("INFORME DE NOVEDADES", W / 2, 38, { align: "center" });
+        doc.setFontSize(11);
+        doc.setFont("helvetica", "normal");
+        doc.setTextColor(180, 210, 240);
+        doc.text("OPERATIVAS Y DE GESTIÓN", W / 2, 45, { align: "center" });
         y = 64;
-        dp.setFillColor(245, 248, 252);
-        dp.roundedRect(marL, y, cW, 44, 3, 3, "F");
-        dp.setDrawColor(...grisC);
-        dp.setLineWidth(0.5);
-        dp.roundedRect(marL, y, cW, 44, 3, 3, "S");
-        const fI = new Date().toLocaleDateString("es-CO", {
+        doc.setFillColor(245, 248, 252);
+        doc.roundedRect(marL, y, contentW, 44, 3, 3, "F");
+        doc.setDrawColor(...grisClaro);
+        doc.setLineWidth(0.5);
+        doc.roundedRect(marL, y, contentW, 44, 3, 3, "S");
+        const fechaInforme = new Date().toLocaleDateString("es-CO", {
           day: "2-digit",
           month: "long",
           year: "numeric",
         });
-        [
+        const metaDatos = [
           ["Preparado por:", sesion.nombre || sesion.username || "—"],
           ["Rol:", sesion.rol || "Operario"],
-          ["Fecha:", fI],
-          ["Registros:", novedades.length + " novedad(es)"],
-          ["Clasificacion:", "Informe Tecnico Operativo"],
-        ].forEach(([l, v], i) => {
-          const my = y + 7 + i * 7;
-          dp.setFontSize(9);
-          dp.setTextColor(...gris);
-          dp.setFont("helvetica", "bold");
-          dp.text(l, marL + 6, my);
-          dp.setTextColor(...negro);
-          dp.setFont("helvetica", "normal");
-          dp.text(v, marL + 52, my);
+          ["Fecha:", fechaInforme],
+          ["Registros:", `${novedades.length} novedad(es)`],
+          ["Clasificación:", "Informe Técnico Operativo"],
+        ];
+        let my = y + 7;
+        metaDatos.forEach(([l, v]) => {
+          doc.setFontSize(9);
+          doc.setTextColor(...gris);
+          doc.setFont("helvetica", "bold");
+          doc.text(l, marL + 6, my);
+          doc.setTextColor(...negro);
+          doc.setFont("helvetica", "normal");
+          doc.text(v, marL + 52, my);
+          my += 7;
         });
-        y += 56;
-        dp.setFillColor(...azulC);
-        dp.rect(marL, y, cW, 1.5, "F");
+        y += 52;
+        y += 4;
+        doc.setFillColor(...azulClaro);
+        doc.rect(marL, y, contentW, 1.5, "F");
         y += 8;
-        // Secciones
-        [
-          ["1. Resumen Ejecutivo", 40],
-          ["2. Marco de Referencia", 45],
-          ["3. Detalle de Novedades", 50],
-        ].forEach(([titulo, lw], si) => {
-          if (si > 0) {
-            chk(30);
-          }
-          dp.setFontSize(12);
-          dp.setTextColor(...azul);
-          dp.setFont("helvetica", "bold");
-          dp.text(titulo, marL, y);
-          y += 7;
-          dp.setDrawColor(...azulC);
-          dp.setLineWidth(1.5);
-          dp.line(marL, y, marL + lw, y);
-          y += 6;
-          if (si === 0) {
-            par(
-              novedades.length === 1
-                ? 'Novedad bajo reclamo "' +
-                    novedades[0].reclamo +
-                    '", ref(s): ' +
-                    (
-                      novedades[0].referencias || [novedades[0].referencia]
-                    ).join(", ") +
-                    ", cantidad: " +
-                    novedades[0].cantidad +
-                    (novedades[0].ubicacion
-                      ? ", ubicacion: " + novedades[0].ubicacion
-                      : "") +
-                    ". Registrado por " +
-                    novedades[0].registradoPor +
-                    " el " +
-                    (novedades[0].fechaHoraCompleta ||
-                      novedades[0].fechaRegistro) +
-                    "."
-                : "Informe de " +
-                    novedades.length +
-                    " novedades operativas. Preparado por " +
-                    (sesion.nombre || sesion.username) +
-                    ", fecha " +
-                    fI +
-                    ".",
-              10
-            );
-            y += 2;
-          } else if (si === 1) {
-            par(
-              "Documento elaborado siguiendo normativa APA 7.ª ed. (American Psychological Association, 2020). Informacion extraida del sistema Reclamos CLH.",
-              10
-            );
-            y += 4;
-          } else {
-            y += 2;
-            novedades.forEach((n, idx) => {
-              chk(60);
-              dp.setFillColor(...azul);
-              dp.roundedRect(marL, y, cW, 10, 2, 2, "F");
-              dp.setFontSize(10);
-              dp.setTextColor(...blanco);
-              dp.setFont("helvetica", "bold");
-              dp.text(
-                "Novedad " + (idx + 1) + " — Reclamo: " + n.reclamo,
-                marL + 4,
-                y + 6.5
-              );
-              y += 14;
-              const campos = [
-                ["Reclamo", n.reclamo],
-                ["Subreclamos", (n.subreclamos || []).join(", ") || "—"],
-                [
-                  "Referencia(s)",
-                  (n.referencias || [n.referencia || "—"]).join(", "),
-                ],
-                ["Cantidad", n.cantidad],
-                ["Nota", n.nota + (n.notaDetalle ? " — " + n.notaDetalle : "")],
-                ["Ubicacion", n.ubicacion || "—"],
-                ["Registrado por", n.registradoPor || "—"],
-                ["Fecha", n.fechaHoraCompleta || n.fechaRegistro || "—"],
-              ];
-              campos.forEach(([lb, vl], ci) => {
-                chk(8);
-                ci % 2 === 0
-                  ? dp.setFillColor(245, 248, 252)
-                  : dp.setFillColor(...blanco);
-                dp.rect(marL, y - 4, cW, 8, "F");
-                dp.setFontSize(9);
-                dp.setTextColor(...gris);
-                dp.setFont("helvetica", "bold");
-                dp.text(lb + ":", marL + 3, y + 1);
-                dp.setTextColor(...negro);
-                dp.setFont("helvetica", "normal");
-                dp.text(String(vl || "—"), marL + 50, y + 1);
-                dp.setDrawColor(...grisC);
-                dp.setLineWidth(0.2);
-                dp.line(marL, y + 4, W - marR, y + 4);
-                y += 8;
-              });
-              if (n.observaciones) {
-                y += 3;
-                chk(12);
-                dp.setFontSize(9);
-                dp.setTextColor(...azulC);
-                dp.setFont("helvetica", "bold");
-                dp.text("Observaciones:", marL + 3, y);
-                y += 5;
-                dp.setFillColor(248, 250, 253);
-                const oL = dp.splitTextToSize(n.observaciones, cW - 10),
-                  oH = oL.length * 5 + 8;
-                chk(oH);
-                dp.rect(marL, y - 2, cW, oH, "F");
-                dp.setDrawColor(200, 215, 235);
-                dp.setLineWidth(0.4);
-                dp.rect(marL, y - 2, cW, oH, "S");
-                dp.setFontSize(10);
-                dp.setTextColor(...negro);
-                dp.setFont("helvetica", "normal");
-                dp.text(oL, marL + 5, y + 4);
-                y += oH + 4;
-              }
-              if (n.refsExtras && n.refsExtras.length > 0) {
-                y += 3;
-                chk(12);
-                dp.setFontSize(9);
-                dp.setTextColor(167, 139, 250);
-                dp.setFont("helvetica", "bold");
-                dp.text("Referencias Extras:", marL + 3, y);
-                y += 5;
-                dp.setFillColor(245, 243, 255);
-                const rT = n.refsExtras
-                  .map((r) => r.ref + (r.desc ? " (" + r.desc + ")" : ""))
-                  .join(" · ");
-                const rL = dp.splitTextToSize(rT, cW - 10),
-                  rH = rL.length * 5 + 8;
-                chk(rH);
-                dp.rect(marL, y - 2, cW, rH, "F");
-                dp.setDrawColor(200, 190, 250);
-                dp.setLineWidth(0.4);
-                dp.rect(marL, y - 2, cW, rH, "S");
-                dp.setFontSize(10);
-                dp.setTextColor(...negro);
-                dp.setFont("helvetica", "normal");
-                dp.text(rL, marL + 5, y + 4);
-                y += rH + 4;
-              }
-              y += 8;
-            });
-          }
-        });
-        chk(40);
-        dp.setFontSize(12);
-        dp.setTextColor(...azul);
-        dp.setFont("helvetica", "bold");
-        dp.text("4. Conclusiones", marL, y);
+
+        // Sección 1
+        doc.setFontSize(12);
+        doc.setTextColor(...azul);
+        doc.setFont("helvetica", "bold");
+        doc.text("1. Resumen Ejecutivo", marL, y);
         y += 7;
-        dp.setDrawColor(...azulC);
-        dp.setLineWidth(1.5);
-        dp.line(marL, y, marL + 30, y);
+        doc.setDrawColor(...azulClaro);
+        doc.setLineWidth(1.5);
+        doc.line(marL, y, marL + 40, y);
         y += 6;
-        const cN = novedades.filter((n) => n.nota === "Con nota").length;
-        par(
-          "De " +
-            novedades.length +
-            " novedades: " +
-            cN +
-            " con nota, " +
-            (novedades.length - cN) +
-            " sin nota. Se recomienda seguimiento y actualizacion de registros sin documentacion.",
+        const resumen =
+          novedades.length === 1
+            ? `Novedad bajo reclamo "${
+                novedades[0].reclamo
+              }", referencia(s): ${(
+                novedades[0].referencias || [novedades[0].referencia]
+              ).join(", ")}, cantidad: ${novedades[0].cantidad}${
+                novedades[0].ubicacion
+                  ? `, ubicación: ${novedades[0].ubicacion}`
+                  : ""
+              }. Registrado por ${novedades[0].registradoPor} el ${
+                novedades[0].fechaHoraCompleta || novedades[0].fechaRegistro
+              }.`
+            : `Informe de ${
+                novedades.length
+              } novedades operativas. Preparado por ${
+                sesion.nombre || sesion.username
+              }, fecha ${fechaInforme}.`;
+        parrafo(resumen, 10);
+        y += 2;
+        checkY(30);
+        doc.setFontSize(12);
+        doc.setTextColor(...azul);
+        doc.setFont("helvetica", "bold");
+        doc.text("2. Marco de Referencia", marL, y);
+        y += 7;
+        doc.setDrawColor(...azulClaro);
+        doc.setLineWidth(1.5);
+        doc.line(marL, y, marL + 45, y);
+        y += 6;
+        parrafo(
+          "Documento elaborado siguiendo normativa APA 7.ª ed. (American Psychological Association, 2020). Información extraída del sistema Reclamos CLH.",
           10
         );
-        chk(35);
         y += 4;
-        dp.setFontSize(12);
-        dp.setTextColor(...azul);
-        dp.setFont("helvetica", "bold");
-        dp.text("5. Referencias Bibliograficas", marL, y);
+        checkY(20);
+        doc.setFontSize(12);
+        doc.setTextColor(...azul);
+        doc.setFont("helvetica", "bold");
+        doc.text("3. Detalle de Novedades", marL, y);
         y += 7;
-        dp.setDrawColor(...azulC);
-        dp.setLineWidth(1.5);
-        dp.line(marL, y, marL + 55, y);
+        doc.setDrawColor(...azulClaro);
+        doc.setLineWidth(1.5);
+        doc.line(marL, y, marL + 50, y);
+        y += 8;
+
+        novedades.forEach((n, idx) => {
+          checkY(60);
+          doc.setFillColor(...azul);
+          doc.roundedRect(marL, y, contentW, 10, 2, 2, "F");
+          doc.setFontSize(10);
+          doc.setTextColor(...blanco);
+          doc.setFont("helvetica", "bold");
+          doc.text(
+            `Novedad ${idx + 1} — Reclamo: ${n.reclamo}`,
+            marL + 4,
+            y + 6.5
+          );
+          y += 14;
+
+          const refs = (n.referencias || [n.referencia || "—"]).join(", ");
+          const subrs = (n.subreclamos || []).join(", ") || "—";
+          const campos = [
+            ["Reclamo", n.reclamo],
+            ["Subreclamos", subrs],
+            ["Referencia(s)", refs],
+            ["Cantidad", n.cantidad],
+            ["Nota", n.nota + (n.notaDetalle ? ` — ${n.notaDetalle}` : "")],
+            ["Ubicación", n.ubicacion || "—"],
+            ["Registrado por", n.registradoPor || "—"],
+            ["Fecha", n.fechaHoraCompleta || n.fechaRegistro || "—"],
+          ];
+          campos.forEach(([label, val], ci) => {
+            checkY(8);
+            ci % 2 === 0
+              ? doc.setFillColor(245, 248, 252)
+              : doc.setFillColor(...blanco);
+            doc.rect(marL, y - 4, contentW, 8, "F");
+            doc.setFontSize(9);
+            doc.setTextColor(...gris);
+            doc.setFont("helvetica", "bold");
+            doc.text(label + ":", marL + 3, y + 1);
+            doc.setTextColor(...negro);
+            doc.setFont("helvetica", "normal");
+            doc.text(String(val || "—"), marL + 50, y + 1);
+            doc.setDrawColor(...grisClaro);
+            doc.setLineWidth(0.2);
+            doc.line(marL, y + 4, W - marR, y + 4);
+            y += 8;
+          });
+          if (n.observaciones) {
+            y += 3;
+            checkY(12);
+            doc.setFontSize(9);
+            doc.setTextColor(...azulClaro);
+            doc.setFont("helvetica", "bold");
+            doc.text("Observaciones:", marL + 3, y);
+            y += 5;
+            doc.setFillColor(248, 250, 253);
+            const obsL = doc.splitTextToSize(n.observaciones, contentW - 10);
+            const obsH = obsL.length * 5 + 8;
+            checkY(obsH);
+            doc.rect(marL, y - 2, contentW, obsH, "F");
+            doc.setDrawColor(200, 215, 235);
+            doc.setLineWidth(0.4);
+            doc.rect(marL, y - 2, contentW, obsH, "S");
+            doc.setFontSize(10);
+            doc.setTextColor(...negro);
+            doc.setFont("helvetica", "normal");
+            doc.text(obsL, marL + 5, y + 4);
+            y += obsH + 4;
+          }
+          if (n.refsExtras && n.refsExtras.length > 0) {
+            y += 3;
+            checkY(12);
+            doc.setFontSize(9);
+            doc.setTextColor(167, 139, 250);
+            doc.setFont("helvetica", "bold");
+            doc.text("Referencias Extras:", marL + 3, y);
+            y += 5;
+            doc.setFillColor(245, 243, 255);
+            const refsT = n.refsExtras
+              .map((r) => r.ref + (r.desc ? ` (${r.desc})` : ""))
+              .join(" · ");
+            const refsL = doc.splitTextToSize(refsT, contentW - 10);
+            const refsH = refsL.length * 5 + 8;
+            checkY(refsH);
+            doc.rect(marL, y - 2, contentW, refsH, "F");
+            doc.setDrawColor(200, 190, 250);
+            doc.setLineWidth(0.4);
+            doc.rect(marL, y - 2, contentW, refsH, "S");
+            doc.setFontSize(10);
+            doc.setTextColor(...negro);
+            doc.setFont("helvetica", "normal");
+            doc.text(refsL, marL + 5, y + 4);
+            y += refsH + 4;
+          }
+          y += 8;
+        });
+
+        checkY(40);
+        doc.setFontSize(12);
+        doc.setTextColor(...azul);
+        doc.setFont("helvetica", "bold");
+        doc.text("4. Conclusiones", marL, y);
+        y += 7;
+        doc.setDrawColor(...azulClaro);
+        doc.setLineWidth(1.5);
+        doc.line(marL, y, marL + 30, y);
         y += 6;
-        par(
+        const conNota = novedades.filter((n) => n.nota === "Con nota").length;
+        const sinNota = novedades.length - conNota;
+        parrafo(
+          `De ${novedades.length} novedades: ${conNota} con nota, ${sinNota} sin nota. Se recomienda seguimiento y actualización de registros sin documentación.`,
+          10
+        );
+
+        checkY(35);
+        y += 4;
+        doc.setFontSize(12);
+        doc.setTextColor(...azul);
+        doc.setFont("helvetica", "bold");
+        doc.text("5. Referencias Bibliográficas", marL, y);
+        y += 7;
+        doc.setDrawColor(...azulClaro);
+        doc.setLineWidth(1.5);
+        doc.line(marL, y, marL + 55, y);
+        y += 6;
+        parrafo(
           "American Psychological Association. (2020). Publication manual of the American Psychological Association (7th ed.). https://doi.org/10.1037/0000165-000",
           10,
           negro,
           10
         );
         y += 2;
-        par(
-          "Reclamos CLH. (" +
-            new Date().getFullYear() +
-            "). Sistema de gestion de novedades [Software]. Desarrollado por Steven Realpe.",
+        parrafo(
+          `Reclamos CLH. (${new Date().getFullYear()}). Sistema de gestión de novedades [Software]. Desarrollado por Steven Realpe.`,
           10,
           negro,
           10
         );
-        const tot = dp.internal.getNumberOfPages();
-        for (let p = 1; p <= tot; p++) {
-          dp.setPage(p);
-          pie(p);
+
+        const totalPags = doc.internal.getNumberOfPages();
+        for (let p = 1; p <= totalPags; p++) {
+          doc.setPage(p);
+          piePagina(p);
         }
-        dp.save(nombreArchivo + ".pdf");
+        doc.save(`${nombreArchivo}.pdf`);
         showToast("✓ PDF generado correctamente", "success");
       }
 
-      /* ─── Excel ─── */
+      // ── Excel ──
       window.exportarExcel = function () {
-        const datos = _filtrar();
+        const datos = filtrar();
         if (!datos.length) {
           showToast("No hay novedades para exportar", "error");
           return;
         }
-        const fI = new Date().toLocaleDateString("es-CO", {
+        const fechaInforme = new Date().toLocaleDateString("es-CO", {
           day: "2-digit",
           month: "long",
           year: "numeric",
         });
-        const pBy = sesion.nombre || sesion.username || "—";
-        const wsR = XLSX.utils.aoa_to_sheet([
+        const preparadoPor = sesion.nombre || sesion.username || "—";
+        const wsResumen = XLSX.utils.aoa_to_sheet([
           ["RECLAMOS CLH — INFORME DE NOVEDADES OPERATIVAS"],
           [],
-          ["Preparado por:", pBy],
+          ["Preparado por:", preparadoPor],
           ["Rol:", sesion.rol || "—"],
-          ["Fecha:", fI],
+          ["Fecha:", fechaInforme],
           ["Total:", datos.length],
           ["Con nota:", datos.filter((n) => n.nota === "Con nota").length],
           ["Sin nota:", datos.filter((n) => n.nota === "Sin nota").length],
@@ -4351,8 +4454,9 @@
             ].join(", "),
           ],
         ]);
-        wsR["!cols"] = [{ wch: 30 }, { wch: 55 }];
-        const enc = [
+        wsResumen["!cols"] = [{ wch: 30 }, { wch: 55 }];
+
+        const encabezados = [
           "N°",
           "Reclamo",
           "Subreclamos",
@@ -4360,7 +4464,7 @@
           "Cantidad",
           "Nota",
           "Detalle nota",
-          "Ubicacion",
+          "Ubicación",
           "Observaciones",
           "Refs extras",
           "Registrado por",
@@ -4369,7 +4473,7 @@
           "Fecha",
           "Hora",
         ];
-        const fil = datos.map((n, i) => [
+        const filas = datos.map((n, i) => [
           i + 1,
           n.reclamo || "—",
           (n.subreclamos || []).join(", ") || "—",
@@ -4380,7 +4484,7 @@
           n.ubicacion || "—",
           n.observaciones || "—",
           (n.refsExtras || [])
-            .map((r) => r.ref + (r.desc ? " (" + r.desc + ")" : ""))
+            .map((r) => r.ref + (r.desc ? ` (${r.desc})` : ""))
             .join(", ") || "—",
           n.registradoPor || "—",
           n.registradoPorUsername || "—",
@@ -4388,8 +4492,8 @@
           n.fechaRegistro || "—",
           n.horaRegistro || "—",
         ]);
-        const wsD = XLSX.utils.aoa_to_sheet([enc, ...fil]);
-        wsD["!cols"] = [
+        const wsDatos = XLSX.utils.aoa_to_sheet([encabezados, ...filas]);
+        wsDatos["!cols"] = [
           { wch: 4 },
           { wch: 18 },
           { wch: 22 },
@@ -4406,53 +4510,231 @@
           { wch: 14 },
           { wch: 10 },
         ];
-        const cN2 = datos.filter((n) => n.nota === "Con nota").length;
-        const usU = [
+
+        const conNota = datos.filter((n) => n.nota === "Con nota").length;
+        const sinNota = datos.length - conNota;
+        const usuariosU = [
           ...new Set(datos.map((n) => n.registradoPor).filter(Boolean)),
         ];
-        const wsS = XLSX.utils.aoa_to_sheet([
-          ["ESTADiSTICAS"],
+        const wsStats = XLSX.utils.aoa_to_sheet([
+          ["ESTADÍSTICAS"],
           [],
           ["Indicador", "Valor"],
           ["Total novedades", datos.length],
-          ["Con nota", cN2],
-          ["Sin nota", datos.length - cN2],
+          ["Con nota", conNota],
+          ["Sin nota", sinNota],
           [
             "% Con nota",
-            cN2 > 0 ? ((cN2 / datos.length) * 100).toFixed(1) + "%" : "0.0%",
+            conNota > 0
+              ? `${((conNota / datos.length) * 100).toFixed(1)}%`
+              : "0.0%",
           ],
           [],
           ["USUARIOS"],
           ["Usuario", "Registros"],
-          ...usU.map((u) => [
+          ...usuariosU.map((u) => [
             u,
             datos.filter((n) => n.registradoPor === u).length,
           ]),
         ]);
-        wsS["!cols"] = [{ wch: 35 }, { wch: 20 }];
+        wsStats["!cols"] = [{ wch: 35 }, { wch: 20 }];
+
         const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, wsR, "Resumen Ejecutivo");
-        XLSX.utils.book_append_sheet(wb, wsD, "Novedades");
-        XLSX.utils.book_append_sheet(wb, wsS, "Estadisticas");
+        XLSX.utils.book_append_sheet(wb, wsResumen, "Resumen Ejecutivo");
+        XLSX.utils.book_append_sheet(wb, wsDatos, "Novedades");
+        XLSX.utils.book_append_sheet(wb, wsStats, "Estadísticas");
         XLSX.writeFile(
           wb,
-          "Informe_Novedades_CLH_" +
-            new Date().toISOString().slice(0, 10) +
-            ".xlsx"
+          `Informe_Novedades_CLH_${new Date().toISOString().slice(0, 10)}.xlsx`
         );
         showToast("✓ Excel generado correctamente", "success");
       };
 
-      /* ─── Listeners ─── */
       document
         .getElementById("searchInput")
-        .addEventListener("input", () => _renderLista());
+        .addEventListener("input", () => renderLista());
       document
         .getElementById("filterNota")
-        .addEventListener("change", () => _renderLista());
+        .addEventListener("change", () => renderLista());
       document
         .getElementById("filterUsuario")
-        .addEventListener("change", () => _renderLista());
+        .addEventListener("change", () => renderLista());
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") cerrarModal();
+      });
+
+      // ══════════════════════════════════════════
+      // REUBICAR
+      // ══════════════════════════════════════════
+      let novedadesParaReubicar = [];
+
+      window.buscarParaReubicar = async function () {
+        const origen = document.getElementById("reubOrigen").value.trim();
+        const destino = document.getElementById("reubDestino").value.trim();
+        if (!origen) {
+          showToast("Ingresa la ubicación origen", "error");
+          return;
+        }
+        if (!destino) {
+          showToast("Ingresa la ubicación destino", "error");
+          return;
+        }
+        if (origen.toLowerCase() === destino.toLowerCase()) {
+          showToast("Origen y destino son iguales", "error");
+          return;
+        }
+
+        document.getElementById("reubPreview").style.display = "none";
+        document.getElementById("reubEmpty").style.display = "none";
+
+        // Buscar en todas las novedades cargadas (o recargar)
+        let todos = todasLasNovedades;
+        if (todos.length === 0) {
+          try {
+            const snap = await db
+              .collection("novedades")
+              .orderBy("timestamp", "desc")
+              .get();
+            todos = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+            todasLasNovedades = todos;
+          } catch (e) {
+            showToast("Error al cargar: " + e.message, "error");
+            return;
+          }
+        }
+
+        novedadesParaReubicar = todos.filter(
+          (n) =>
+            (n.ubicacion || "").trim().toLowerCase() ===
+            origen.trim().toLowerCase()
+        );
+
+        if (novedadesParaReubicar.length === 0) {
+          document.getElementById("reubEmpty").style.display = "block";
+          return;
+        }
+
+        // Renderizar preview
+        const lista = document.getElementById("reubLista");
+        lista.innerHTML = novedadesParaReubicar
+          .map((n) => {
+            const refs = (n.referencias || [n.referencia || "—"]).join(", ");
+            return `
+          <div class="reub-row">
+            <div class="reub-reclamo">${n.reclamo}</div>
+            <div class="reub-meta">${refs} · ${n.cantidad}</div>
+            <div class="reub-arrow">
+              <span class="reub-from">${n.ubicacion}</span>
+              <span class="reub-chevron">→</span>
+              <span class="reub-to">${destino}</span>
+            </div>
+          </div>`;
+          })
+          .join("");
+
+        document.getElementById("reubContador").textContent = `${
+          novedadesParaReubicar.length
+        } novedad${novedadesParaReubicar.length > 1 ? "es" : ""} encontrada${
+          novedadesParaReubicar.length > 1 ? "s" : ""
+        } · ubicación: ${origen}`;
+        document.getElementById("reubPreview").style.display = "block";
+      };
+
+      window.confirmarReubicacion = async function () {
+        const origen = document.getElementById("reubOrigen").value.trim();
+        const destino = document.getElementById("reubDestino").value.trim();
+        if (novedadesParaReubicar.length === 0) return;
+
+        const btn = document.getElementById("btnConfirmarReub");
+        const spinner = document.getElementById("reubSpinner");
+        const txt = document.getElementById("reubBtnTxt");
+        btn.disabled = true;
+        spinner.style.display = "block";
+        txt.textContent = "Actualizando...";
+
+        const fechaHoraActual = new Date().toLocaleString("es-CO");
+        let exitosos = 0;
+        let fallidos = 0;
+
+        try {
+          for (const n of novedadesParaReubicar) {
+            try {
+              await db
+                .collection("novedades")
+                .doc(n.id)
+                .update({
+                  ubicacion: destino,
+                  ultimaEdicion: Date.now(),
+                  editadoPor: sesion.nombre || sesion.username || "—",
+                  editadoPorUsername: sesion.username || "—",
+                });
+              // Auditoría por cada novedad reubicada
+              await db.collection("auditoria").add({
+                accion: "REUBICAR",
+                modulo: "novedades",
+                guiaId: n.reclamo,
+                datosAntes: { ubicacion: origen },
+                datosDespues: { ubicacion: destino },
+                detalle: `Reclamo ${n.reclamo} reubicado de "${origen}" a "${destino}"`,
+                usuario: sesion?.username || "—",
+                nombreUsuario: sesion?.nombre || sesion?.username || "—",
+                rol: sesion?.rol || "—",
+                timestamp: Date.now(),
+                fechaHora: fechaHoraActual,
+              });
+              // Actualizar cache local
+              const idx = todasLasNovedades.findIndex((x) => x.id === n.id);
+              if (idx >= 0) todasLasNovedades[idx].ubicacion = destino;
+              exitosos++;
+            } catch (e) {
+              fallidos++;
+            }
+          }
+
+          if (fallidos === 0) {
+            showToast(
+              `✓ ${exitosos} novedad${exitosos > 1 ? "es" : ""} reubicada${
+                exitosos > 1 ? "s" : ""
+              } correctamente`,
+              "success"
+            );
+          } else {
+            showToast(`${exitosos} reubicadas, ${fallidos} con error`, "error");
+          }
+
+          // Actualizar preview con nueva ubicación
+          document
+            .getElementById("reubLista")
+            .querySelectorAll(".reub-from")
+            .forEach((el) => {
+              el.textContent = destino;
+              el.className = "reub-to";
+            });
+          document
+            .getElementById("reubLista")
+            .querySelectorAll(".reub-chevron")
+            .forEach((el) => el.remove());
+          document.getElementById(
+            "reubContador"
+          ).textContent = `✓ ${exitosos} novedad${
+            exitosos > 1 ? "es" : ""
+          } movida${exitosos > 1 ? "s" : ""} a "${destino}"`;
+          novedadesParaReubicar = [];
+        } catch (e) {
+          showToast("Error: " + e.message, "error");
+        } finally {
+          btn.disabled = false;
+          spinner.style.display = "none";
+          txt.textContent = "✓  Confirmar cambio de ubicación";
+        }
+      };
+
+      function showToast(msg, type) {
+        const t = document.getElementById("toast");
+        t.textContent = msg;
+        t.className = `toast ${type} show`;
+        setTimeout(() => t.classList.remove("show"), 3500);
+      }
     </script>
   </body>
 </html>
