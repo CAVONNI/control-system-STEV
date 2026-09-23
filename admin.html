@@ -3,10 +3,19 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/png" href="./favicon-96x96.png" sizes="96x96" />
+    <link
+      rel="icon"
+      type="image/png"
+      href="./favicon-96x96.png"
+      sizes="96x96"
+    />
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
     <link rel="shortcut icon" href="./favicon.ico" />
-    <link rel="apple-touch-icon" sizes="180x180" href="./icono-touch-de-apple.png" />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="./icono-touch-de-apple.png"
+    />
     <meta name="apple-mobile-web-app-title" content="SCI-STEV" />
     <link rel="manifest" href="./sitio.manifiesto web" />
     <title>Panel Admin · Reclamos CLH</title>
@@ -151,9 +160,8 @@
       #adminPanel {
         display: none;
         width: 100%;
-        max-width: 620px;
+        max-width: 680px;
       }
-
       .page-header {
         text-align: center;
         margin-bottom: 36px;
@@ -189,7 +197,6 @@
         border-radius: 2px;
       }
 
-      /* Tabs */
       .tabs {
         display: flex;
         gap: 8px;
@@ -201,17 +208,18 @@
       }
       .tab-btn {
         flex: 1;
-        padding: 9px 14px;
+        padding: 9px 10px;
         background: none;
         border: none;
         border-radius: 6px;
         font-family: var(--font-mono);
         font-size: 10px;
-        letter-spacing: 2px;
+        letter-spacing: 1.5px;
         text-transform: uppercase;
         color: var(--text-muted);
         cursor: pointer;
         transition: all 0.2s;
+        white-space: nowrap;
       }
       .tab-btn.active {
         background: rgba(0, 212, 255, 0.12);
@@ -219,7 +227,6 @@
         border: 1px solid var(--border-strong);
       }
 
-      /* Card */
       .card {
         background: var(--bg-card);
         border: 1px solid var(--border);
@@ -296,7 +303,6 @@
       select option {
         background: var(--bg-card);
       }
-
       .row-2 {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -405,7 +411,6 @@
         border: 1px solid rgba(239, 68, 68, 0.25);
         color: var(--accent-red);
       }
-
       .user-actions {
         display: flex;
         gap: 6px;
@@ -435,16 +440,18 @@
         background: rgba(239, 68, 68, 0.08);
       }
 
-      /* Modal */
+      /* ── MODAL ── */
       .modal-overlay {
         display: none;
         position: fixed;
         inset: 0;
         background: rgba(0, 0, 0, 0.85);
         z-index: 1000;
-        align-items: center;
+        align-items: flex-start;
         justify-content: center;
         backdrop-filter: blur(6px);
+        overflow-y: auto;
+        padding: 24px;
       }
       .modal-overlay.active {
         display: flex;
@@ -455,11 +462,12 @@
         border-radius: var(--radius);
         padding: 32px 30px 28px;
         width: 100%;
-        max-width: 380px;
+        max-width: 520px;
         box-shadow: 0 30px 70px rgba(0, 0, 0, 0.7),
           0 0 40px rgba(0, 212, 255, 0.08);
         position: relative;
         animation: slideUp 0.3s ease both;
+        margin: auto;
       }
       .modal::before {
         content: "";
@@ -481,7 +489,15 @@
         font-weight: 700;
         letter-spacing: 2px;
         text-transform: uppercase;
-        margin-bottom: 20px;
+        margin-bottom: 6px;
+      }
+      .modal-subtitle {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 2px;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        margin-bottom: 22px;
       }
       .modal-close {
         position: absolute;
@@ -499,6 +515,200 @@
       }
       .modal-close:hover {
         color: var(--accent);
+      }
+
+      /* Modal tabs */
+      .modal-tabs {
+        display: flex;
+        gap: 6px;
+        margin-bottom: 22px;
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 12px;
+      }
+      .modal-tab {
+        background: none;
+        border: none;
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        cursor: pointer;
+        padding: 6px 14px;
+        border-radius: var(--radius-sm);
+        transition: all 0.2s;
+      }
+      .modal-tab.active {
+        background: rgba(0, 212, 255, 0.1);
+        color: var(--accent);
+        border: 1px solid var(--border-strong);
+      }
+
+      /* ── PERMISOS ── */
+      .permisos-section {
+        margin-bottom: 20px;
+      }
+      .permisos-section-title {
+        font-family: var(--font-mono);
+        font-size: 9px;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        color: var(--accent);
+        margin-bottom: 10px;
+        padding-bottom: 6px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .permisos-section-title::before {
+        content: "";
+        display: inline-block;
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        background: var(--accent);
+      }
+
+      /* Módulos grid */
+      .modulos-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        margin-bottom: 6px;
+      }
+      .modulo-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: var(--bg-card2);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        padding: 10px 12px;
+        cursor: pointer;
+        transition: all 0.2s;
+        user-select: none;
+      }
+      .modulo-item:hover {
+        border-color: var(--border-strong);
+        background: rgba(0, 212, 255, 0.04);
+      }
+      .modulo-item.checked {
+        border-color: rgba(16, 185, 129, 0.4);
+        background: rgba(16, 185, 129, 0.06);
+      }
+      .modulo-item input[type="checkbox"] {
+        display: none;
+      }
+      .check-indicator {
+        width: 16px;
+        height: 16px;
+        border-radius: 4px;
+        border: 1px solid var(--border-strong);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        transition: all 0.2s;
+        font-size: 10px;
+      }
+      .modulo-item.checked .check-indicator {
+        background: var(--accent-green);
+        border-color: var(--accent-green);
+        color: #fff;
+      }
+      .modulo-label {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--text-secondary);
+      }
+      .modulo-item.checked .modulo-label {
+        color: var(--accent-green);
+      }
+
+      /* Acciones grid */
+      .acciones-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 6px;
+      }
+      .accion-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+        background: var(--bg-card2);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        padding: 10px 6px;
+        cursor: pointer;
+        transition: all 0.2s;
+        user-select: none;
+        text-align: center;
+      }
+      .accion-item:hover {
+        border-color: var(--border-strong);
+        background: rgba(0, 212, 255, 0.04);
+      }
+      .accion-item.checked {
+        border-color: rgba(0, 212, 255, 0.45);
+        background: rgba(0, 212, 255, 0.07);
+      }
+      .accion-item input[type="checkbox"] {
+        display: none;
+      }
+      .accion-icon {
+        font-size: 18px;
+      }
+      .accion-label {
+        font-family: var(--font-mono);
+        font-size: 9px;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+      }
+      .accion-item.checked .accion-label {
+        color: var(--accent);
+      }
+      .accion-item .check-indicator {
+        width: 12px;
+        height: 12px;
+        border-radius: 3px;
+        border: 1px solid var(--border-strong);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 8px;
+        transition: all 0.2s;
+      }
+      .accion-item.checked .check-indicator {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: #000;
+      }
+
+      /* Resumen de permisos en la lista de usuarios */
+      .permisos-pills {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+        margin-top: 4px;
+      }
+      .perm-pill {
+        font-family: var(--font-mono);
+        font-size: 8px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        padding: 2px 7px;
+        border-radius: 999px;
+        background: rgba(0, 212, 255, 0.06);
+        border: 1px solid var(--border);
+        color: var(--text-muted);
+      }
+      .perm-pill.on {
+        background: rgba(16, 185, 129, 0.08);
+        border-color: rgba(16, 185, 129, 0.3);
+        color: var(--accent-green);
       }
 
       /* Toast */
@@ -552,7 +762,6 @@
         border-color: var(--border-strong);
         background: var(--accent-glow);
       }
-
       .empty-state {
         text-align: center;
         padding: 32px;
@@ -591,6 +800,15 @@
         .card {
           padding: 22px 18px;
         }
+        .acciones-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .modulos-grid {
+          grid-template-columns: 1fr;
+        }
+        .tabs {
+          flex-wrap: wrap;
+        }
       }
     </style>
   </head>
@@ -614,27 +832,26 @@
     <div id="adminPanel">
       <header class="page-header">
         <h1>Panel de <span>Admin</span></h1>
-        <p>Gestión de usuarios del sistema</p>
+        <p>Gestión de usuarios y permisos del sistema</p>
         <div class="accent-line"></div>
       </header>
 
-      <!-- Tabs -->
       <div class="tabs">
         <button class="tab-btn active" id="tab1" onclick="switchTab('crear')">
-          ➕ Crear usuario
+          ➕ Crear
         </button>
         <button class="tab-btn" id="tab2" onclick="switchTab('usuarios')">
           👥 Usuarios
         </button>
         <button class="tab-btn" id="tab3" onclick="switchTab('clave')">
-          🔑 Mi clave admin
+          🔑 Mi clave
         </button>
       </div>
 
       <!-- Tab: Crear usuario -->
       <div id="tabCrear">
         <div class="card">
-          <p class="card-title">Nuevo usuario operario</p>
+          <p class="card-title">Nuevo usuario</p>
           <div class="row-2">
             <div class="field">
               <label class="fl">Username (ID)</label>
@@ -683,16 +900,16 @@
         <div class="card">
           <p class="card-title">Cambiar clave de administrador</p>
           <div class="field">
-            <label class="fl">Clave actual</label>
-            <input type="password" id="claveActual" placeholder="••••••••" />
+            <label class="fl">Clave actual</label
+            ><input type="password" id="claveActual" placeholder="••••••••" />
           </div>
           <div class="field">
-            <label class="fl">Nueva clave</label>
-            <input type="password" id="claveNueva" placeholder="••••••••" />
+            <label class="fl">Nueva clave</label
+            ><input type="password" id="claveNueva" placeholder="••••••••" />
           </div>
           <div class="field">
-            <label class="fl">Confirmar nueva clave</label>
-            <input type="password" id="claveConfirm" placeholder="••••••••" />
+            <label class="fl">Confirmar nueva clave</label
+            ><input type="password" id="claveConfirm" placeholder="••••••••" />
           </div>
           <button class="btn-primary" onclick="cambiarClaveAdmin()">
             Actualizar clave
@@ -703,41 +920,88 @@
       <a href="index.html" class="nav-link">⬡ &nbsp;Volver al panel</a>
     </div>
 
-    <!-- ── MODAL EDITAR ── -->
+    <!-- ── MODAL EDITAR (con tabs: Datos / Permisos) ── -->
     <div class="modal-overlay" id="editModal">
       <div class="modal">
         <button class="modal-close" onclick="cerrarModal()">✕</button>
         <p class="modal-title">Editar usuario</p>
-        <input type="hidden" id="editUsername" />
-        <div class="field">
-          <label class="fl">Nombre visible</label>
-          <input type="text" id="editNombre" />
+        <p class="modal-subtitle" id="modalSubtitle">@username</p>
+
+        <div class="modal-tabs">
+          <button
+            class="modal-tab active"
+            id="mtab1"
+            onclick="switchModalTab('datos')"
+          >
+            👤 Datos
+          </button>
+          <button
+            class="modal-tab"
+            id="mtab2"
+            onclick="switchModalTab('permisos')"
+          >
+            🔒 Permisos
+          </button>
         </div>
-        <div class="field">
-          <label class="fl">Nueva contraseña</label>
-          <input
-            type="password"
-            id="editClave"
-            placeholder="Dejar vacío para no cambiar"
-          />
+
+        <!-- Pestaña datos -->
+        <div id="mTabDatos">
+          <input type="hidden" id="editUsername" />
+          <div class="field">
+            <label class="fl">Nombre visible</label
+            ><input type="text" id="editNombre" />
+          </div>
+          <div class="field">
+            <label class="fl">Nueva contraseña</label
+            ><input
+              type="password"
+              id="editClave"
+              placeholder="Dejar vacío para no cambiar"
+            />
+          </div>
+          <div class="row-2">
+            <div class="field">
+              <label class="fl">Rol</label>
+              <select id="editRol">
+                <option value="operario">Operario</option>
+                <option value="supervisor">Supervisor</option>
+              </select>
+            </div>
+            <div class="field">
+              <label class="fl">Estado</label>
+              <select id="editActivo">
+                <option value="true">Activo</option>
+                <option value="false">Inactivo</option>
+              </select>
+            </div>
+          </div>
+          <button class="btn-primary" onclick="guardarEdicion()">
+            Guardar cambios
+          </button>
         </div>
-        <div class="field">
-          <label class="fl">Rol</label>
-          <select id="editRol">
-            <option value="operario">Operario</option>
-            <option value="supervisor">Supervisor</option>
-          </select>
+
+        <!-- Pestaña permisos -->
+        <div id="mTabPermisos" style="display: none">
+          <!-- Módulos -->
+          <div class="permisos-section">
+            <div class="permisos-section-title">Módulos con acceso</div>
+            <div class="modulos-grid" id="modulosGrid">
+              <!-- Se genera con JS -->
+            </div>
+          </div>
+
+          <!-- Acciones -->
+          <div class="permisos-section">
+            <div class="permisos-section-title">Acciones permitidas</div>
+            <div class="acciones-grid" id="accionesGrid">
+              <!-- Se genera con JS -->
+            </div>
+          </div>
+
+          <button class="btn-primary" onclick="guardarPermisos()">
+            Guardar permisos
+          </button>
         </div>
-        <div class="field">
-          <label class="fl">Estado</label>
-          <select id="editActivo">
-            <option value="true">Activo</option>
-            <option value="false">Inactivo</option>
-          </select>
-        </div>
-        <button class="btn-primary" onclick="guardarEdicion()">
-          Guardar cambios
-        </button>
       </div>
     </div>
 
@@ -768,15 +1032,50 @@
       const app = initializeApp(firebaseConfig);
       const db = getFirestore(app);
 
-      // ── Verificar sesión ──
+      // ── Verificar sesión (igual que antes) ──
       const sesion = sessionStorage.getItem("clh_user");
-      if (!sesion) {
-        window.location.href = "login.html";
-      }
+      if (!sesion) window.location.href = "login.html";
 
-      // La clave admin se guarda en Firestore en config/admin
-      let adminUnlocked = false;
+      // ── Catálogo de módulos y acciones del sistema ──
+      const MODULOS = [
+        { id: "modulo1", label: "Módulo 1 · Validación LPN" },
+        { id: "modulo2", label: "Módulo 2" },
+        { id: "modulo3", label: "Módulo 3" },
+        { id: "modulo4", label: "Módulo 4 · Guías" },
+        { id: "modulo5", label: "Módulo 5 · Memorando" },
+        { id: "admin", label: "Panel Admin" },
+      ];
 
+      const ACCIONES = [
+        { id: "ver", label: "Ver", icon: "👁️" },
+        { id: "crear", label: "Crear", icon: "➕" },
+        { id: "editar", label: "Editar", icon: "✏️" },
+        { id: "eliminar", label: "Eliminar", icon: "🗑️" },
+        { id: "exportar", label: "Exportar", icon: "📤" },
+      ];
+
+      // ── Permisos por defecto para usuario nuevo ──
+      const PERMISOS_DEFAULT = {
+        modulos: {
+          modulo1: true,
+          modulo2: false,
+          modulo3: false,
+          modulo4: false,
+          modulo5: false,
+          admin: false,
+        },
+        acciones: {
+          ver: true,
+          crear: false,
+          editar: false,
+          eliminar: false,
+          exportar: false,
+        },
+      };
+
+      // ════════════════════════════════════════
+      // LOCK / VERIFICAR ADMIN
+      // ════════════════════════════════════════
       window.verificarAdmin = async function () {
         const clave = document.getElementById("adminKeyInput").value;
         const errEl = document.getElementById("lockError");
@@ -784,20 +1083,16 @@
           errEl.textContent = "Ingresa la clave";
           return;
         }
-
         try {
           const snap = await getDoc(doc(db, "config", "admin"));
-          let claveAdmin = "admin1234"; // clave por defecto si no existe doc
+          let claveAdmin = "admin1234";
           if (snap.exists()) claveAdmin = snap.data().clave || "admin1234";
-
           if (clave !== claveAdmin) {
             errEl.textContent = "✕ Clave incorrecta";
             document.getElementById("adminKeyInput").value = "";
             setTimeout(() => (errEl.textContent = ""), 3000);
             return;
           }
-
-          adminUnlocked = true;
           document.getElementById("lockScreen").style.display = "none";
           document.getElementById("adminPanel").style.display = "block";
           cargarUsuarios();
@@ -805,22 +1100,22 @@
           errEl.textContent = "Error: " + err.message;
         }
       };
-
       document
         .getElementById("adminKeyInput")
         .addEventListener("keydown", (e) => {
           if (e.key === "Enter") window.verificarAdmin();
         });
 
-      // ── Tabs ──
+      // ════════════════════════════════════════
+      // TABS PANEL PRINCIPAL
+      // ════════════════════════════════════════
       window.switchTab = function (tab) {
-        document.getElementById("tabCrear").style.display = "none";
-        document.getElementById("tabUsuarios").style.display = "none";
-        document.getElementById("tabClave").style.display = "none";
-        document.getElementById("tab1").classList.remove("active");
-        document.getElementById("tab2").classList.remove("active");
-        document.getElementById("tab3").classList.remove("active");
-
+        ["tabCrear", "tabUsuarios", "tabClave"].forEach(
+          (id) => (document.getElementById(id).style.display = "none")
+        );
+        ["tab1", "tab2", "tab3"].forEach((id) =>
+          document.getElementById(id).classList.remove("active")
+        );
         if (tab === "crear") {
           document.getElementById("tabCrear").style.display = "block";
           document.getElementById("tab1").classList.add("active");
@@ -836,7 +1131,25 @@
         }
       };
 
-      // ── Crear usuario ──
+      // ════════════════════════════════════════
+      // TABS MODAL EDITAR
+      // ════════════════════════════════════════
+      window.switchModalTab = function (tab) {
+        document.getElementById("mTabDatos").style.display =
+          tab === "datos" ? "block" : "none";
+        document.getElementById("mTabPermisos").style.display =
+          tab === "permisos" ? "block" : "none";
+        document
+          .getElementById("mtab1")
+          .classList.toggle("active", tab === "datos");
+        document
+          .getElementById("mtab2")
+          .classList.toggle("active", tab === "permisos");
+      };
+
+      // ════════════════════════════════════════
+      // CREAR USUARIO
+      // ════════════════════════════════════════
       window.crearUsuario = async function () {
         const username = document
           .getElementById("newUsername")
@@ -873,6 +1186,7 @@
             rol,
             activo: true,
             creado: Date.now(),
+            permisos: PERMISOS_DEFAULT, // ← campo nuevo, no rompe nada anterior
           });
           showToast("✓ Usuario creado correctamente", "success");
           document.getElementById("newUsername").value = "";
@@ -883,7 +1197,9 @@
         }
       };
 
-      // ── Cargar usuarios ──
+      // ════════════════════════════════════════
+      // CARGAR USUARIOS
+      // ════════════════════════════════════════
       window.cargarUsuarios = async function () {
         const container = document.getElementById("userListContainer");
         container.innerHTML = `<div class="empty-state">Cargando...</div>`;
@@ -896,6 +1212,7 @@
             container.innerHTML = `<div class="empty-state">No hay usuarios registrados</div>`;
             return;
           }
+
           container.innerHTML = `<div class="user-list">${usuarios
             .map((u) => {
               const inicial = (u.nombre || u.username || "?")[0].toUpperCase();
@@ -907,12 +1224,25 @@
                   : `<span class="user-badge badge-operario">${
                       u.rol || "operario"
                     }</span>`;
+
+              // Resumen visual de módulos activos
+              const perms = u.permisos || PERMISOS_DEFAULT;
+              const modulosOn = MODULOS.filter(
+                (m) => perms.modulos?.[m.id]
+              ).map((m) => m.label.split("·")[0].trim());
+              const pillsHTML = modulosOn.length
+                ? modulosOn
+                    .map((m) => `<span class="perm-pill on">${m}</span>`)
+                    .join("")
+                : `<span class="perm-pill">Sin módulos</span>`;
+
               return `
               <div class="user-row">
                 <div class="user-avatar">${inicial}</div>
                 <div class="user-info">
                   <div class="user-name">${u.nombre || u.username}</div>
                   <div class="user-meta">@${u.username}</div>
+                  <div class="permisos-pills">${pillsHTML}</div>
                 </div>
                 ${badge}
                 <div class="user-actions">
@@ -931,19 +1261,62 @@
         }
       };
 
-      // ── Abrir modal editar ──
-      window._usuariosCache = {};
+      // ════════════════════════════════════════
+      // ABRIR MODAL EDITAR
+      // ════════════════════════════════════════
       window.abrirEditar = async function (username) {
         try {
           const snap = await getDoc(doc(db, "usuarios", username));
           if (!snap.exists()) return;
           const u = snap.data();
+
+          // Datos básicos
           document.getElementById("editUsername").value = username;
           document.getElementById("editNombre").value = u.nombre || "";
           document.getElementById("editClave").value = "";
           document.getElementById("editRol").value = u.rol || "operario";
           document.getElementById("editActivo").value =
             u.activo === false ? "false" : "true";
+          document.getElementById("modalSubtitle").textContent = "@" + username;
+
+          // Permisos actuales (si no tiene, usa default)
+          const perms = u.permisos || PERMISOS_DEFAULT;
+
+          // Renderizar módulos
+          const modulosGrid = document.getElementById("modulosGrid");
+          modulosGrid.innerHTML = MODULOS.map((m) => {
+            const on = perms.modulos?.[m.id] === true;
+            return `
+              <div class="modulo-item ${on ? "checked" : ""}" id="mi_${
+              m.id
+            }" onclick="toggleModulo('${m.id}')">
+                <input type="checkbox" id="chk_mod_${m.id}" ${
+              on ? "checked" : ""
+            } />
+                <div class="check-indicator">${on ? "✓" : ""}</div>
+                <span class="modulo-label">${m.label}</span>
+              </div>`;
+          }).join("");
+
+          // Renderizar acciones
+          const accionesGrid = document.getElementById("accionesGrid");
+          accionesGrid.innerHTML = ACCIONES.map((a) => {
+            const on = perms.acciones?.[a.id] === true;
+            return `
+              <div class="accion-item ${on ? "checked" : ""}" id="ai_${
+              a.id
+            }" onclick="toggleAccion('${a.id}')">
+                <input type="checkbox" id="chk_acc_${a.id}" ${
+              on ? "checked" : ""
+            } />
+                <div class="accion-icon">${a.icon}</div>
+                <div class="check-indicator">${on ? "✓" : ""}</div>
+                <div class="accion-label">${a.label}</div>
+              </div>`;
+          }).join("");
+
+          // Abrir en pestaña Datos por defecto
+          switchModalTab("datos");
           document.getElementById("editModal").classList.add("active");
         } catch (err) {
           showToast("Error: " + err.message, "error");
@@ -954,6 +1327,29 @@
         document.getElementById("editModal").classList.remove("active");
       };
 
+      // ── Toggle visual módulo ──
+      window.toggleModulo = function (id) {
+        const item = document.getElementById("mi_" + id);
+        const chk = document.getElementById("chk_mod_" + id);
+        const on = !chk.checked;
+        chk.checked = on;
+        item.classList.toggle("checked", on);
+        item.querySelector(".check-indicator").textContent = on ? "✓" : "";
+      };
+
+      // ── Toggle visual acción ──
+      window.toggleAccion = function (id) {
+        const item = document.getElementById("ai_" + id);
+        const chk = document.getElementById("chk_acc_" + id);
+        const on = !chk.checked;
+        chk.checked = on;
+        item.classList.toggle("checked", on);
+        item.querySelector(".check-indicator").textContent = on ? "✓" : "";
+      };
+
+      // ════════════════════════════════════════
+      // GUARDAR DATOS (sin tocar permisos)
+      // ════════════════════════════════════════
       window.guardarEdicion = async function () {
         const username = document.getElementById("editUsername").value;
         const nombre = document.getElementById("editNombre").value.trim();
@@ -979,6 +1375,37 @@
         }
       };
 
+      // ════════════════════════════════════════
+      // GUARDAR PERMISOS (sin tocar datos)
+      // ════════════════════════════════════════
+      window.guardarPermisos = async function () {
+        const username = document.getElementById("editUsername").value;
+
+        const modulos = {};
+        MODULOS.forEach((m) => {
+          modulos[m.id] = document.getElementById("chk_mod_" + m.id).checked;
+        });
+
+        const acciones = {};
+        ACCIONES.forEach((a) => {
+          acciones[a.id] = document.getElementById("chk_acc_" + a.id).checked;
+        });
+
+        try {
+          await updateDoc(doc(db, "usuarios", username), {
+            permisos: { modulos, acciones },
+          });
+          showToast("✓ Permisos guardados", "success");
+          cerrarModal();
+          cargarUsuarios();
+        } catch (err) {
+          showToast("Error: " + err.message, "error");
+        }
+      };
+
+      // ════════════════════════════════════════
+      // ELIMINAR USUARIO
+      // ════════════════════════════════════════
       window.eliminarUsuario = async function (username) {
         if (
           !confirm(
@@ -995,17 +1422,18 @@
         }
       };
 
-      // ── Cambiar clave admin ──
+      // ════════════════════════════════════════
+      // CAMBIAR CLAVE ADMIN
+      // ════════════════════════════════════════
       window.cambiarClaveAdmin = async function () {
         const actual = document.getElementById("claveActual").value;
         const nueva = document.getElementById("claveNueva").value;
-        const confirm = document.getElementById("claveConfirm").value;
-
-        if (!actual || !nueva || !confirm) {
+        const confirma = document.getElementById("claveConfirm").value;
+        if (!actual || !nueva || !confirma) {
           showToast("Completa todos los campos", "error");
           return;
         }
-        if (nueva !== confirm) {
+        if (nueva !== confirma) {
           showToast("Las claves nuevas no coinciden", "error");
           return;
         }
@@ -1013,17 +1441,14 @@
           showToast("La nueva clave debe tener al menos 6 caracteres", "error");
           return;
         }
-
         try {
           const snap = await getDoc(doc(db, "config", "admin"));
           let claveActualDB = "admin1234";
           if (snap.exists()) claveActualDB = snap.data().clave || "admin1234";
-
           if (actual !== claveActualDB) {
             showToast("La clave actual es incorrecta", "error");
             return;
           }
-
           await setDoc(
             doc(db, "config", "admin"),
             { clave: nueva },
@@ -1038,6 +1463,9 @@
         }
       };
 
+      // ════════════════════════════════════════
+      // TOAST + KEYBOARD
+      // ════════════════════════════════════════
       function showToast(msg, type) {
         const t = document.getElementById("toast");
         t.textContent = msg;
@@ -1045,10 +1473,23 @@
         setTimeout(() => t.classList.remove("show"), 3500);
       }
 
-      // Cerrar modal con Escape
       document.addEventListener("keydown", (e) => {
         if (e.key === "Escape") cerrarModal();
       });
+    </script>
+    <script>
+      const sesion = JSON.parse(sessionStorage.getItem("clh_user"));
+      const permisos = sesion?.permisos;
+
+      // ¿Puede eliminar?
+      if (!permisos?.acciones?.eliminar) {
+        document.getElementById("btnEliminar").style.display = "none";
+      }
+
+      // ¿Tiene acceso al módulo 5?
+      if (!permisos?.modulos?.modulo5) {
+        window.location.href = "index.html"; // redirigir si no tiene acceso
+      }
     </script>
   </body>
 </html>

@@ -1,0 +1,1482 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Módulo 5 — Memorando Bajas</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- ZXing para escanear QR/Barcodes desde cámara -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/zxing-js/0.20.0/index.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=DM+Mono:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg-deep: #0b0f1a;
+        --bg-panel: #111827;
+        --bg-card: #1a2235;
+        --bg-card2: #141c2e;
+        --accent: #00d4ff;
+        --accent-glow: rgba(0, 212, 255, 0.15);
+        --accent-green: #10b981;
+        --accent-red: #ef4444;
+        --accent-amber: #f59e0b;
+        --border: rgba(0, 212, 255, 0.12);
+        --border-strong: rgba(0, 212, 255, 0.35);
+        --text-primary: #e8edf5;
+        --text-secondary: #8fa3c0;
+        --text-muted: #4d6080;
+        --font-display: "Rajdhani", sans-serif;
+        --font-mono: "DM Mono", monospace;
+        --radius: 14px;
+        --radius-sm: 8px;
+      }
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: var(--font-display);
+        background-color: var(--bg-deep);
+        background-image: radial-gradient(
+            ellipse 70% 50% at 50% -5%,
+            rgba(0, 212, 255, 0.1),
+            transparent 65%
+          ),
+          repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 39px,
+            rgba(0, 212, 255, 0.022) 39px,
+            rgba(0, 212, 255, 0.022) 40px
+          ),
+          repeating-linear-gradient(
+            90deg,
+            transparent,
+            transparent 39px,
+            rgba(0, 212, 255, 0.022) 39px,
+            rgba(0, 212, 255, 0.022) 40px
+          );
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 48px 24px 120px;
+        color: var(--text-primary);
+      }
+
+      .page-header {
+        text-align: center;
+        margin-bottom: 36px;
+        animation: slideDown 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+      }
+      .page-header h1 {
+        font-size: 30px;
+        font-weight: 700;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+      }
+      .page-header h1 span {
+        color: var(--accent);
+      }
+      .page-header p {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 2px;
+        color: var(--text-muted);
+        margin-top: 6px;
+        text-transform: uppercase;
+      }
+      .accent-line {
+        width: 50px;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--accent),
+          transparent
+        );
+        margin: 12px auto 0;
+        border-radius: 2px;
+      }
+
+      .card {
+        width: 100%;
+        max-width: 560px;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 32px 30px;
+        box-shadow: 0 24px 64px rgba(0, 0, 0, 0.65), 0 0 0 1px var(--border),
+          0 0 40px rgba(0, 212, 255, 0.07);
+        position: relative;
+        animation: slideUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+        margin-bottom: 20px;
+      }
+      .card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 10%;
+        width: 80%;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--accent),
+          transparent
+        );
+      }
+
+      .section-label {
+        font-family: var(--font-mono);
+        font-size: 9px;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        margin-bottom: 8px;
+        margin-top: 20px;
+      }
+      .section-label:first-child {
+        margin-top: 0;
+      }
+
+      input[type="text"],
+      input[type="file"] {
+        width: 100%;
+        background: rgba(11, 15, 26, 0.7);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        color: var(--text-primary);
+        font-family: var(--font-mono);
+        font-size: 13px;
+        padding: 12px 16px;
+        outline: none;
+        transition: border-color 0.2s, box-shadow 0.2s;
+      }
+      input[type="text"]::placeholder {
+        color: var(--text-muted);
+        font-size: 12px;
+      }
+      input[type="text"]:focus,
+      input[type="file"]:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1);
+      }
+      input[type="file"] {
+        cursor: pointer;
+        padding: 10px 16px;
+        color: var(--text-secondary);
+      }
+      input[type="file"]::-webkit-file-upload-button {
+        background: rgba(0, 212, 255, 0.08);
+        color: var(--accent);
+        border: 1px solid var(--border-strong);
+        border-radius: 4px;
+        padding: 5px 12px;
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        cursor: pointer;
+        margin-right: 12px;
+        transition: background 0.2s;
+      }
+      input[type="file"]::-webkit-file-upload-button:hover {
+        background: rgba(0, 212, 255, 0.16);
+      }
+
+      .btn {
+        width: 100%;
+        margin-top: 12px;
+        padding: 13px;
+        background: linear-gradient(135deg, #0a3d62, #1e5f8e);
+        color: var(--accent);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius-sm);
+        font-family: var(--font-display);
+        font-size: 14px;
+        font-weight: 700;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+      .btn:hover {
+        background: linear-gradient(135deg, #0d4e7a, #2470a8);
+        box-shadow: 0 0 30px rgba(0, 212, 255, 0.2);
+        transform: translateY(-1px);
+      }
+      .btn:active {
+        transform: translateY(0) scale(0.98);
+      }
+      .btn:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .btn-secondary {
+        background: rgba(0, 212, 255, 0.06);
+        border: 1px solid var(--border-strong);
+        color: var(--accent);
+        border-radius: var(--radius-sm);
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        padding: 10px 18px;
+        cursor: pointer;
+        transition: all 0.2s;
+        margin-top: 8px;
+      }
+      .btn-secondary:hover {
+        background: rgba(0, 212, 255, 0.14);
+        box-shadow: 0 0 20px rgba(0, 212, 255, 0.15);
+      }
+
+      .btn-danger {
+        background: rgba(239, 68, 68, 0.07);
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        color: var(--accent-red);
+        border-radius: var(--radius-sm);
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        padding: 6px 14px;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .btn-danger:hover {
+        background: rgba(239, 68, 68, 0.15);
+      }
+
+      /* Estado carga Excel */
+      .status-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        padding: 5px 14px;
+        border-radius: 999px;
+        margin-top: 10px;
+      }
+      .status-pill.ok {
+        background: rgba(16, 185, 129, 0.08);
+        border: 1px solid rgba(16, 185, 129, 0.3);
+        color: var(--accent-green);
+      }
+      .status-pill.warn {
+        background: rgba(245, 158, 11, 0.08);
+        border: 1px solid rgba(245, 158, 11, 0.3);
+        color: var(--accent-amber);
+      }
+      .status-pill.err {
+        background: rgba(239, 68, 68, 0.08);
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        color: var(--accent-red);
+      }
+      .dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: currentColor;
+        flex-shrink: 0;
+      }
+
+      /* Scanner area */
+      .scanner-wrap {
+        width: 100%;
+        position: relative;
+        border-radius: var(--radius-sm);
+        overflow: hidden;
+        border: 1px solid var(--border-strong);
+        background: #000;
+        display: none;
+      }
+      .scanner-wrap.active {
+        display: block;
+      }
+      #scannerVideo {
+        width: 100%;
+        display: block;
+        max-height: 260px;
+        object-fit: cover;
+      }
+      .scanner-overlay {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        pointer-events: none;
+      }
+      .scanner-frame {
+        width: 200px;
+        height: 80px;
+        border: 2px solid var(--accent);
+        border-radius: 6px;
+        box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.45);
+        position: relative;
+      }
+      .scanner-line {
+        position: absolute;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: var(--accent);
+        box-shadow: 0 0 10px var(--accent);
+        animation: scanLine 1.8s ease-in-out infinite;
+      }
+      @keyframes scanLine {
+        0% {
+          top: 0;
+        }
+        50% {
+          top: calc(100% - 2px);
+        }
+        100% {
+          top: 0;
+        }
+      }
+      .scanner-hint {
+        position: absolute;
+        bottom: 10px;
+        left: 0;
+        right: 0;
+        text-align: center;
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 1.5px;
+        color: rgba(255, 255, 255, 0.6);
+        text-transform: uppercase;
+      }
+
+      /* Input + scan btn row */
+      .lpn-row {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+      .lpn-row input {
+        flex: 1;
+        margin: 0;
+      }
+
+      /* Resultado de búsqueda LPN */
+      .lpn-result {
+        margin-top: 12px;
+        padding: 14px 16px;
+        border-radius: var(--radius-sm);
+        font-family: var(--font-mono);
+        font-size: 12px;
+        line-height: 1.8;
+        display: none;
+      }
+      .lpn-result.found {
+        display: block;
+        background: rgba(16, 185, 129, 0.06);
+        border: 1px solid rgba(16, 185, 129, 0.3);
+        color: var(--accent-green);
+      }
+      .lpn-result.not-found {
+        display: block;
+        background: rgba(239, 68, 68, 0.06);
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        color: var(--accent-red);
+      }
+
+      /* Foto capture */
+      .foto-area {
+        margin-top: 14px;
+        display: none;
+      }
+      .foto-area.active {
+        display: block;
+      }
+      .foto-preview-wrap {
+        position: relative;
+        width: 100%;
+        border-radius: var(--radius-sm);
+        overflow: hidden;
+        border: 1px solid var(--border);
+        background: #000;
+      }
+      #fotoVideo {
+        width: 100%;
+        display: block;
+        max-height: 220px;
+        object-fit: cover;
+      }
+      #fotoCanvas {
+        display: none;
+      }
+      .foto-preview-img {
+        width: 100%;
+        border-radius: var(--radius-sm);
+        border: 1px solid var(--border-strong);
+        display: none;
+      }
+
+      /* Lista de items escaneados */
+      .items-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 8px;
+      }
+      .item-card {
+        background: rgba(11, 15, 26, 0.7);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        padding: 14px 16px;
+        display: flex;
+        gap: 14px;
+        align-items: flex-start;
+        animation: fadeIn 0.3s ease;
+      }
+      .item-thumb {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 6px;
+        border: 1px solid var(--border-strong);
+        flex-shrink: 0;
+      }
+      .item-thumb-placeholder {
+        width: 60px;
+        height: 60px;
+        border-radius: 6px;
+        border: 1px solid var(--border);
+        background: var(--bg-card2);
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+      }
+      .item-info {
+        flex: 1;
+        min-width: 0;
+      }
+      .item-lpn {
+        color: var(--accent);
+        font-family: var(--font-mono);
+        font-size: 12px;
+        font-weight: 500;
+      }
+      .item-ref {
+        color: var(--text-primary);
+        font-family: var(--font-mono);
+        font-size: 11px;
+        margin-top: 3px;
+      }
+      .item-meta {
+        color: var(--text-muted);
+        font-family: var(--font-mono);
+        font-size: 10px;
+        margin-top: 4px;
+      }
+      .item-actions {
+        display: flex;
+        gap: 6px;
+        margin-top: 8px;
+        flex-wrap: wrap;
+      }
+
+      .counter-row {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 8px;
+      }
+      .counter-box {
+        flex: 1;
+        background: rgba(0, 212, 255, 0.04);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        padding: 12px 14px;
+        text-align: center;
+      }
+      .counter-box .cb-num {
+        font-family: var(--font-mono);
+        font-size: 22px;
+        font-weight: 500;
+        color: var(--accent);
+      }
+      .counter-box .cb-label {
+        font-family: var(--font-mono);
+        font-size: 9px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        margin-top: 3px;
+      }
+
+      /* Nav link */
+      .nav-link {
+        display: inline-block;
+        margin-top: 16px;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        text-decoration: none;
+        padding: 9px 20px;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        transition: all 0.2s ease;
+      }
+      .nav-link:hover {
+        color: var(--accent);
+        border-color: var(--border-strong);
+        background: var(--accent-glow);
+      }
+
+      /* Botones fijos inferiores */
+      .btns-fixed-row {
+        position: fixed;
+        bottom: 28px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 999;
+        display: flex;
+        gap: 10px;
+        align-items: center;
+      }
+      .btn-pdf-fixed,
+      .btn-xls-fixed {
+        background: rgba(0, 212, 255, 0.1);
+        color: var(--accent);
+        border: 1px solid var(--border-strong);
+        border-radius: 999px;
+        padding: 13px 28px;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        cursor: pointer;
+        backdrop-filter: blur(8px);
+        white-space: nowrap;
+        transition: background 0.2s, box-shadow 0.2s;
+      }
+      .btn-pdf-fixed:hover,
+      .btn-xls-fixed:hover {
+        background: rgba(0, 212, 255, 0.2);
+        box-shadow: 0 0 24px rgba(0, 212, 255, 0.2);
+      }
+      .btn-pdf-fixed:disabled,
+      .btn-xls-fixed:disabled {
+        opacity: 0.35;
+        cursor: not-allowed;
+      }
+      .btn-xls-fixed {
+        background: rgba(16, 185, 129, 0.08);
+        border-color: rgba(16, 185, 129, 0.35);
+        color: var(--accent-green);
+      }
+      .btn-xls-fixed:hover {
+        background: rgba(16, 185, 129, 0.18);
+        box-shadow: 0 0 24px rgba(16, 185, 129, 0.2);
+      }
+
+      /* Toast */
+      .toast {
+        position: fixed;
+        top: 24px;
+        left: 50%;
+        transform: translateX(-50%) translateY(-80px);
+        z-index: 9999;
+        background: var(--bg-card);
+        border: 1px solid var(--border-strong);
+        border-radius: 999px;
+        padding: 10px 24px;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        color: var(--text-primary);
+        transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+        white-space: nowrap;
+      }
+      .toast.show {
+        transform: translateX(-50%) translateY(0);
+      }
+      .toast.green {
+        border-color: rgba(16, 185, 129, 0.5);
+        color: var(--accent-green);
+      }
+      .toast.red {
+        border-color: rgba(239, 68, 68, 0.5);
+        color: var(--accent-red);
+      }
+
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(24px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes slideDown {
+        from {
+          opacity: 0;
+          transform: translateY(-16px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(6px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* PDF preview oculto */
+      #pdfPreview {
+        position: fixed;
+        left: -9999px;
+        top: 0;
+        width: 794px;
+        background: #fff;
+        padding: 60px 70px;
+        font-family: Arial, sans-serif;
+        color: #000;
+        line-height: 1.6;
+      }
+      #pdfPreview h3 {
+        font-size: 13px;
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 8px;
+      }
+      #pdfPreview .memo-header {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 6px;
+      }
+      #pdfPreview .memo-field {
+        margin: 4px 0;
+        font-size: 12px;
+      }
+      #pdfPreview .memo-field strong {
+        margin-right: 4px;
+      }
+      #pdfPreview .memo-body {
+        margin: 18px 0;
+        font-size: 12px;
+        text-align: justify;
+      }
+      #pdfPreview .item-block {
+        margin: 24px 0;
+        page-break-inside: avoid;
+      }
+      #pdfPreview .item-block .ref-name {
+        font-size: 12px;
+        font-weight: bold;
+        margin-bottom: 8px;
+      }
+      #pdfPreview .item-block img {
+        max-width: 260px;
+        max-height: 200px;
+        border: 1px solid #ccc;
+        display: block;
+      }
+      #pdfPreview .firmas {
+        margin-top: 60px;
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 40px;
+      }
+      #pdfPreview .firma {
+        text-align: center;
+      }
+      #pdfPreview .firma .linea {
+        border-top: 1px solid #000;
+        width: 200px;
+        margin: 0 auto 6px;
+      }
+      #pdfPreview .firma p {
+        font-size: 11px;
+      }
+
+      @media (max-width: 520px) {
+        .page-header h1 {
+          font-size: 22px;
+        }
+        .counter-row {
+          flex-direction: column;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="toast" id="toast"></div>
+
+    <header class="page-header">
+      <h1>Módulo <span>5</span></h1>
+      <p>Generador de Memorando — Bajas de Inventario</p>
+      <div class="accent-line"></div>
+    </header>
+
+    <!-- ── PASO 1: CARGAR EXCEL ── -->
+    <div class="card">
+      <p class="section-label">Paso 1 — Base de datos</p>
+      <input type="file" id="excelFile" accept=".xlsx,.xls" />
+      <div id="excelStatus"></div>
+    </div>
+
+    <!-- ── PASO 2: ESCANEAR LPN ── -->
+    <div class="card">
+      <p class="section-label">Paso 2 — Escanear o ingresar LPN</p>
+
+      <div class="lpn-row">
+        <input
+          type="text"
+          id="lpnInput"
+          placeholder="Ej: R102020262154"
+          autocomplete="off"
+        />
+        <button class="btn-secondary" id="btnScan" onclick="toggleScanner()">
+          ⊙ Cámara
+        </button>
+      </div>
+
+      <!-- Video escáner -->
+      <div class="scanner-wrap" id="scannerWrap" style="margin-top: 12px">
+        <video id="scannerVideo" autoplay muted playsinline></video>
+        <div class="scanner-overlay">
+          <div class="scanner-frame"><div class="scanner-line"></div></div>
+        </div>
+        <div class="scanner-hint">Apunta el código de barras al recuadro</div>
+      </div>
+
+      <button class="btn" style="margin-top: 14px" onclick="buscarYAgregar()">
+        Validar y Agregar
+      </button>
+
+      <div class="lpn-result" id="lpnResult"></div>
+
+      <!-- Foto de referencia -->
+      <div class="foto-area" id="fotoArea">
+        <p class="section-label" style="margin-top: 16px">
+          Foto de la referencia
+        </p>
+        <div class="foto-preview-wrap" id="fotoCameraWrap">
+          <video id="fotoVideo" autoplay muted playsinline></video>
+        </div>
+        <canvas id="fotoCanvas"></canvas>
+        <img id="fotoPreviewImg" class="foto-preview-img" alt="Foto tomada" />
+        <div style="display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap">
+          <button class="btn-secondary" id="btnTomarFoto" onclick="tomarFoto()">
+            📷 Tomar Foto
+          </button>
+          <button
+            class="btn-secondary"
+            id="btnRetomar"
+            onclick="retomar()"
+            style="display: none"
+          >
+            ↺ Retomar
+          </button>
+          <button
+            class="btn"
+            id="btnConfirmar"
+            onclick="confirmarItem()"
+            style="display: none; margin-top: 0; flex: 1"
+          >
+            ✓ Confirmar y Guardar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── PASO 3: LISTA DE ITEMS ── -->
+    <div class="card" id="cardLista" style="display: none">
+      <p class="section-label">Paso 3 — Referencias registradas</p>
+      <div class="counter-row" id="counterRow">
+        <div class="counter-box">
+          <div class="cb-num" id="cntRefs">0</div>
+          <div class="cb-label">Referencias</div>
+        </div>
+        <div class="counter-box">
+          <div class="cb-num" id="cntUnits">0</div>
+          <div class="cb-label">Unidades totales</div>
+        </div>
+      </div>
+      <div class="items-list" id="itemsList"></div>
+    </div>
+
+    <!-- Nav -->
+    <a href="index.html" class="nav-link">⬡ &nbsp;Volver al inicio</a>
+
+    <!-- Botones fijos inferiores -->
+    <div class="btns-fixed-row">
+      <button
+        class="btn-xls-fixed"
+        id="btnXLS"
+        onclick="exportarExcel()"
+        disabled
+      >
+        ↓ &nbsp;Exportar Excel
+      </button>
+      <button class="btn-pdf-fixed" id="btnPDF" onclick="generarPDF()" disabled>
+        ↓ &nbsp;Generar PDF
+      </button>
+    </div>
+
+    <!-- Estructura oculta para generar PDF -->
+    <div id="pdfPreview"></div>
+
+    <script>
+      // ════════════════════════════════════════
+      // ESTADO GLOBAL
+      // ════════════════════════════════════════
+      let datosExcel = [];
+      let itemsPendientes = []; // items confirmados listos para el PDF
+      let itemActual = null; // item en proceso (escaneado, esperando foto)
+      let scannerStream = null;
+      let fotoStream = null;
+      let zxingReader = null;
+      let scanInterval = null;
+
+      // ════════════════════════════════════════
+      // TOAST
+      // ════════════════════════════════════════
+      function toast(msg, tipo = "") {
+        const el = document.getElementById("toast");
+        el.textContent = msg;
+        el.className = "toast show " + tipo;
+        setTimeout(() => {
+          el.className = "toast";
+        }, 3000);
+      }
+
+      // ════════════════════════════════════════
+      // CARGAR EXCEL
+      // ════════════════════════════════════════
+      document
+        .getElementById("excelFile")
+        .addEventListener("change", function (e) {
+          const file = e.target.files[0];
+          if (!file) return;
+          const reader = new FileReader();
+          reader.onload = function (ev) {
+            try {
+              const data = new Uint8Array(ev.target.result);
+              const wb = XLSX.read(data, { type: "array" });
+              const hoja = wb.Sheets[wb.SheetNames[0]];
+              // Leer con separador punto y coma si la primera columna contiene todo junto
+              let rows = XLSX.utils.sheet_to_json(hoja, { raw: false });
+              // Detectar si viene como CSV con ";" en una sola columna
+              if (rows.length > 0) {
+                const firstKey = Object.keys(rows[0])[0];
+                if (firstKey && firstKey.includes(";")) {
+                  // Parsear manualmente
+                  const raw = XLSX.utils.sheet_to_csv(hoja, { FS: ";" });
+                  const lines = raw.trim().split("\n");
+                  const headers = lines[0].split(";").map((h) => h.trim());
+                  rows = lines.slice(1).map((line) => {
+                    const vals = line.split(";");
+                    const obj = {};
+                    headers.forEach(
+                      (h, i) => (obj[h] = (vals[i] || "").trim())
+                    );
+                    return obj;
+                  });
+                }
+              }
+              datosExcel = rows;
+              showStatus(
+                `ok`,
+                `${rows.length} registros cargados · ${file.name}`
+              );
+              toast("Excel cargado correctamente", "green");
+            } catch (err) {
+              showStatus("err", "Error al leer el archivo");
+              toast("Error al leer el Excel", "red");
+            }
+          };
+          reader.readAsArrayBuffer(file);
+        });
+
+      function showStatus(tipo, msg) {
+        const el = document.getElementById("excelStatus");
+        const iconos = { ok: "●", warn: "◐", err: "✕" };
+        el.innerHTML = `<div class="status-pill ${tipo}"><span class="dot"></span>${iconos[tipo]} ${msg}</div>`;
+      }
+
+      // ════════════════════════════════════════
+      // ESCÁNER DE CÓDIGO DE BARRAS (ZXing)
+      // ════════════════════════════════════════
+      async function toggleScanner() {
+        const wrap = document.getElementById("scannerWrap");
+        if (scannerStream) {
+          detenerScanner();
+          wrap.style.display = "none";
+          document.getElementById("btnScan").textContent = "⊙ Cámara";
+          return;
+        }
+        try {
+          wrap.style.display = "block";
+          document.getElementById("btnScan").textContent = "✕ Cerrar";
+          const video = document.getElementById("scannerVideo");
+          scannerStream = await navigator.mediaDevices.getUserMedia({
+            video: {
+              facingMode: { ideal: "environment" },
+              width: { ideal: 1280 },
+            },
+          });
+          video.srcObject = scannerStream;
+          await video.play();
+          iniciarZXing(video);
+        } catch (err) {
+          toast("No se pudo acceder a la cámara", "red");
+          wrap.style.display = "none";
+        }
+      }
+
+      function iniciarZXing(video) {
+        // Usamos un canvas para capturar frames y decodificar
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+        const hints = new Map();
+
+        // Intentar con la API de BarcodeDetector nativa del navegador (Chrome/Android)
+        if ("BarcodeDetector" in window) {
+          const detector = new BarcodeDetector({
+            formats: [
+              "code_128",
+              "code_39",
+              "ean_13",
+              "qr_code",
+              "data_matrix",
+            ],
+          });
+          scanInterval = setInterval(async () => {
+            if (video.readyState !== video.HAVE_ENOUGH_DATA) return;
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            ctx.drawImage(video, 0, 0);
+            try {
+              const codes = await detector.detect(canvas);
+              if (codes.length > 0) {
+                const val = codes[0].rawValue.trim().toUpperCase();
+                document.getElementById("lpnInput").value = val;
+                detenerScanner();
+                document.getElementById("scannerWrap").style.display = "none";
+                document.getElementById("btnScan").textContent = "⊙ Cámara";
+                toast("LPN escaneado: " + val, "green");
+                buscarYAgregar();
+              }
+            } catch (e) {}
+          }, 300);
+        } else {
+          // Fallback: ZXing desde CDN
+          toast(
+            "BarcodeDetector no disponible en este navegador. Ingresa el LPN manualmente.",
+            ""
+          );
+          detenerScanner();
+          document.getElementById("scannerWrap").style.display = "none";
+        }
+      }
+
+      function detenerScanner() {
+        if (scanInterval) {
+          clearInterval(scanInterval);
+          scanInterval = null;
+        }
+        if (scannerStream) {
+          scannerStream.getTracks().forEach((t) => t.stop());
+          scannerStream = null;
+        }
+      }
+
+      // ════════════════════════════════════════
+      // BUSCAR LPN EN EXCEL
+      // ════════════════════════════════════════
+      function buscarYAgregar() {
+        const val = document
+          .getElementById("lpnInput")
+          .value.trim()
+          .toUpperCase();
+        const resultEl = document.getElementById("lpnResult");
+        const fotoArea = document.getElementById("fotoArea");
+
+        if (!val) {
+          toast("Ingresa un LPN", "red");
+          return;
+        }
+        if (datosExcel.length === 0) {
+          toast("Carga primero el Excel", "red");
+          return;
+        }
+
+        // Verificar duplicado
+        if (itemsPendientes.some((i) => i.lpn === val)) {
+          toast("Este LPN ya fue registrado", "red");
+          return;
+        }
+
+        // Buscar en columna LPN (o No.;LPN;... si vino como csv)
+        const found = datosExcel.find((row) => {
+          const lpnVal = (row["LPN"] || row["lpn"] || "")
+            .toString()
+            .toUpperCase();
+          return lpnVal === val;
+        });
+
+        if (!found) {
+          resultEl.className = "lpn-result not-found";
+          resultEl.innerHTML = `LPN <strong>${val}</strong> no encontrado en el Excel.`;
+          fotoArea.classList.remove("active");
+          return;
+        }
+
+        const ref =
+          found["REFERENCIAS"] || found["REFERENCIA"] || found["REF"] || "—";
+        const qty = found["CANTIDAD"] || found["QTY"] || "—";
+        const tipo = found["TIPO"] || "—";
+
+        resultEl.className = "lpn-result found";
+        resultEl.innerHTML = `
+          <strong>LPN:</strong> ${val}<br>
+          <strong>REFERENCIA:</strong> ${ref}<br>
+          <strong>CANTIDAD:</strong> ${qty}<br>
+          <strong>TIPO:</strong> ${tipo}
+        `;
+
+        // Guardar item actual, esperar foto
+        itemActual = {
+          lpn: val,
+          referencia: ref,
+          cantidad: qty,
+          tipo,
+          foto: null,
+        };
+
+        // Activar área de foto
+        fotoArea.classList.add("active");
+        iniciarCamaraFoto();
+      }
+
+      // ════════════════════════════════════════
+      // CÁMARA PARA FOTO DE REFERENCIA
+      // ════════════════════════════════════════
+      async function iniciarCamaraFoto() {
+        const video = document.getElementById("fotoVideo");
+        const img = document.getElementById("fotoPreviewImg");
+        const btnRetomar = document.getElementById("btnRetomar");
+        const btnConfirmar = document.getElementById("btnConfirmar");
+        const btnTomar = document.getElementById("btnTomarFoto");
+
+        img.style.display = "none";
+        document.getElementById("fotoCameraWrap").style.display = "block";
+        btnRetomar.style.display = "none";
+        btnConfirmar.style.display = "none";
+        btnTomar.style.display = "inline-block";
+
+        if (fotoStream) {
+          fotoStream.getTracks().forEach((t) => t.stop());
+        }
+        try {
+          fotoStream = await navigator.mediaDevices.getUserMedia({
+            video: {
+              facingMode: { ideal: "environment" },
+              width: { ideal: 1280 },
+            },
+          });
+          video.srcObject = fotoStream;
+          await video.play();
+        } catch (err) {
+          toast("No se pudo abrir la cámara para la foto", "red");
+        }
+      }
+
+      function tomarFoto() {
+        const video = document.getElementById("fotoVideo");
+        const canvas = document.getElementById("fotoCanvas");
+        const img = document.getElementById("fotoPreviewImg");
+
+        canvas.width = video.videoWidth || 640;
+        canvas.height = video.videoHeight || 480;
+        canvas.getContext("2d").drawImage(video, 0, 0);
+
+        const dataURL = canvas.toDataURL("image/jpeg", 0.85);
+        img.src = dataURL;
+        img.style.display = "block";
+        document.getElementById("fotoCameraWrap").style.display = "none";
+
+        if (fotoStream) {
+          fotoStream.getTracks().forEach((t) => t.stop());
+          fotoStream = null;
+        }
+
+        document.getElementById("btnTomarFoto").style.display = "none";
+        document.getElementById("btnRetomar").style.display = "inline-block";
+        document.getElementById("btnConfirmar").style.display = "inline-block";
+
+        if (itemActual) itemActual.foto = dataURL;
+      }
+
+      function retomar() {
+        document.getElementById("fotoPreviewImg").style.display = "none";
+        document.getElementById("btnRetomar").style.display = "none";
+        document.getElementById("btnConfirmar").style.display = "none";
+        if (itemActual) itemActual.foto = null;
+        iniciarCamaraFoto();
+      }
+
+      function confirmarItem() {
+        if (!itemActual) return;
+        itemsPendientes.push({ ...itemActual });
+        itemActual = null;
+
+        // Limpiar UI
+        document.getElementById("lpnInput").value = "";
+        document.getElementById("lpnResult").className = "lpn-result";
+        document.getElementById("lpnResult").innerHTML = "";
+        document.getElementById("fotoArea").classList.remove("active");
+        document.getElementById("fotoPreviewImg").style.display = "none";
+        document.getElementById("btnRetomar").style.display = "none";
+        document.getElementById("btnConfirmar").style.display = "none";
+        document.getElementById("btnTomarFoto").style.display = "inline-block";
+        document.getElementById("fotoCameraWrap").style.display = "block";
+
+        renderLista();
+        toast("Referencia agregada correctamente", "green");
+      }
+
+      // ════════════════════════════════════════
+      // RENDERIZAR LISTA DE ITEMS
+      // ════════════════════════════════════════
+      // ════════════════════════════════════════
+      // EXPORTAR EXCEL
+      // ════════════════════════════════════════
+      function exportarExcel() {
+        if (itemsPendientes.length === 0) {
+          toast("No hay referencias para exportar", "red");
+          return;
+        }
+
+        const datos = itemsPendientes.map((item, idx) => ({
+          "No.": idx + 1,
+          LPN: item.lpn,
+          REFERENCIAS: item.referencia,
+          CANTIDAD: item.cantidad,
+          TIPO: item.tipo,
+        }));
+
+        const hoja = XLSX.utils.json_to_sheet(datos, {
+          header: ["No.", "LPN", "REFERENCIAS", "CANTIDAD", "TIPO"],
+        });
+
+        // Ancho de columnas
+        hoja["!cols"] = [
+          { wch: 5 },
+          { wch: 20 },
+          { wch: 28 },
+          { wch: 10 },
+          { wch: 16 },
+        ];
+
+        const libro = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(libro, hoja, "Bajas Inventario");
+
+        const hoy = new Date();
+        const fecha = `${hoy.getFullYear()}${String(
+          hoy.getMonth() + 1
+        ).padStart(2, "0")}${String(hoy.getDate()).padStart(2, "0")}`;
+        XLSX.writeFile(libro, `Bajas_Inventario_${fecha}.xlsx`);
+        toast("Excel exportado correctamente", "green");
+      }
+
+      function renderLista() {
+        const card = document.getElementById("cardLista");
+        const list = document.getElementById("itemsList");
+        const btnPDF = document.getElementById("btnPDF");
+        const btnXLS = document.getElementById("btnXLS");
+
+        if (itemsPendientes.length === 0) {
+          card.style.display = "none";
+          btnPDF.disabled = true;
+          btnXLS.disabled = true;
+          return;
+        }
+
+        card.style.display = "block";
+        btnPDF.disabled = false;
+        btnXLS.disabled = false;
+
+        // Contadores
+        const totalRefs = itemsPendientes.length;
+        const totalUnits = itemsPendientes.reduce(
+          (s, i) => s + (parseInt(i.cantidad) || 0),
+          0
+        );
+        document.getElementById("cntRefs").textContent = totalRefs;
+        document.getElementById("cntUnits").textContent = totalUnits;
+
+        list.innerHTML = itemsPendientes
+          .map(
+            (item, idx) => `
+          <div class="item-card">
+            ${
+              item.foto
+                ? `<img class="item-thumb" src="${item.foto}" alt="foto" />`
+                : `<div class="item-thumb-placeholder">📦</div>`
+            }
+            <div class="item-info">
+              <div class="item-lpn">${item.lpn}</div>
+              <div class="item-ref">${item.referencia}</div>
+              <div class="item-meta">Cant: ${
+                item.cantidad
+              } &nbsp;·&nbsp; Tipo: ${item.tipo}</div>
+              <div class="item-actions">
+                ${
+                  !item.foto
+                    ? `<button class="btn-secondary" onclick="agregarFotoItem(${idx})" style="padding:5px 12px;font-size:10px;">📷 Agregar foto</button>`
+                    : ""
+                }
+                <button class="btn-danger" onclick="eliminarItem(${idx})">✕ Quitar</button>
+              </div>
+            </div>
+          </div>
+        `
+          )
+          .join("");
+      }
+
+      function eliminarItem(idx) {
+        itemsPendientes.splice(idx, 1);
+        renderLista();
+        toast("Referencia eliminada", "");
+      }
+
+      function agregarFotoItem(idx) {
+        // Permitir foto extra para un item ya guardado
+        itemActual = itemsPendientes[idx];
+        document.getElementById("fotoArea").classList.add("active");
+        iniciarCamaraFoto();
+        // Al confirmar, sobreescribe el item
+        document.getElementById("btnConfirmar").onclick = function () {
+          itemsPendientes[idx] = { ...itemActual };
+          itemActual = null;
+          document.getElementById("fotoArea").classList.remove("active");
+          document.getElementById("fotoPreviewImg").style.display = "none";
+          document.getElementById("btnRetomar").style.display = "none";
+          document.getElementById("btnConfirmar").style.display = "none";
+          document.getElementById("btnConfirmar").onclick = confirmarItem;
+          renderLista();
+          toast("Foto actualizada", "green");
+        };
+      }
+
+      // ════════════════════════════════════════
+      // GENERAR PDF
+      // ════════════════════════════════════════
+      async function generarPDF() {
+        if (itemsPendientes.length === 0) {
+          toast("No hay referencias registradas", "red");
+          return;
+        }
+
+        toast("Generando PDF...", "");
+        const btnPDF = document.getElementById("btnPDF");
+        btnPDF.disabled = true;
+        btnPDF.textContent = "⏳ Generando...";
+
+        const hoy = new Date();
+        const fechaStr = `${String(hoy.getDate()).padStart(2, "0")}/${String(
+          hoy.getMonth() + 1
+        ).padStart(2, "0")}/${hoy.getFullYear()}`;
+        const totalRefs = itemsPendientes.length;
+        const totalUnits = itemsPendientes.reduce(
+          (s, i) => s + (parseInt(i.cantidad) || 0),
+          0
+        );
+
+        // Construir HTML del memorando
+        let itemsHTML = "";
+        for (const item of itemsPendientes) {
+          itemsHTML += `
+            <div class="item-block">
+              <div class="ref-name">${item.referencia}</div>
+              ${
+                item.foto
+                  ? `<img src="${item.foto}" style="max-width:260px;max-height:200px;border:1px solid #ccc;" />`
+                  : '<p style="font-size:11px;color:#999;">(Sin imagen adjunta)</p>'
+              }
+              <p style="font-size:11px;color:#444;margin-top:4px;">LPN: ${
+                item.lpn
+              } &nbsp;|&nbsp; Cant: ${item.cantidad} &nbsp;|&nbsp; Tipo: ${
+            item.tipo
+          }</p>
+            </div>
+          `;
+        }
+
+        const preview = document.getElementById("pdfPreview");
+        preview.innerHTML = `
+          <div style="text-align:right;font-size:11px;margin-bottom:4px;">GLH-AR 2026-173</div>
+          <h3>MEMORANDO GLH-AR 2026-173</h3>
+
+          <div class="memo-field"><strong>PARA:</strong> Sra. Dora Balbina Muñoz Gómez - Jefa de Auditoría Interna</div>
+          <div class="memo-field"><strong>DE:</strong> Mayerly Andrea Satizabal – Analista de Inventarios</div>
+          <div class="memo-field"><strong>FECHA:</strong> ${fechaStr}</div>
+          <div class="memo-field"><strong>ASUNTO:</strong> DADA DE BAJA CORRESPONDIENTE A MATERIAL DE RECLAMACIONES RECHAZADOS POR PARTE DEL TALLER DE SERVICIOS.</div>
+
+          <div class="memo-body">
+            Con el objetivo de depurar la Bodega HRC-MATERIAL MAL ESTADO RESPUESTOS MOTOS en el Almacén de Repuestos,
+            y dando cumplimiento al procedimiento administrativo PA-PM-0004 "CONTROL DE INVENTARIOS-PRODUCTOS POSVENTA",
+            Se solicita la dada de baja de <strong>${totalRefs} referencias</strong> con <strong>${totalUnits} unidades</strong> que corresponden
+            al material de RECLAMOS RECHAZADOS reportados por el Taller de Servicio.
+          </div>
+
+          ${itemsHTML}
+
+          <p style="font-size:12px;margin-top:30px;">Atentamente,</p>
+
+          <div class="firmas">
+            <div class="firma">
+              <div class="linea"></div>
+              <p><strong>Nicolás Rendón Escobar</strong></p>
+              <p>Vicepresidente de Operaciones</p>
+            </div>
+            <div class="firma">
+              <div class="linea"></div>
+              <p><strong>Yamileth Caicedo Ospina</strong></p>
+              <p>Director de Posventa Motocicletas</p>
+            </div>
+            <div class="firma">
+              <div class="linea"></div>
+              <p><strong>Luis Fernando Vera</strong></p>
+              <p>Jefe de Operaciones Repuestos Motos</p>
+            </div>
+            <div class="firma">
+              <div class="linea"></div>
+              <p><strong>Mayerly Andrea Satizabal</strong></p>
+              <p>Analista de Inventarios</p>
+            </div>
+          </div>
+        `;
+
+        try {
+          const { jsPDF } = window.jspdf;
+          const pdf = new jsPDF({ orientation: "p", unit: "mm", format: "a4" });
+
+          const canvas = await html2canvas(preview, {
+            scale: 2,
+            useCORS: true,
+            allowTaint: true,
+            backgroundColor: "#ffffff",
+            width: 794,
+          });
+
+          const imgData = canvas.toDataURL("image/jpeg", 0.92);
+          const pdfW = pdf.internal.pageSize.getWidth();
+          const pdfH = pdf.internal.pageSize.getHeight();
+          const ratio = canvas.width / canvas.height;
+          const pageH = pdfW / ratio;
+
+          let posY = 0;
+          let remaining = canvas.height;
+          let page = 0;
+
+          while (remaining > 0) {
+            const sliceH = Math.min(remaining, canvas.height * (pdfH / pageH));
+            const sliceCanvas = document.createElement("canvas");
+            sliceCanvas.width = canvas.width;
+            sliceCanvas.height = sliceH;
+            sliceCanvas
+              .getContext("2d")
+              .drawImage(
+                canvas,
+                0,
+                posY,
+                canvas.width,
+                sliceH,
+                0,
+                0,
+                canvas.width,
+                sliceH
+              );
+
+            if (page > 0) pdf.addPage();
+            pdf.addImage(
+              sliceCanvas.toDataURL("image/jpeg", 0.92),
+              "JPEG",
+              0,
+              0,
+              pdfW,
+              pdfW * (sliceH / canvas.width)
+            );
+
+            posY += sliceH;
+            remaining -= sliceH;
+            page++;
+          }
+
+          const fecha = `${hoy.getFullYear()}${String(
+            hoy.getMonth() + 1
+          ).padStart(2, "0")}${String(hoy.getDate()).padStart(2, "0")}`;
+          pdf.save(`Memorando_Bajas_${fecha}.pdf`);
+          toast("PDF generado correctamente", "green");
+        } catch (err) {
+          toast("Error al generar el PDF: " + err.message, "red");
+          console.error(err);
+        }
+
+        btnPDF.disabled = false;
+        btnPDF.textContent = "↓  Generar Memorando PDF";
+      }
+
+      // ════════════════════════════════════════
+      // ENTER en input LPN
+      // ════════════════════════════════════════
+      document
+        .getElementById("lpnInput")
+        .addEventListener("keydown", function (e) {
+          if (e.key === "Enter") buscarYAgregar();
+        });
+    </script>
+    <script>
+      const sesion = JSON.parse(sessionStorage.getItem("clh_user"));
+      const permisos = sesion?.permisos;
+
+      // ¿Puede eliminar?
+      if (!permisos?.acciones?.eliminar) {
+        document.getElementById("btnEliminar").style.display = "none";
+      }
+
+      // ¿Tiene acceso al módulo 5?
+      if (!permisos?.modulos?.modulo5) {
+        window.location.href = "index.html"; // redirigir si no tiene acceso
+      }
+    </script>
+  </body>
+</html>

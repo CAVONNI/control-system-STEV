@@ -2315,5 +2315,19 @@
 
       cargarDatos();
     </script>
+       <Script>
+        const sesion = JSON.parse(sessionStorage.getItem("clh_user"));
+         const permisos = sesion?.permisos;
+         
+         // ¿Puede eliminar?
+         if (!permisos?.acciones?.eliminar) {
+           document.getElementById("btnEliminar").style.display = "none";
+         }
+         
+         // ¿Tiene acceso al módulo 5?
+         if (!permisos?.modulos?.modulo5) {
+           window.location.href = "index.html"; // redirigir si no tiene acceso
+         } 
+         </Script>
   </body>
 </html>

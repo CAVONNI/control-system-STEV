@@ -833,7 +833,11 @@
         </p>
         <span class="card-arrow">Acceder →</span>
       </a>
-      <a href="guias.html" class="menu-card card-guias">
+      <a
+        href="guias.html"
+        class="menu-card"
+        style="--card-accent: #a78bfa; --card-border: rgba(167, 139, 250, 0.35)"
+      >
         <span class="card-icon">📦</span>
         <span class="card-tag">Módulo 02</span>
         <div class="card-title">Registro de Guías</div>
@@ -863,6 +867,19 @@
         <p class="card-desc">Consulta y registra novedades.</p>
         <span class="card-arrow">Acceder →</span>
       </a>
+      <a
+        href="validacionINV.html"
+        class="menu-card"
+        style="--card-accent: #a78bfa; --card-border: rgba(167, 139, 250, 0.35)"
+      >
+        <span class="card-icon">📦</span>
+        <span class="card-tag">Módulo 05</span>
+        <div class="card-title">VALIDACIÓN INV CLH</div>
+        <p class="card-desc">
+          Registra rechazados y d-baja con imagen, referencias y demas datos.
+        </p>
+        <span class="card-arrow">Acceder →</span>
+      </a>
     </div>
 
     <p class="footer">Steven Realpe · control system · v1.1</p>
@@ -889,5 +906,19 @@
         window.location.href = "login.html";
       };
     </script>
+       <Script>
+        const sesion = JSON.parse(sessionStorage.getItem("clh_user"));
+         const permisos = sesion?.permisos;
+         
+         // ¿Puede eliminar?
+         if (!permisos?.acciones?.eliminar) {
+           document.getElementById("btnEliminar").style.display = "none";
+         }
+         
+         // ¿Tiene acceso al módulo 5?
+         if (!permisos?.modulos?.modulo5) {
+           window.location.href = "index.html"; // redirigir si no tiene acceso
+         } 
+         </Script>
   </body>
 </html>
