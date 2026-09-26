@@ -2,8 +2,8 @@
    VALIDAR LPN — Lógica principal
    ================================================ */
 
-   let datosExcel = [];       // Excel principal (LPN, REFERENCIA, CANTIDAD, NOTA, TIPO...)
-   let listaTipoExcel = [];   // Excel de cruce (NOTA -> TIPO/ASN), como lista [{notaNumeros, tipo}]
+   let datosExcel = []; // Excel principal (LPN, REFERENCIA, CANTIDAD, NOTA, TIPO...)
+   let listaTipoExcel = []; // Excel de cruce (NOTA -> TIPO/ASN), como lista [{notaNumeros, tipo}]
    
    // ── CARGA DEL EXCEL PRINCIPAL ──
    document.getElementById("excelFile").addEventListener("change", function (e) {
@@ -26,30 +26,32 @@
    });
    
    // ── CARGA DEL EXCEL DE TIPOS (cruce por NOTA) ──
-   document.getElementById("excelTipoFile").addEventListener("change", function (e) {
-     let archivo = e.target.files[0];
-     if (!archivo) return;
+   document
+     .getElementById("excelTipoFile")
+     .addEventListener("change", function (e) {
+       let archivo = e.target.files[0];
+       if (!archivo) return;
    
-     let lector = new FileReader();
+       let lector = new FileReader();
    
-     lector.onload = function (event) {
-       let data = new Uint8Array(event.target.result);
-       let workbook = XLSX.read(data, { type: "array" });
+       lector.onload = function (event) {
+         let data = new Uint8Array(event.target.result);
+         let workbook = XLSX.read(data, { type: "array" });
    
-       listaTipoExcel = extraerListaTipos(workbook);
+         listaTipoExcel = extraerListaTipos(workbook);
    
-       console.log("Excel de tipos cargado:", listaTipoExcel);
+         console.log("Excel de tipos cargado:", listaTipoExcel);
    
-       if (listaTipoExcel.length === 0) {
-         const resultado = document.getElementById("resultado");
-         resultado.textContent =
-           "⚠ No se encontraron columnas NOTA / TIPO (o ASN) en el Excel de tipos.";
-         resultado.className = "resultado advertencia";
-       }
-     };
+         if (listaTipoExcel.length === 0) {
+           const resultado = document.getElementById("resultado");
+           resultado.textContent =
+             "⚠ No se encontraron columnas NOTA / TIPO (o ASN) en el Excel de tipos.";
+           resultado.className = "resultado advertencia";
+         }
+       };
    
-     lector.readAsArrayBuffer(archivo);
-   });
+       lector.readAsArrayBuffer(archivo);
+     });
    
    /**
     * Recorre todas las hojas del workbook de "tipos" buscando una que tenga
@@ -140,12 +142,12 @@
          guardarEnHistorial(item);
    
          resultado.innerHTML = `
-           <strong>REFERENCIA:</strong> ${item.REFERENCIA}<br>
-           <strong>LPN:</strong> ${item.LPN}<br>
-           <strong>CANTIDAD:</strong> ${item.CANTIDAD}<br>
-           <strong>NOTA:</strong> ${item.NOTA}<br>
-           <strong>TIPO:</strong> ${item.TIPO || "No encontrado"}
-         `;
+              <strong>REFERENCIA:</strong> ${item.REFERENCIA}<br>
+              <strong>LPN:</strong> ${item.LPN}<br>
+              <strong>CANTIDAD:</strong> ${item.CANTIDAD}<br>
+              <strong>NOTA:</strong> ${item.NOTA}<br>
+              <strong>TIPO:</strong> ${item.TIPO || "No encontrado"}
+            `;
          return;
        }
    
@@ -155,18 +157,18 @@
        coincidencias.forEach((item) => {
          const tipoPreview = obtenerTipoPorNota(item.NOTA) || "—";
          resultado.innerHTML += `
-           <div style="margin-bottom:10px; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:8px;">
-             <strong>LPN:</strong> ${item.LPN}<br>
-             <strong>REF:</strong> ${item.REFERENCIA}<br>
-             <strong>NOTA:</strong> ${item.NOTA}<br>
-             <strong>TIPO:</strong> ${tipoPreview}<br>
-             <button onclick="seleccionar('${encodeURIComponent(
-               JSON.stringify(item)
-             )}')">
-             Guardar este
-           </button>
-           </div>
-         `;
+              <div style="margin-bottom:10px; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:8px;">
+                <strong>LPN:</strong> ${item.LPN}<br>
+                <strong>REF:</strong> ${item.REFERENCIA}<br>
+                <strong>NOTA:</strong> ${item.NOTA}<br>
+                <strong>TIPO:</strong> ${tipoPreview}<br>
+                <button onclick="seleccionar('${encodeURIComponent(
+                  JSON.stringify(item)
+                )}')">
+                Guardar este
+              </button>
+              </div>
+            `;
        });
      } else {
        resultado.textContent = "No se encontraron resultados.";
@@ -183,11 +185,11 @@
      const resultado = document.getElementById("resultado");
    
      resultado.innerHTML = `
-       <strong>Guardado correctamente:</strong><br><br>
-       LPN: ${item.LPN}<br>
-       REFERENCIA: ${item.REFERENCIA}<br>
-       TIPO: ${item.TIPO || "No encontrado"}
-     `;
+          <strong>Guardado correctamente:</strong><br><br>
+          LPN: ${item.LPN}<br>
+          REFERENCIA: ${item.REFERENCIA}<br>
+          TIPO: ${item.TIPO || "No encontrado"}
+        `;
    }
    
    function guardarEnHistorial(item) {
@@ -211,11 +213,12 @@
    }
    
    /* ================================================
-      Funciones de otras páginas (registro.html, etc.)
-      — se dejan intactas, no forman parte de este cambio —
-      ================================================ */
+         Funciones de otras páginas (registro.html, etc.)
+         ================================================ */
    
    function exportarExcel() {
+     if (!Permisos.exigir('exportar')) return;
+   
      let historial = JSON.parse(localStorage.getItem("historialLPN")) || [];
    
      if (historial.length === 0) {
@@ -230,6 +233,8 @@
    }
    
    function limpiarTabla() {
+     if (!Permisos.exigir('eliminar')) return;
+   
      if (!confirm("¿Seguro que quieres borrar todo el historial?")) {
        return;
      }

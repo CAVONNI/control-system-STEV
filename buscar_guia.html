@@ -1309,10 +1309,19 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/png" href="./favicon-96x96.png" sizes="96x96" />
+    <link
+      rel="icon"
+      type="image/png"
+      href="./favicon-96x96.png"
+      sizes="96x96"
+    />
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
     <link rel="shortcut icon" href="./favicon.ico" />
-    <link rel="apple-touch-icon" sizes="180x180" href="./icono-touch-de-apple.png" />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="./icono-touch-de-apple.png"
+    />
     <meta name="apple-mobile-web-app-title" content="SCI-STEV" />
     <link rel="manifest" href="./sitio.manifiesto web" />
     <title>Buscador de Guías</title>
@@ -1902,6 +1911,52 @@
     </style>
   </head>
   <body>
+    <script>
+      const Permisos = (function () {
+        let sesion = null, perms = null;
+        const DEFAULT = { modulos: { modulo1:false,modulo2:false,modulo3:false,modulo4:false,modulo5:false,admin:false }, acciones: { ver:true,crear:false,editar:false,eliminar:false,exportar:false } };
+        function toast(msg) {
+          let t = document.getElementById("_permToast");
+          if (!t) {
+            t = document.createElement("div");
+            t.id = "_permToast";
+            t.style.cssText = "position:fixed;bottom:28px;right:28px;padding:12px 20px;border-radius:8px;font-family:monospace;font-size:12px;background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.4);color:#ef4444;z-index:9999;opacity:0;transition:opacity .3s;";
+            document.body.appendChild(t);
+          }
+          t.textContent = msg;
+          t.style.opacity = "1";
+          setTimeout(() => (t.style.opacity = "0"), 3000);
+        }
+        function init(moduloId, opts) {
+          opts = opts || {};
+          const loginPage = opts.loginPage || "login.html";
+          const homePage = opts.homePage || "index.html";
+          const raw = sessionStorage.getItem("clh_user");
+          if (!raw) { window.location.href = loginPage; return null; }
+          try { sesion = JSON.parse(raw); } catch (e) { window.location.href = loginPage; return null; }
+          perms = sesion.permisos || DEFAULT;
+          if (moduloId && perms.modulos?.[moduloId] !== true) { window.location.href = homePage; return null; }
+          const arrancar = () => { aplicarUI(); observar(); };
+          if (document.readyState === "loading") { document.addEventListener("DOMContentLoaded", arrancar); } else { arrancar(); }
+          return { sesion, perms };
+        }
+        function puede(accion) { return perms?.acciones?.[accion] === true; }
+        function exigir(accion) { if (!puede(accion)) { toast("No tienes permiso para: " + accion); return false; } return true; }
+        function aplicarUI(root) {
+          root = root || document;
+          root.querySelectorAll("[data-permiso]").forEach((el) => {
+            const accion = el.getAttribute("data-permiso");
+            if (!puede(accion)) { el.style.display = "none"; el.setAttribute("disabled", "true"); }
+          });
+        }
+        function observar() {
+          const obs = new MutationObserver(() => aplicarUI());
+          obs.observe(document.body, { childList: true, subtree: true });
+        }
+        return { init, puede, exigir, aplicarUI };
+      })();
+      Permisos.init('modulo2');
+    </script>
     <header class="page-header">
       <h1>Buscar <span>Guía</span></h1>
       <p>Consulta el historial de paquetes recibidos</p>
@@ -1959,6 +2014,7 @@
     <button
       id="btnExportar"
       onclick="exportarExcel()"
+      data-permiso="exportar"
       style="
         position: fixed;
         bottom: 28px;
@@ -1984,7 +2040,6 @@
     >
       ↓ &nbsp;Exportar a Excel
     </button>
-
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
       import {
@@ -2047,6 +2102,7 @@
       }
 
       window.exportarExcel = function () {
+        if (!Permisos.exigir('exportar')) return;
         if (!todosLosDatos.length) {
           alert("No hay registros para exportar.");
           return;
@@ -2152,10 +2208,10 @@
               </div>
             </div>
             <div class="result-actions">
-              <button class="btn-edit" onclick="abrirEditar('${
+              <button class="btn-edit" data-permiso="editar" onclick="abrirEditar('${
                 r.guia
               }')">✏ &nbsp;Editar</button>
-              <button class="btn-delete" onclick="eliminarGuia('${
+              <button class="btn-delete" data-permiso="eliminar" onclick="eliminarGuia('${
                 r.guia
               }')">✕ &nbsp;Eliminar</button>
             </div>
@@ -2166,10 +2222,12 @@
             onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-muted)'">
             ← Volver a todos
           </button>`;
+        Permisos.aplicarUI(resultadoEl);
       };
 
       // ── Editar ──
       window.abrirEditar = function (guia) {
+        if (!Permisos.exigir('editar')) return;
         const r = todosLosDatos.find((d) => d.guia === guia);
         if (!r) return;
         document.getElementById("editGuiaId").value = guia;
@@ -2185,6 +2243,7 @@
       };
 
       window.guardarEdicion = async function () {
+        if (!Permisos.exigir('editar')) return;
         const guia = document.getElementById("editGuiaId").value;
         const fecha = document.getElementById("editFecha").value;
         const recibidoPor = document
@@ -2240,6 +2299,7 @@
 
       // ── Eliminar ──
       window.eliminarGuia = async function (guia) {
+        if (!Permisos.exigir('eliminar')) return;
         if (!confirm(`¿Eliminar el registro de la guía ${guia}?`)) return;
         const antes = todosLosDatos.find((d) => d.guia === guia);
         try {
@@ -2315,19 +2375,5 @@
 
       cargarDatos();
     </script>
-       <Script>
-        const sesion = JSON.parse(sessionStorage.getItem("clh_user"));
-         const permisos = sesion?.permisos;
-         
-         // ¿Puede eliminar?
-         if (!permisos?.acciones?.eliminar) {
-           document.getElementById("btnEliminar").style.display = "none";
-         }
-         
-         // ¿Tiene acceso al módulo 5?
-         if (!permisos?.modulos?.modulo5) {
-           window.location.href = "index.html"; // redirigir si no tiene acceso
-         } 
-         </Script>
   </body>
 </html>

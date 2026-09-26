@@ -2885,6 +2885,52 @@
     </style>
   </head>
   <body>
+    <script>
+      const Permisos = (function () {
+        let sesion = null, perms = null;
+        const DEFAULT = { modulos: { modulo1:false,modulo2:false,modulo3:false,modulo4:false,modulo5:false,admin:false }, acciones: { ver:true,crear:false,editar:false,eliminar:false,exportar:false } };
+        function toast(msg) {
+          let t = document.getElementById("_permToast");
+          if (!t) {
+            t = document.createElement("div");
+            t.id = "_permToast";
+            t.style.cssText = "position:fixed;bottom:28px;right:28px;padding:12px 20px;border-radius:8px;font-family:monospace;font-size:12px;background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.4);color:#ef4444;z-index:9999;opacity:0;transition:opacity .3s;";
+            document.body.appendChild(t);
+          }
+          t.textContent = msg;
+          t.style.opacity = "1";
+          setTimeout(() => (t.style.opacity = "0"), 3000);
+        }
+        function init(moduloId, opts) {
+          opts = opts || {};
+          const loginPage = opts.loginPage || "login.html";
+          const homePage = opts.homePage || "index.html";
+          const raw = sessionStorage.getItem("clh_user");
+          if (!raw) { window.location.href = loginPage; return null; }
+          try { sesion = JSON.parse(raw); } catch (e) { window.location.href = loginPage; return null; }
+          perms = sesion.permisos || DEFAULT;
+          if (moduloId && perms.modulos?.[moduloId] !== true) { window.location.href = homePage; return null; }
+          const arrancar = () => { aplicarUI(); observar(); };
+          if (document.readyState === "loading") { document.addEventListener("DOMContentLoaded", arrancar); } else { arrancar(); }
+          return { sesion, perms };
+        }
+        function puede(accion) { return perms?.acciones?.[accion] === true; }
+        function exigir(accion) { if (!puede(accion)) { toast("No tienes permiso para: " + accion); return false; } return true; }
+        function aplicarUI(root) {
+          root = root || document;
+          root.querySelectorAll("[data-permiso]").forEach((el) => {
+            const accion = el.getAttribute("data-permiso");
+            if (!puede(accion)) { el.style.display = "none"; el.setAttribute("disabled", "true"); }
+          });
+        }
+        function observar() {
+          const obs = new MutationObserver(() => aplicarUI());
+          obs.observe(document.body, { childList: true, subtree: true });
+        }
+        return { init, puede, exigir, aplicarUI };
+      })();
+      Permisos.init('modulo4');
+    </script>
     <header class="page-header">
       <h1>Registro de <span>Novedades</span></h1>
       <p>Gestion y seguimiento de novedades operativas</p>
@@ -3076,6 +3122,7 @@
         <button
           class="btn-primary"
           id="btnGuardar"
+          data-permiso="crear"
           onclick="guardarNovedad()"
           style="margin-top: 18px"
         >
@@ -3105,6 +3152,7 @@
           <option value="">Todos los usuarios</option>
         </select>
         <button
+          data-permiso="exportar"
           onclick="exportarTodosPDF()"
           style="
             background: rgba(245, 158, 11, 0.08);
@@ -3125,6 +3173,7 @@
           Exportar PDF
         </button>
         <button
+          data-permiso="exportar"
           onclick="exportarExcel()"
           style="
             background: rgba(16, 185, 129, 0.08);
@@ -3212,6 +3261,7 @@
             type="button"
             class="btn-primary"
             id="btnConfirmarReub"
+            data-permiso="editar"
             onclick="confirmarReubicacion()"
             style="
               background: linear-gradient(135deg, #064e3b, #065f46);
@@ -3379,6 +3429,7 @@
 
         <button
           class="btn-save"
+          data-permiso="editar"
           onclick="guardarEdicion()"
           style="margin-top: 14px"
         >
@@ -3661,6 +3712,7 @@
 
       // ── Guardar novedad ──
       window.guardarNovedad = async function () {
+        if (!Permisos.exigir('crear')) return;
         const reclamo = document.getElementById("reclamo").value.trim();
         const referencias = getListValues("listaReferencias");
         const cantidad = document.getElementById("cantidad").value.trim();
@@ -3961,13 +4013,13 @@
               ${refsExtrasHTML}
             </div>
             <div class="detail-actions">
-              <button class="btn-act btn-edit-a" onclick="abrirEditar('${
+              <button class="btn-act btn-edit-a" data-permiso="editar" onclick="abrirEditar('${
                 n.id
               }')">✏ Editar</button>
-              <button class="btn-act btn-pdf-a" onclick="exportarPDFUno('${
+              <button class="btn-act btn-pdf-a" data-permiso="exportar" onclick="exportarPDFUno('${
                 n.id
               }')">📄 Exportar PDF</button>
-              <button class="btn-act btn-del-a" onclick="eliminarNovedad('${
+              <button class="btn-act btn-del-a" data-permiso="eliminar" onclick="eliminarNovedad('${
                 n.id
               }')">✕ Eliminar</button>
             </div>
@@ -3981,6 +4033,7 @@
 
       // ── Editar ──
       window.abrirEditar = function (id) {
+        if (!Permisos.exigir('editar')) return;
         const n = todasLasNovedades.find((x) => x.id === id);
         if (!n) return;
         document.getElementById("editId").value = id;
@@ -4022,6 +4075,7 @@
       };
 
       window.guardarEdicion = async function () {
+        if (!Permisos.exigir('editar')) return;
         const id = document.getElementById("editId").value;
         const reclamo = document.getElementById("editReclamo").value.trim();
         const referencias = getListValues("editListaReferencias");
@@ -4084,6 +4138,7 @@
 
       // ── Eliminar ──
       window.eliminarNovedad = async function (id) {
+        if (!Permisos.exigir('eliminar')) return;
         if (
           !confirm("¿Eliminar esta novedad? Esta acción no se puede deshacer.")
         )
@@ -4100,11 +4155,13 @@
 
       // ── PDF ──
       window.exportarPDFUno = function (id) {
+        if (!Permisos.exigir('exportar')) return;
         const n = todasLasNovedades.find((x) => x.id === id);
         if (!n) return;
         generarPDF([n], `Informe_Novedad_${n.reclamo}`);
       };
       window.exportarTodosPDF = function () {
+        if (!Permisos.exigir('exportar')) return;
         const datos = filtrar();
         if (!datos.length) {
           showToast("No hay novedades para exportar", "error");
@@ -4426,6 +4483,7 @@
 
       // ── Excel ──
       window.exportarExcel = function () {
+        if (!Permisos.exigir('exportar')) return;
         const datos = filtrar();
         if (!datos.length) {
           showToast("No hay novedades para exportar", "error");
@@ -4641,6 +4699,7 @@
       };
 
       window.confirmarReubicacion = async function () {
+        if (!Permisos.exigir('editar')) return;
         const origen = document.getElementById("reubOrigen").value.trim();
         const destino = document.getElementById("reubDestino").value.trim();
         if (novedadesParaReubicar.length === 0) return;
@@ -4736,19 +4795,5 @@
         setTimeout(() => t.classList.remove("show"), 3500);
       }
     </script>
-       <Script>
-        const sesion = JSON.parse(sessionStorage.getItem("clh_user"));
-         const permisos = sesion?.permisos;
-         
-         // ¿Puede eliminar?
-         if (!permisos?.acciones?.eliminar) {
-           document.getElementById("btnEliminar").style.display = "none";
-         }
-         
-         // ¿Tiene acceso al módulo 5?
-         if (!permisos?.modulos?.modulo5) {
-           window.location.href = "index.html"; // redirigir si no tiene acceso
-         } 
-         </Script>
   </body>
 </html>

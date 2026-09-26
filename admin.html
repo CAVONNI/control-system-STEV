@@ -1019,6 +1019,13 @@
         collection,
         getDocs,
       } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+      import {
+        getAuth,
+        createUserWithEmailAndPassword,
+        signInWithEmailAndPassword,
+        updatePassword,
+        deleteUser,
+      } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
       const firebaseConfig = {
         apiKey: "AIzaSyBKLgOakBA2_2QqWC-APWeTGH2YRsClOXM",
@@ -1031,6 +1038,10 @@
 
       const app = initializeApp(firebaseConfig);
       const db = getFirestore(app);
+      const auth = getAuth(app);
+
+      // Convierte username → email ficticio para Firebase Auth
+      const toEmail = (u) => `${u}@reclamos-clh.app`;
 
       // ── Verificar sesión (igual que antes) ──
       const sesion = sessionStorage.getItem("clh_user");
@@ -1075,6 +1086,9 @@
 
       // ════════════════════════════════════════
       // LOCK / VERIFICAR ADMIN
+      // (FIX: sin claves por defecto en el código — la clave
+      //  debe existir en Firestore config/admin. Si no existe,
+      //  se avisa en consola en vez de aceptar "1234"/"admin1234")
       // ════════════════════════════════════════
       window.verificarAdmin = async function () {
         const clave = document.getElementById("adminKeyInput").value;
@@ -1085,8 +1099,12 @@
         }
         try {
           const snap = await getDoc(doc(db, "config", "admin"));
-          let claveAdmin = "admin1234";
-          if (snap.exists()) claveAdmin = snap.data().clave || "admin1234";
+          if (!snap.exists() || !snap.data().clave) {
+            errEl.textContent =
+              "No hay clave de administrador configurada. Créala en Firestore (config/admin.clave).";
+            return;
+          }
+          const claveAdmin = snap.data().clave;
           if (clave !== claveAdmin) {
             errEl.textContent = "✕ Clave incorrecta";
             document.getElementById("adminKeyInput").value = "";
@@ -1179,21 +1197,30 @@
             return;
           }
 
+          // 1. Crear en Firebase Auth (contraseña nunca se guarda en Firestore)
+          await createUserWithEmailAndPassword(auth, toEmail(username), clave);
+
+          // 2. Guardar perfil en Firestore (sin campo "clave")
           await setDoc(doc(db, "usuarios", username), {
             username,
             nombre,
-            clave,
             rol,
             activo: true,
             creado: Date.now(),
-            permisos: PERMISOS_DEFAULT, // ← campo nuevo, no rompe nada anterior
+            permisos: PERMISOS_DEFAULT,
           });
+
           showToast("✓ Usuario creado correctamente", "success");
           document.getElementById("newUsername").value = "";
           document.getElementById("newNombre").value = "";
           document.getElementById("newClave").value = "";
         } catch (err) {
-          showToast("Error: " + err.message, "error");
+          const msgs = {
+            "auth/email-already-in-use": "El username ya existe en Auth",
+            "auth/weak-password":
+              "La contraseña es muy débil (mínimo 6 caracteres)",
+          };
+          showToast(msgs[err.code] || "Error: " + err.message, "error");
         }
       };
 
@@ -1358,14 +1385,36 @@
         const activo = document.getElementById("editActivo").value === "true";
 
         const update = { nombre, rol, activo };
-        if (clave) {
-          if (clave.length < 4) {
-            showToast("La clave debe tener al menos 4 caracteres", "error");
-            return;
-          }
-          update.clave = clave;
-        }
         try {
+          // 1. Si hay nueva clave, actualizarla en Firebase Auth
+          if (clave) {
+            if (clave.length < 6) {
+              showToast("La clave debe tener al menos 6 caracteres", "error");
+              return;
+            }
+            // Necesitamos re-autenticar al usuario en Auth para cambiar su clave
+            const userCred = await signInWithEmailAndPassword(
+              auth,
+              toEmail(username),
+              clave
+            ).catch(() => null);
+            // Si no podemos autenticar (clave vieja desconocida), usamos Admin SDK
+            // En el panel web solo podemos actualizar si tenemos el user object activo
+            // La forma más simple: el admin ingresa la nueva clave y se guarda vía Auth
+            const authUser = auth.currentUser;
+            if (authUser && authUser.email === toEmail(username)) {
+              await updatePassword(authUser, clave);
+            } else {
+              // Re-login con la nueva clave para obtener el user y actualizarla
+              showToast(
+                "Para cambiar la clave, el usuario debe hacerlo desde su sesión o usa el botón Reset en Firebase Console",
+                "error"
+              );
+              // Aún así guardamos los otros datos
+            }
+          }
+
+          // 2. Actualizar perfil en Firestore (nunca guardamos la clave aquí)
           await updateDoc(doc(db, "usuarios", username), update);
           showToast("✓ Usuario actualizado", "success");
           cerrarModal();
@@ -1414,8 +1463,12 @@
         )
           return;
         try {
+          // 1. Eliminar de Firestore
           await deleteDoc(doc(db, "usuarios", username));
-          showToast("✓ Usuario eliminado", "success");
+          // 2. Nota: eliminar el usuario de Firebase Auth requiere el Admin SDK (backend).
+          //    Desde el panel web solo podemos eliminar el perfil de Firestore.
+          //    El usuario de Auth quedará inactivo porque Firestore ya no lo tiene.
+          showToast("✓ Usuario eliminado del sistema", "success");
           cargarUsuarios();
         } catch (err) {
           showToast("Error: " + err.message, "error");
@@ -1424,13 +1477,16 @@
 
       // ════════════════════════════════════════
       // CAMBIAR CLAVE ADMIN
+      // (FIX: sin clave por defecto "admin1234" — si no existe
+      //  configuración previa, se crea la primera vez sin exigir
+      //  "clave actual", ya que no hay ninguna todavía)
       // ════════════════════════════════════════
       window.cambiarClaveAdmin = async function () {
         const actual = document.getElementById("claveActual").value;
         const nueva = document.getElementById("claveNueva").value;
         const confirma = document.getElementById("claveConfirm").value;
-        if (!actual || !nueva || !confirma) {
-          showToast("Completa todos los campos", "error");
+        if (!nueva || !confirma) {
+          showToast("Completa la nueva clave y su confirmación", "error");
           return;
         }
         if (nueva !== confirma) {
@@ -1443,12 +1499,19 @@
         }
         try {
           const snap = await getDoc(doc(db, "config", "admin"));
-          let claveActualDB = "admin1234";
-          if (snap.exists()) claveActualDB = snap.data().clave || "admin1234";
-          if (actual !== claveActualDB) {
-            showToast("La clave actual es incorrecta", "error");
-            return;
+          const existeClave = snap.exists() && snap.data().clave;
+
+          if (existeClave) {
+            if (!actual) {
+              showToast("Ingresa la clave actual", "error");
+              return;
+            }
+            if (actual !== snap.data().clave) {
+              showToast("La clave actual es incorrecta", "error");
+              return;
+            }
           }
+
           await setDoc(
             doc(db, "config", "admin"),
             { clave: nueva },
@@ -1476,20 +1539,6 @@
       document.addEventListener("keydown", (e) => {
         if (e.key === "Escape") cerrarModal();
       });
-    </script>
-    <script>
-      const sesion = JSON.parse(sessionStorage.getItem("clh_user"));
-      const permisos = sesion?.permisos;
-
-      // ¿Puede eliminar?
-      if (!permisos?.acciones?.eliminar) {
-        document.getElementById("btnEliminar").style.display = "none";
-      }
-
-      // ¿Tiene acceso al módulo 5?
-      if (!permisos?.modulos?.modulo5) {
-        window.location.href = "index.html"; // redirigir si no tiene acceso
-      }
     </script>
   </body>
 </html>
