@@ -20,20 +20,40 @@
     <link rel="manifest" href="./sitio.manifiesto web" />
     <title>Consulta LPN</title>
 
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
   </head>
 
   <body>
     <script>
       const Permisos = (function () {
-        let sesion = null, perms = null;
-        const DEFAULT = { modulos: { modulo1:false,modulo2:false,modulo3:false,modulo4:false,modulo5:false,admin:false }, acciones: { ver:true,crear:false,editar:false,eliminar:false,exportar:false } };
+        let sesion = null,
+          perms = null;
+        const DEFAULT = {
+          modulos: {
+            modulo1: false,
+            modulo2: false,
+            modulo3: false,
+            modulo4: false,
+            modulo5: false,
+            admin: false,
+          },
+          acciones: {
+            ver: true,
+            crear: false,
+            editar: false,
+            eliminar: false,
+            exportar: false,
+          },
+        };
         function toast(msg) {
           let t = document.getElementById("_permToast");
           if (!t) {
             t = document.createElement("div");
             t.id = "_permToast";
-            t.style.cssText = "position:fixed;bottom:28px;right:28px;padding:12px 20px;border-radius:8px;font-family:monospace;font-size:12px;background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.4);color:#ef4444;z-index:9999;opacity:0;transition:opacity .3s;";
+            t.style.cssText =
+              "position:fixed;bottom:28px;right:28px;padding:12px 20px;border-radius:8px;font-family:monospace;font-size:12px;background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.4);color:#ef4444;z-index:9999;opacity:0;transition:opacity .3s;";
             document.body.appendChild(t);
           }
           t.textContent = msg;
@@ -45,21 +65,50 @@
           const loginPage = opts.loginPage || "login.html";
           const homePage = opts.homePage || "index.html";
           const raw = sessionStorage.getItem("clh_user");
-          if (!raw) { window.location.href = loginPage; return null; }
-          try { sesion = JSON.parse(raw); } catch (e) { window.location.href = loginPage; return null; }
+          if (!raw) {
+            window.location.href = loginPage;
+            return null;
+          }
+          try {
+            sesion = JSON.parse(raw);
+          } catch (e) {
+            window.location.href = loginPage;
+            return null;
+          }
           perms = sesion.permisos || DEFAULT;
-          if (moduloId && perms.modulos?.[moduloId] !== true) { window.location.href = homePage; return null; }
-          const arrancar = () => { aplicarUI(); observar(); };
-          if (document.readyState === "loading") { document.addEventListener("DOMContentLoaded", arrancar); } else { arrancar(); }
+          if (moduloId && perms.modulos?.[moduloId] !== true) {
+            window.location.href = homePage;
+            return null;
+          }
+          const arrancar = () => {
+            aplicarUI();
+            observar();
+          };
+          if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", arrancar);
+          } else {
+            arrancar();
+          }
           return { sesion, perms };
         }
-        function puede(accion) { return perms?.acciones?.[accion] === true; }
-        function exigir(accion) { if (!puede(accion)) { toast("No tienes permiso para: " + accion); return false; } return true; }
+        function puede(accion) {
+          return perms?.acciones?.[accion] === true;
+        }
+        function exigir(accion) {
+          if (!puede(accion)) {
+            toast("No tienes permiso para: " + accion);
+            return false;
+          }
+          return true;
+        }
         function aplicarUI(root) {
           root = root || document;
           root.querySelectorAll("[data-permiso]").forEach((el) => {
             const accion = el.getAttribute("data-permiso");
-            if (!puede(accion)) { el.style.display = "none"; el.setAttribute("disabled", "true"); }
+            if (!puede(accion)) {
+              el.style.display = "none";
+              el.setAttribute("disabled", "true");
+            }
           });
         }
         function observar() {
@@ -68,7 +117,7 @@
         }
         return { init, puede, exigir, aplicarUI };
       })();
-      Permisos.init('modulo1');
+      Permisos.init("modulo1");
     </script>
     <style>
       /* ================================================
@@ -501,14 +550,11 @@
     <div class="contenedor">
       <h2>Validar LPN</h2>
 
-      
       <label>Subir archivo Excel</label>
-<input type="file" id="excelFile" />
+      <input type="file" id="excelFile" />
 
-<label>Subir archivo Excel de Tipos (Nota / Tipo)</label>
-<input type="file" id="excelTipoFile" />
-
-
+      <label>Subir archivo Excel de Tipos (Nota / Tipo)</label>
+      <input type="file" id="excelTipoFile" />
 
       <label>Ingresar LPN</label>
       <input type="text" id="lpnInput" placeholder="Ej: R060120268656" />
@@ -549,6 +595,280 @@
     <a href="registro.html" class="boton-registro">Ver Registros de LPN</a>
     <a href="index.html" class="boton-registro_volver">Volver</a>
     <button id="btnTop" onclick="irArriba()">↑</button>
-    <script src="funciones.js"></script>
+    <script>
+      /* ============================================================
+   FIREBASE / FIRESTORE — HISTORIAL LPN
+   Mantiene la estructura visual existente y reemplaza
+   localStorage por Firestore.
+   ============================================================ */
+      (function () {
+        const firebaseConfig = {
+          apiKey: "AIzaSyBKLgOakBA2_2QqWC-APWeTGH2YRsClOXM",
+          authDomain: "reclamos-clh.firebaseapp.com",
+          projectId: "reclamos-clh",
+          storageBucket: "reclamos-clh.firebasestorage.app",
+          messagingSenderId: "893651222188",
+          appId: "1:893651222188:web:edb9d9963596255633e909",
+        };
+
+        try {
+          if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+          window.__clhDb = firebase.firestore();
+        } catch (error) {
+          console.error("Firebase no pudo inicializarse:", error);
+        }
+      })();
+    </script>
+    <script>
+      /* ============================================================
+   LÓGICA DE VALIDACIÓN LPN
+   ============================================================ */
+      let datosExcel = [];
+      let datosTipos = [];
+      const COLECCION_HISTORIAL_LPN = "historialLPN";
+
+      function obtenerDB() {
+        if (window.__clhDb) return window.__clhDb;
+        if (typeof db !== "undefined") return db;
+        throw new Error("No se pudo conectar con Firebase Firestore.");
+      }
+
+      function obtenerSesionCLH() {
+        try {
+          return JSON.parse(sessionStorage.getItem("clh_user")) || {};
+        } catch (_) {
+          return {};
+        }
+      }
+
+      function normalizar(v) {
+        return v === undefined || v === null ? "" : String(v).trim();
+      }
+
+      function obtenerTipoPorNota(nota) {
+        const buscada = normalizar(nota).toUpperCase();
+        if (!buscada || !Array.isArray(datosTipos)) return "";
+
+        const encontrado = datosTipos.find((item) => {
+          const notaItem = normalizar(
+            item.NOTA || item.Nota || item.nota
+          ).toUpperCase();
+          return notaItem === buscada;
+        });
+
+        return encontrado
+          ? normalizar(encontrado.TIPO || encontrado.Tipo || encontrado.tipo)
+          : "";
+      }
+
+      function mostrarMensajeResultado(texto, clase = "resultado") {
+        const el = document.getElementById("resultado");
+        if (!el) return;
+        el.className = clase;
+        el.innerHTML = texto;
+      }
+
+      async function guardarEnHistorial(item) {
+        try {
+          const firestore = obtenerDB();
+          const sesion = obtenerSesionCLH();
+          const registro = {
+            LPN: normalizar(item.LPN),
+            REFERENCIA: normalizar(item.REFERENCIA),
+            CANTIDAD: item.CANTIDAD ?? "",
+            NOTA: normalizar(item.NOTA),
+            TIPO:
+              normalizar(item.TIPO) ||
+              obtenerTipoPorNota(item.NOTA) ||
+              "No encontrado",
+            timestamp: Date.now(),
+            fechaHora: new Date().toLocaleString("es-CO"),
+            registradoPor: sesion.nombre || sesion.username || "—",
+            registradoPorUsername: sesion.username || "—",
+          };
+
+          await firestore.collection(COLECCION_HISTORIAL_LPN).add(registro);
+          return registro;
+        } catch (error) {
+          console.error("Error guardando historial LPN:", error);
+          throw error;
+        }
+      }
+
+      async function seleccionar(encoded) {
+        try {
+          const item = JSON.parse(decodeURIComponent(encoded));
+          item.TIPO = obtenerTipoPorNota(item.NOTA) || "No encontrado";
+          await guardarEnHistorial(item);
+
+          mostrarMensajeResultado(
+            `
+      <strong>REFERENCIA:</strong> ${escapeHtml(item.REFERENCIA)}<br>
+      <strong>LPN:</strong> ${escapeHtml(item.LPN)}<br>
+      <strong>CANTIDAD:</strong> ${escapeHtml(item.CANTIDAD)}<br>
+      <strong>NOTA:</strong> ${escapeHtml(item.NOTA)}<br>
+      <strong>TIPO:</strong> ${escapeHtml(item.TIPO)}
+    `,
+            "resultado encontrado"
+          );
+        } catch (error) {
+          console.error(error);
+          mostrarMensajeResultado(
+            "No fue posible guardar el registro en la base de datos.",
+            "resultado no-encontrado"
+          );
+        }
+      }
+      window.seleccionar = seleccionar;
+
+      function escapeHtml(value) {
+        return String(value ?? "")
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("'", "&#039;");
+      }
+
+      async function buscarLPN() {
+        const valorBusqueda = document
+          .getElementById("lpnInput")
+          .value.trim()
+          .toUpperCase();
+        const campo = document.getElementById("filtroCampo").value;
+        const resultado = document.getElementById("resultado");
+
+        if (!datosExcel || datosExcel.length === 0) {
+          resultado.textContent = "No hay datos cargados.";
+          resultado.className = "resultado advertencia";
+          return;
+        }
+
+        if (!valorBusqueda) {
+          resultado.textContent = "Ingresa un valor para buscar.";
+          resultado.className = "resultado advertencia";
+          return;
+        }
+
+        const coincidencias = datosExcel.filter((item) => {
+          const valorCampo = item[campo];
+          if (
+            valorCampo === undefined ||
+            valorCampo === null ||
+            valorCampo === ""
+          )
+            return false;
+          return valorCampo.toString().toUpperCase().includes(valorBusqueda);
+        });
+
+        if (coincidencias.length > 0) {
+          resultado.className = "resultado encontrado";
+
+          if (coincidencias.length === 1) {
+            const item = { ...coincidencias[0] };
+            item.TIPO = obtenerTipoPorNota(item.NOTA);
+
+            try {
+              await guardarEnHistorial(item);
+              resultado.innerHTML = `
+          <strong>REFERENCIA:</strong> ${escapeHtml(item.REFERENCIA)}<br>
+          <strong>LPN:</strong> ${escapeHtml(item.LPN)}<br>
+          <strong>CANTIDAD:</strong> ${escapeHtml(item.CANTIDAD)}<br>
+          <strong>NOTA:</strong> ${escapeHtml(item.NOTA)}<br>
+          <strong>TIPO:</strong> ${escapeHtml(item.TIPO || "No encontrado")}
+        `;
+            } catch (error) {
+              resultado.textContent =
+                "El resultado se encontró, pero no pudo guardarse en Firestore.";
+              resultado.className = "resultado no-encontrado";
+              console.error(error);
+            }
+            return;
+          }
+
+          resultado.innerHTML =
+            "<strong>Selecciona cuál guardar:</strong><br><br>";
+
+          coincidencias.forEach((item) => {
+            const tipoPreview = obtenerTipoPorNota(item.NOTA) || "—";
+            const encoded = encodeURIComponent(JSON.stringify(item));
+            resultado.innerHTML += `
+        <div style="margin-bottom:10px; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:8px;">
+          <strong>LPN:</strong> ${escapeHtml(item.LPN)}<br>
+          <strong>REF:</strong> ${escapeHtml(item.REFERENCIA)}<br>
+          <strong>NOTA:</strong> ${escapeHtml(item.NOTA)}<br>
+          <strong>TIPO:</strong> ${escapeHtml(tipoPreview)}<br>
+          <button type="button" onclick="seleccionar('${encoded}')">Guardar este</button>
+        </div>
+      `;
+          });
+        } else {
+          resultado.textContent = "No se encontraron resultados.";
+          resultado.className = "resultado no-encontrado";
+        }
+      }
+      window.buscarLPN = buscarLPN;
+
+      async function cargarExcelLPN(file) {
+        if (!file) return;
+        try {
+          const data = await file.arrayBuffer();
+          const workbook = XLSX.read(data, { type: "array" });
+          const hoja = workbook.Sheets[workbook.SheetNames[0]];
+          datosExcel = XLSX.utils.sheet_to_json(hoja, { defval: "" });
+        } catch (error) {
+          console.error(error);
+          mostrarMensajeResultado(
+            "No se pudo leer el archivo Excel.",
+            "resultado no-encontrado"
+          );
+        }
+      }
+
+      async function cargarExcelTipos(file) {
+        if (!file) return;
+        try {
+          const data = await file.arrayBuffer();
+          const workbook = XLSX.read(data, { type: "array" });
+          const hoja = workbook.Sheets[workbook.SheetNames[0]];
+          datosTipos = XLSX.utils.sheet_to_json(hoja, { defval: "" });
+        } catch (error) {
+          console.error(error);
+          mostrarMensajeResultado(
+            "No se pudo leer el archivo de Tipos.",
+            "resultado no-encontrado"
+          );
+        }
+      }
+
+      function irArriba() {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+      window.irArriba = irArriba;
+
+      document
+        .getElementById("excelFile")
+        ?.addEventListener("change", (e) => cargarExcelLPN(e.target.files[0]));
+      document
+        .getElementById("excelTipoFile")
+        ?.addEventListener("change", (e) =>
+          cargarExcelTipos(e.target.files[0])
+        );
+
+      // Permite seguir usando Enter como antes.
+      document
+        .getElementById("lpnInput")
+        ?.addEventListener("keydown", function (e) {
+          if (e.key !== "Enter") return;
+          const estado = document.getElementById("resultado");
+          if (estado && estado.classList.contains("encontrado")) {
+            this.value = "";
+            estado.textContent = "";
+            estado.className = "resultado";
+          } else {
+            buscarLPN();
+          }
+        });
+    </script>
   </body>
 </html>
