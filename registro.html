@@ -2,37 +2,22 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      rel="icon"
-      type="image/png"
-      href="./favicon-96x96.png"
-      sizes="96x96"
-    />
+    <link rel="icon" type="image/png" href="./favicon-96x96.png" sizes="96x96" />
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
     <link rel="shortcut icon" href="./favicon.ico" />
-    <link
-      rel="apple-touch-icon"
-      sizes="180x180"
-      href="./icono-touch-de-apple.png"
-    />
+    <link rel="apple-touch-icon" sizes="180x180" href="./icono-touch-de-apple.png" />
     <meta name="apple-mobile-web-app-title" content="SCI-STEV" />
     <link rel="manifest" href="./sitio.manifiesto web" />
     <title>Document</title>
-  </head>
-  <body>
-    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
     <style>
       /* ================================================
       HISTORIAL DE ESCANEOS — Corporate Warehouse UI
-      Aesthetic: Industrial Precision / Dark Command Center
       ================================================ */
 
       @import url("https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=DM+Mono:wght@300;400;500&display=swap");
 
-      /* ── CSS VARIABLES ── */
       :root {
         --bg-deep: #0b0f1a;
         --bg-panel: #111827;
@@ -56,7 +41,6 @@
         --radius-sm: 6px;
       }
 
-      /* ── RESET ── */
       *,
       *::before,
       *::after {
@@ -65,23 +49,15 @@
         box-sizing: border-box;
       }
 
-      /* ── BODY ── */
       body {
         font-family: var(--font-display);
         background-color: var(--bg-deep);
-        background-image: radial-gradient(
-            ellipse 80% 50% at 50% -10%,
-            rgba(0, 212, 255, 0.08) 0%,
-            transparent 60%
-          ),
-          linear-gradient(180deg, #0b0f1a 0%, #0d1220 100%);
         min-height: 100vh;
         display: flex;
         flex-direction: column;
         align-items: center;
         padding: 48px 24px 64px;
         color: var(--text-primary);
-        /* Subtle grid overlay */
         background-image: radial-gradient(
             ellipse 80% 50% at 50% -10%,
             rgba(0, 212, 255, 0.08),
@@ -103,7 +79,6 @@
           );
       }
 
-      /* ── HEADER SECTION ── */
       h3 {
         font-family: var(--font-display);
         font-size: 36px;
@@ -126,7 +101,6 @@
         border-radius: 2px;
       }
 
-      /* ── CONTADOR ── */
       #contadorRegistros {
         font-family: var(--font-mono);
         font-size: 12px;
@@ -141,7 +115,6 @@
         background: rgba(0, 212, 255, 0.04);
       }
 
-      /* ── TABLE WRAPPER ── */
       .table-wrapper {
         width: 100%;
         max-width: 900px;
@@ -150,7 +123,6 @@
         box-shadow: var(--shadow-card), var(--shadow-glow);
       }
 
-      /* ── TABLE ── */
       #tablaHistorial {
         width: 100%;
         border-collapse: collapse;
@@ -162,7 +134,6 @@
         overflow: hidden;
       }
 
-      /* ── THEAD ── */
       #tablaHistorial thead {
         background: linear-gradient(135deg, #0f1f3d 0%, #142040 100%);
         border-bottom: 2px solid var(--accent-primary);
@@ -192,7 +163,6 @@
         background: var(--border);
       }
 
-      /* ── TBODY ── */
       #tablaHistorial tbody tr {
         border-bottom: 1px solid var(--border);
         transition: background 0.2s ease, transform 0.15s ease;
@@ -223,7 +193,6 @@
         border-bottom: none;
       }
 
-      /* ── CELLS ── */
       #tablaHistorial td {
         padding: 14px 20px;
         text-align: center;
@@ -233,7 +202,6 @@
         white-space: nowrap;
       }
 
-      /* LPN column — monospaced accent */
       #tablaHistorial td:first-child {
         font-family: var(--font-mono);
         font-size: 13px;
@@ -241,13 +209,11 @@
         letter-spacing: 1px;
       }
 
-      /* Referencia */
       #tablaHistorial td:nth-child(2) {
         color: var(--text-secondary);
         font-weight: 400;
       }
 
-      /* Cantidad */
       #tablaHistorial td:nth-child(3) {
         font-family: var(--font-mono);
         font-size: 14px;
@@ -255,7 +221,6 @@
         color: var(--accent-amber);
       }
 
-      /* Nota */
       #tablaHistorial td:nth-child(4) {
         color: var(--text-secondary);
         font-size: 13px;
@@ -265,7 +230,6 @@
         text-overflow: ellipsis;
       }
 
-      /* Tipo — badge-style */
       #tablaHistorial td:nth-child(5) {
         font-family: var(--font-mono);
         font-size: 11px;
@@ -296,7 +260,6 @@
         overflow: hidden;
       }
 
-      /* First button: export */
       .botones:first-of-type {
         background: linear-gradient(135deg, #0a3d62, #1e5f8e);
         color: var(--accent-primary);
@@ -310,7 +273,6 @@
         transform: translateY(-2px);
       }
 
-      /* Second button: clear */
       .botones:last-of-type,
       .botones + .botones {
         background: rgba(239, 68, 68, 0.08);
@@ -390,181 +352,132 @@
         }
       }
     </style>
+  </head>
+
+  <body>
     <h3>Historial de escaneos</h3>
 
     <p id="contadorRegistros">Cantidad de registros: 0</p>
 
     <table id="tablaHistorial">
-      <thead>
-        <tr>
-          <th>LPN</th>
-          <th>Referencia</th>
-          <th>Cantidad</th>
-          <th>Nota</th>
-          <th>Tipo</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-    <script>
-      /* ============================================================
-   FIREBASE / FIRESTORE — HISTORIAL LPN
-   Mantiene la estructura visual existente y reemplaza
-   localStorage por Firestore.
-   ============================================================ */
-      (function () {
-        const firebaseConfig = {
-          apiKey: "AIzaSyBKLgOakBA2_2QqWC-APWeTGH2YRsClOXM",
-          authDomain: "reclamos-clh.firebaseapp.com",
-          projectId: "reclamos-clh",
-          storageBucket: "reclamos-clh.firebasestorage.app",
-          messagingSenderId: "893651222188",
-          appId: "1:893651222188:web:edb9d9963596255633e909",
-        };
+        <thead>
+          <tr>
+            <th>LPN</th>
+            <th>Referencia</th>
+            <th>Cantidad</th>
+            <th>Nota</th>
+            <th>Tipo</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
 
-        try {
-          if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-          window.__clhDb = firebase.firestore();
-        } catch (error) {
-          console.error("Firebase no pudo inicializarse:", error);
-        }
-      })();
-    </script>
-    <script>
-      let historial = [];
-      const COLECCION_HISTORIAL_LPN = "historialLPN";
-
-      function obtenerDBHistorial() {
-        if (window.__clhDb) return window.__clhDb;
-        if (typeof db !== "undefined") return db;
-        throw new Error("No se pudo conectar con Firebase Firestore.");
-      }
-
-      function renderHistorial() {
-        const tabla = document.querySelector("#tablaHistorial tbody");
-        if (!tabla) return;
-        tabla.innerHTML = "";
-
-        historial.forEach((reg) => {
-          const fila = tabla.insertRow();
-          fila.insertCell(0).textContent = reg.LPN || "";
-          fila.insertCell(1).textContent = reg.REFERENCIA || "";
-          fila.insertCell(2).textContent = reg.CANTIDAD ?? "";
-          fila.insertCell(3).textContent = reg.NOTA || "";
-          fila.insertCell(4).textContent = reg.TIPO || "";
-          fila.cells[4].setAttribute("data-tipo", reg.TIPO || "");
-        });
-
-        const contador = document.getElementById("contadorRegistros");
-        if (contador)
-          contador.textContent = "Cantidad de registros: " + historial.length;
-      }
-
-      async function cargarHistorialFirestore() {
-        try {
-          const firestore = obtenerDBHistorial();
-          const snap = await firestore
-            .collection(COLECCION_HISTORIAL_LPN)
-            .orderBy("timestamp", "desc")
-            .get();
-
-          historial = snap.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-          renderHistorial();
-        } catch (error) {
-          console.error("Error cargando historial LPN:", error);
-          const contador = document.getElementById("contadorRegistros");
-          if (contador) contador.textContent = "Error al cargar historial";
-          alert(
-            "No fue posible cargar el historial desde Firestore.\n\n" +
-              error.message
-          );
-        }
-      }
-
-      async function exportarExcel() {
-        try {
-          const firestore = obtenerDBHistorial();
-          const snap = await firestore
-            .collection(COLECCION_HISTORIAL_LPN)
-            .orderBy("timestamp", "desc")
-            .get();
-
-          const datos = snap.docs.map((doc) => {
-            const d = doc.data();
-            return {
-              LPN: d.LPN || "",
-              REFERENCIA: d.REFERENCIA || "",
-              CANTIDAD: d.CANTIDAD ?? "",
-              NOTA: d.NOTA || "",
-              TIPO: d.TIPO || "",
-              FECHA_HORA: d.fechaHora || "",
-              USUARIO: d.registradoPor || "",
-            };
-          });
-
-          if (datos.length === 0) {
-            alert("No hay registros para exportar");
-            return;
-          }
-
-          const ws = XLSX.utils.json_to_sheet(datos);
-          const wb = XLSX.utils.book_new();
-          XLSX.utils.book_append_sheet(wb, ws, "Historial LPN");
-          XLSX.writeFile(wb, "Historial_LPN.xlsx");
-        } catch (error) {
-          console.error("Error exportando historial LPN:", error);
-          alert("No fue posible exportar el historial.\n\n" + error.message);
-        }
-      }
-
-      async function limpiarTabla() {
-        if (!confirm("¿Seguro que quieres borrar todo el historial?")) return;
-
-        try {
-          const firestore = obtenerDBHistorial();
-          const snap = await firestore
-            .collection(COLECCION_HISTORIAL_LPN)
-            .get();
-
-          // Firestore permite un máximo de 500 operaciones por batch.
-          let batch = firestore.batch();
-          let operaciones = 0;
-
-          for (const doc of snap.docs) {
-            batch.delete(doc.ref);
-            operaciones++;
-
-            if (operaciones === 500) {
-              await batch.commit();
-              batch = firestore.batch();
-              operaciones = 0;
-            }
-          }
-
-          if (operaciones > 0) await batch.commit();
-
-          historial = [];
-          renderHistorial();
-        } catch (error) {
-          console.error("Error eliminando historial LPN:", error);
-          alert("No fue posible eliminar el historial.\n\n" + error.message);
-        }
-      }
-
-      window.exportarExcel = exportarExcel;
-      window.limpiarTabla = limpiarTabla;
-      window.cargarHistorialFirestore = cargarHistorialFirestore;
-
-      cargarHistorialFirestore();
-    </script>
-
-    <button onclick="exportarExcel()" class="botones">Exportar a Excel</button>
-    <button onclick="limpiarTabla()" class="botones">Limpiar historial</button>
+    <button id="btnExportar" class="botones">Exportar a Excel</button>
+    <button id="btnEliminar" class="botones">Limpiar historial</button>
     <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
     <a href="validar_lpn.html" class="boton-registro">Volver</a>
-    <script>
+
+    <script type="module">
+      import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+      import {
+        getFirestore, collection, addDoc, getDocs, query, orderBy,
+        onSnapshot, writeBatch, serverTimestamp,
+      } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyBKLgOakBA2_2QqWC-APWeTGH2YRsClOXM",
+        authDomain: "reclamos-clh.firebaseapp.com",
+        projectId: "reclamos-clh",
+        storageBucket: "reclamos-clh.firebasestorage.app",
+        messagingSenderId: "893651222188",
+        appId: "1:893651222188:web:edb9d9963596255633e909",
+      };
+
+      const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+      const col = collection(db, "historialLPN");
       const sesion = JSON.parse(sessionStorage.getItem("clh_user"));
+
+      let registros = [];
+
+      // ── Pintar tabla ──
+      function pintarTabla() {
+        const tbody = document.querySelector("#tablaHistorial tbody");
+        tbody.innerHTML = "";
+        registros.forEach((reg) => {
+          const fila = tbody.insertRow();
+          fila.insertCell(0).textContent = reg.LPN ?? "";
+          fila.insertCell(1).textContent = reg.REFERENCIA ?? "";
+          fila.insertCell(2).textContent = reg.CANTIDAD ?? "";
+          fila.insertCell(3).textContent = reg.NOTA ?? "";
+          fila.insertCell(4).textContent = reg.TIPO ?? "";
+        });
+        document.getElementById("contadorRegistros").textContent =
+          "Cantidad de registros: " + registros.length;
+      }
+
+      // ── Leer en tiempo real desde Firestore ──
+      onSnapshot(
+        query(col, orderBy("timestamp", "desc")),
+        (snap) => {
+          registros = snap.docs.map((d) => ({
+            id: d.id,
+            ...d.data({ serverTimestamps: "estimate" }),
+          }));
+          pintarTabla();
+        },
+        (err) => {
+          console.error(err);
+          alert("Error leyendo Firestore: " + err.message);
+        }
+      );
+
+      // ── Exportar ──
+      document.getElementById("btnExportar").addEventListener("click", () => {
+        if (!sesion?.permisos?.acciones?.exportar)
+          return alert("No tienes permiso para: exportar");
+        if (!registros.length) return alert("No hay registros para exportar");
+        const datos = registros.map((r) => ({
+          LPN: r.LPN, REFERENCIA: r.REFERENCIA, CANTIDAD: r.CANTIDAD,
+          NOTA: r.NOTA, TIPO: r.TIPO,
+          OPERACION: r.OPERACION || "",
+          FECHA: r.fechaHora || "",
+          USUARIO: r.registradoPor || "",
+        }));
+        const hoja = XLSX.utils.json_to_sheet(datos);
+        const libro = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(libro, hoja, "Historial");
+        XLSX.writeFile(libro, "historial_escaneos.xlsx");
+      });
+
+      // ── Limpiar (borra en Firestore) ──
+      document.getElementById("btnEliminar").addEventListener("click", async () => {
+        if (!sesion?.permisos?.acciones?.eliminar)
+          return alert("No tienes permiso para: eliminar");
+        if (!confirm("¿Seguro que deseas borrar TODO el historial?")) return;
+        try {
+          const snap = await getDocs(col);
+          let batch = writeBatch(db);
+          let n = 0;
+          for (const d of snap.docs) {
+            batch.delete(d.ref);
+            if (++n % 450 === 0) { await batch.commit(); batch = writeBatch(db); }
+          }
+          await batch.commit();
+        } catch (e) {
+          console.error(e);
+          alert("No se pudo borrar: " + e.message);
+        }
+      });
+
+      // ── Permisos ──
       const permisos = sesion?.permisos;
+      if (!permisos?.acciones?.eliminar) {
+        document.getElementById("btnEliminar").style.display = "none";
+      }
+      if (!permisos?.modulos?.modulo5) {
+        window.location.href = "index.html";
+      }
     </script>
   </body>
 </html>
