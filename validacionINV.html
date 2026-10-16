@@ -7,8 +7,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <!-- ZXing para escanear QR/Barcodes desde cámara -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/zxing-js/0.20.0/index.min.js"></script>
+    <!-- docx: genera el Word (.docx) editable -->
+    <script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link
       href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=DM+Mono:wght@300;400;500&display=swap"
@@ -69,7 +69,7 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        padding: 48px 24px 120px;
+        padding: 48px 24px 150px;
         color: var(--text-primary);
       }
 
@@ -414,17 +414,24 @@
         border: 1px solid var(--border);
         background: #000;
       }
+      /* Muestra el encuadre COMPLETO (sin recortar): lo que ves es lo que se captura */
       #fotoVideo {
         width: 100%;
+        height: auto;
+        max-height: 70vh;
         display: block;
-        max-height: 220px;
-        object-fit: cover;
+        object-fit: contain;
+        background: #000;
       }
       #fotoCanvas {
         display: none;
       }
       .foto-preview-img {
         width: 100%;
+        height: auto;
+        max-height: 70vh;
+        object-fit: contain;
+        background: #000;
         border-radius: var(--radius-sm);
         border: 1px solid var(--border-strong);
         display: none;
@@ -450,7 +457,8 @@
       .item-thumb {
         width: 60px;
         height: 60px;
-        object-fit: cover;
+        object-fit: contain;
+        background: #000;
         border-radius: 6px;
         border: 1px solid var(--border-strong);
         flex-shrink: 0;
@@ -548,21 +556,26 @@
       /* Botones fijos inferiores */
       .btns-fixed-row {
         position: fixed;
-        bottom: 28px;
+        bottom: 20px;
         left: 50%;
         transform: translateX(-50%);
         z-index: 999;
         display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
         gap: 10px;
         align-items: center;
+        width: calc(100% - 24px);
+        max-width: 640px;
       }
       .btn-pdf-fixed,
-      .btn-xls-fixed {
+      .btn-xls-fixed,
+      .btn-doc-fixed {
         background: rgba(0, 212, 255, 0.1);
         color: var(--accent);
         border: 1px solid var(--border-strong);
         border-radius: 999px;
-        padding: 13px 28px;
+        padding: 13px 24px;
         font-family: var(--font-mono);
         font-size: 11px;
         letter-spacing: 2px;
@@ -573,12 +586,14 @@
         transition: background 0.2s, box-shadow 0.2s;
       }
       .btn-pdf-fixed:hover,
-      .btn-xls-fixed:hover {
+      .btn-xls-fixed:hover,
+      .btn-doc-fixed:hover {
         background: rgba(0, 212, 255, 0.2);
         box-shadow: 0 0 24px rgba(0, 212, 255, 0.2);
       }
       .btn-pdf-fixed:disabled,
-      .btn-xls-fixed:disabled {
+      .btn-xls-fixed:disabled,
+      .btn-doc-fixed:disabled {
         opacity: 0.35;
         cursor: not-allowed;
       }
@@ -590,6 +605,15 @@
       .btn-xls-fixed:hover {
         background: rgba(16, 185, 129, 0.18);
         box-shadow: 0 0 24px rgba(16, 185, 129, 0.2);
+      }
+      .btn-doc-fixed {
+        background: rgba(96, 165, 250, 0.1);
+        border-color: rgba(96, 165, 250, 0.4);
+        color: #60a5fa;
+      }
+      .btn-doc-fixed:hover {
+        background: rgba(96, 165, 250, 0.2);
+        box-shadow: 0 0 24px rgba(96, 165, 250, 0.2);
       }
 
       /* Toast */
@@ -729,6 +753,13 @@
         }
         .counter-row {
           flex-direction: column;
+        }
+        .btn-pdf-fixed,
+        .btn-xls-fixed,
+        .btn-doc-fixed {
+          padding: 11px 16px;
+          font-size: 10px;
+          letter-spacing: 1px;
         }
       }
     </style>
@@ -889,10 +920,13 @@
         onclick="exportarExcel()"
         disabled
       >
-        ↓ &nbsp;Exportar Excel
+        ↓ &nbsp;Excel
+      </button>
+      <button class="btn-doc-fixed" id="btnDOC" data-permiso="exportar" onclick="exportarWord()" disabled>
+        ↓ &nbsp;Word
       </button>
       <button class="btn-pdf-fixed" id="btnPDF" data-permiso="exportar" onclick="generarPDF()" disabled>
-        ↓ &nbsp;Generar PDF
+        ↓ &nbsp;PDF
       </button>
     </div>
 
@@ -904,12 +938,61 @@
       // ESTADO GLOBAL
       // ════════════════════════════════════════
       let datosExcel = [];
-      let itemsPendientes = []; // items confirmados listos para el PDF
+      let indiceLPN = new Map(); // LPN normalizado -> registro
+      let itemsPendientes = []; // items confirmados listos para el PDF/Word
       let itemActual = null; // item en proceso (escaneado, esperando foto)
       let scannerStream = null;
       let fotoStream = null;
-      let zxingReader = null;
       let scanInterval = null;
+
+      // ════════════════════════════════════════
+      // TEXTOS DEL MEMORANDO (compartidos por PDF y Word)
+      // ════════════════════════════════════════
+      const MEMO = {
+        codigo: "GLH-AR 2026-173",
+        para: "Sra. Dora Balbina Muñoz Gómez - Jefa de Auditoría Interna",
+        de: "Mayerly Andrea Satizabal – Analista de Inventarios",
+        asunto:
+          "DADA DE BAJA CORRESPONDIENTE A MATERIAL DE RECLAMACIONES RECHAZADOS POR PARTE DEL TALLER DE SERVICIOS.",
+        cuerpoIni:
+          'Con el objetivo de depurar la Bodega HRC-MATERIAL MAL ESTADO RESPUESTOS MOTOS en el Almacén de Repuestos, y dando cumplimiento al procedimiento administrativo PA-PM-0004 "CONTROL DE INVENTARIOS-PRODUCTOS POSVENTA", Se solicita la dada de baja de ',
+        cuerpoFin:
+          " que corresponden al material de RECLAMOS RECHAZADOS reportados por el Taller de Servicio.",
+        firmas: [
+          { nombre: "Nicolás Rendón Escobar", cargo: "Vicepresidente de Operaciones" },
+          { nombre: "Yamileth Caicedo Ospina", cargo: "Director de Posventa Motocicletas" },
+          { nombre: "Luis Fernando Vera", cargo: "Jefe de Operaciones Repuestos Motos" },
+          { nombre: "Mayerly Andrea Satizabal", cargo: "Analista de Inventarios" },
+        ],
+      };
+
+      function fechaHoy() {
+        const hoy = new Date();
+        const dd = String(hoy.getDate()).padStart(2, "0");
+        const mm = String(hoy.getMonth() + 1).padStart(2, "0");
+        return {
+          texto: `${dd}/${mm}/${hoy.getFullYear()}`,
+          archivo: `${hoy.getFullYear()}${mm}${dd}`,
+        };
+      }
+      function totales() {
+        return {
+          refs: itemsPendientes.length,
+          units: itemsPendientes.reduce((s, i) => s + (parseInt(i.cantidad) || 0), 0),
+        };
+      }
+
+      // ════════════════════════════════════════
+      // NORMALIZACIÓN (para comparar LPN y encabezados sin que fallen por espacios, mayúsculas, etc.)
+      // ════════════════════════════════════════
+      const norm = (s) =>
+        String(s ?? "").normalize("NFKC").replace(/[^A-Za-z0-9]/g, "").toUpperCase();
+      const normHeader = (s) =>
+        String(s ?? "")
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "")
+          .replace(/[^A-Za-z0-9]/g, "")
+          .toUpperCase();
 
       // ════════════════════════════════════════
       // TOAST
@@ -934,37 +1017,54 @@
           const reader = new FileReader();
           reader.onload = function (ev) {
             try {
-              const data = new Uint8Array(ev.target.result);
-              const wb = XLSX.read(data, { type: "array" });
+              const wb = XLSX.read(new Uint8Array(ev.target.result), { type: "array" });
               const hoja = wb.Sheets[wb.SheetNames[0]];
-              // Leer con separador punto y coma si la primera columna contiene todo junto
-              let rows = XLSX.utils.sheet_to_json(hoja, { raw: false });
-              // Detectar si viene como CSV con ";" en una sola columna
-              if (rows.length > 0) {
-                const firstKey = Object.keys(rows[0])[0];
-                if (firstKey && firstKey.includes(";")) {
-                  // Parsear manualmente
-                  const raw = XLSX.utils.sheet_to_csv(hoja, { FS: ";" });
-                  const lines = raw.trim().split("\n");
-                  const headers = lines[0].split(";").map((h) => h.trim());
-                  rows = lines.slice(1).map((line) => {
-                    const vals = line.split(";");
-                    const obj = {};
-                    headers.forEach(
-                      (h, i) => (obj[h] = (vals[i] || "").trim())
-                    );
-                    return obj;
-                  });
-                }
-              }
-              datosExcel = rows;
-              showStatus(
-                `ok`,
-                `${rows.length} registros cargados · ${file.name}`
+              let matriz = XLSX.utils.sheet_to_json(hoja, {
+                header: 1,
+                raw: false,
+                defval: "",
+              });
+
+              // Soporta archivos con todo en una sola columna separado por ";"
+              matriz = matriz.map((r) =>
+                r.length === 1 && String(r[0]).includes(";")
+                  ? String(r[0]).split(";")
+                  : r
               );
+
+              // Buscar la fila de encabezados (la que contiene "LPN")
+              const hIdx = matriz.findIndex((r) =>
+                r.some((c) => normHeader(c) === "LPN")
+              );
+              if (hIdx < 0) throw new Error("No se encontró la columna LPN");
+
+              const headers = matriz[hIdx].map(normHeader);
+              const col = (...names) => headers.findIndex((h) => names.includes(h));
+              const cLPN = col("LPN");
+              const cREF = col("REFERENCIAS", "REFERENCIA", "REF");
+              const cQTY = col("CANTIDAD", "QTY", "CANT");
+              const cTIPO = col("TIPO", "DESCRIPCION");
+
+              indiceLPN = new Map();
+              datosExcel = [];
+              matriz.slice(hIdx + 1).forEach((r) => {
+                const lpn = String(r[cLPN] ?? "").trim();
+                if (!lpn) return;
+                const reg = {
+                  lpn,
+                  referencia: String(r[cREF] ?? "").trim() || "—",
+                  cantidad: String(r[cQTY] ?? "").trim() || "—",
+                  tipo: String(r[cTIPO] ?? "").trim() || "—",
+                };
+                datosExcel.push(reg);
+                indiceLPN.set(norm(lpn), reg);
+              });
+
+              showStatus("ok", `${datosExcel.length} LPN cargados · ${file.name}`);
               toast("Excel cargado correctamente", "green");
             } catch (err) {
-              showStatus("err", "Error al leer el archivo");
+              console.error(err);
+              showStatus("err", "Error al leer el archivo: " + err.message);
               toast("Error al leer el Excel", "red");
             }
           };
@@ -978,7 +1078,7 @@
       }
 
       // ════════════════════════════════════════
-      // ESCÁNER DE CÓDIGO DE BARRAS (ZXing)
+      // ESCÁNER DE CÓDIGO DE BARRAS
       // ════════════════════════════════════════
       async function toggleScanner() {
         const wrap = document.getElementById("scannerWrap");
@@ -1000,29 +1100,22 @@
           });
           video.srcObject = scannerStream;
           await video.play();
-          iniciarZXing(video);
+          iniciarScanner(video);
         } catch (err) {
           toast("No se pudo acceder a la cámara", "red");
           wrap.style.display = "none";
+          document.getElementById("btnScan").textContent = "⊙ Cámara";
         }
       }
 
-      function iniciarZXing(video) {
-        // Usamos un canvas para capturar frames y decodificar
+      function iniciarScanner(video) {
         const canvas = document.createElement("canvas");
         const ctx = canvas.getContext("2d");
-        const hints = new Map();
 
-        // Intentar con la API de BarcodeDetector nativa del navegador (Chrome/Android)
+        // BarcodeDetector nativo (Chrome/Android)
         if ("BarcodeDetector" in window) {
           const detector = new BarcodeDetector({
-            formats: [
-              "code_128",
-              "code_39",
-              "ean_13",
-              "qr_code",
-              "data_matrix",
-            ],
+            formats: ["code_128", "code_39", "ean_13", "qr_code", "data_matrix"],
           });
           scanInterval = setInterval(async () => {
             if (video.readyState !== video.HAVE_ENOUGH_DATA) return;
@@ -1043,13 +1136,10 @@
             } catch (e) {}
           }, 300);
         } else {
-          // Fallback: ZXing desde CDN
-          toast(
-            "BarcodeDetector no disponible en este navegador. Ingresa el LPN manualmente.",
-            ""
-          );
+          toast("Este navegador no soporta escaneo. Ingresa el LPN manualmente.", "");
           detenerScanner();
           document.getElementById("scannerWrap").style.display = "none";
+          document.getElementById("btnScan").textContent = "⊙ Cámara";
         }
       }
 
@@ -1068,11 +1158,8 @@
       // BUSCAR LPN EN EXCEL
       // ════════════════════════════════════════
       function buscarYAgregar() {
-        if (!Permisos.exigir('crear')) return;
-        const val = document
-          .getElementById("lpnInput")
-          .value.trim()
-          .toUpperCase();
+        if (!Permisos.exigir("crear")) return;
+        const val = norm(document.getElementById("lpnInput").value);
         const resultEl = document.getElementById("lpnResult");
         const fotoArea = document.getElementById("fotoArea");
 
@@ -1085,50 +1172,47 @@
           return;
         }
 
-        // Verificar duplicado
-        if (itemsPendientes.some((i) => i.lpn === val)) {
-          toast("Este LPN ya fue registrado", "red");
-          return;
+        // 1) coincidencia exacta; 2) si el lector agregó prefijo/sufijo, coincidencia parcial
+        let found = indiceLPN.get(val);
+        if (!found) {
+          for (const [k, reg] of indiceLPN) {
+            if (val.includes(k) || k.includes(val)) {
+              found = reg;
+              break;
+            }
+          }
         }
-
-        // Buscar en columna LPN (o No.;LPN;... si vino como csv)
-        const found = datosExcel.find((row) => {
-          const lpnVal = (row["LPN"] || row["lpn"] || "")
-            .toString()
-            .toUpperCase();
-          return lpnVal === val;
-        });
 
         if (!found) {
           resultEl.className = "lpn-result not-found";
-          resultEl.innerHTML = `LPN <strong>${val}</strong> no encontrado en el Excel.`;
+          resultEl.innerHTML = `LPN <strong>${val}</strong> no encontrado en el Excel (${datosExcel.length} registros cargados).`;
           fotoArea.classList.remove("active");
           return;
         }
 
-        const ref =
-          found["REFERENCIAS"] || found["REFERENCIA"] || found["REF"] || "—";
-        const qty = found["CANTIDAD"] || found["QTY"] || "—";
-        const tipo = found["TIPO"] || "—";
+        // Verificar duplicado
+        if (itemsPendientes.some((i) => i.lpn === found.lpn)) {
+          toast("Este LPN ya fue registrado", "red");
+          return;
+        }
 
         resultEl.className = "lpn-result found";
         resultEl.innerHTML = `
-          <strong>LPN:</strong> ${val}<br>
-          <strong>REFERENCIA:</strong> ${ref}<br>
-          <strong>CANTIDAD:</strong> ${qty}<br>
-          <strong>TIPO:</strong> ${tipo}
+          <strong>LPN:</strong> ${found.lpn}<br>
+          <strong>REFERENCIA:</strong> ${found.referencia}<br>
+          <strong>CANTIDAD:</strong> ${found.cantidad}<br>
+          <strong>TIPO:</strong> ${found.tipo}
         `;
 
         // Guardar item actual, esperar foto
         itemActual = {
-          lpn: val,
-          referencia: ref,
-          cantidad: qty,
-          tipo,
+          lpn: found.lpn,
+          referencia: found.referencia,
+          cantidad: found.cantidad,
+          tipo: found.tipo,
           foto: null,
         };
 
-        // Activar área de foto
         fotoArea.classList.add("active");
         iniciarCamaraFoto();
       }
@@ -1171,6 +1255,7 @@
         const canvas = document.getElementById("fotoCanvas");
         const img = document.getElementById("fotoPreviewImg");
 
+        // Se captura el fotograma completo del video (el mismo que ahora se ve completo en pantalla)
         canvas.width = video.videoWidth || 640;
         canvas.height = video.videoHeight || 480;
         canvas.getContext("2d").drawImage(video, 0, 0);
@@ -1201,7 +1286,7 @@
       }
 
       function confirmarItem() {
-        if (!Permisos.exigir('crear')) return;
+        if (!Permisos.exigir("crear")) return;
         if (!itemActual) return;
         itemsPendientes.push({ ...itemActual });
         itemActual = null;
@@ -1222,13 +1307,10 @@
       }
 
       // ════════════════════════════════════════
-      // RENDERIZAR LISTA DE ITEMS
-      // ════════════════════════════════════════
-      // ════════════════════════════════════════
       // EXPORTAR EXCEL
       // ════════════════════════════════════════
       function exportarExcel() {
-        if (!Permisos.exigir('exportar')) return;
+        if (!Permisos.exigir("exportar")) return;
         if (itemsPendientes.length === 0) {
           toast("No hay referencias para exportar", "red");
           return;
@@ -1245,52 +1327,34 @@
         const hoja = XLSX.utils.json_to_sheet(datos, {
           header: ["No.", "LPN", "REFERENCIAS", "CANTIDAD", "TIPO"],
         });
-
-        // Ancho de columnas
-        hoja["!cols"] = [
-          { wch: 5 },
-          { wch: 20 },
-          { wch: 28 },
-          { wch: 10 },
-          { wch: 16 },
-        ];
+        hoja["!cols"] = [{ wch: 5 }, { wch: 20 }, { wch: 28 }, { wch: 10 }, { wch: 16 }];
 
         const libro = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(libro, hoja, "Bajas Inventario");
-
-        const hoy = new Date();
-        const fecha = `${hoy.getFullYear()}${String(
-          hoy.getMonth() + 1
-        ).padStart(2, "0")}${String(hoy.getDate()).padStart(2, "0")}`;
-        XLSX.writeFile(libro, `Bajas_Inventario_${fecha}.xlsx`);
+        XLSX.writeFile(libro, `Bajas_Inventario_${fechaHoy().archivo}.xlsx`);
         toast("Excel exportado correctamente", "green");
       }
 
+      // ════════════════════════════════════════
+      // RENDERIZAR LISTA DE ITEMS
+      // ════════════════════════════════════════
       function renderLista() {
         const card = document.getElementById("cardLista");
         const list = document.getElementById("itemsList");
-        const btnPDF = document.getElementById("btnPDF");
-        const btnXLS = document.getElementById("btnXLS");
+        const btns = ["btnPDF", "btnXLS", "btnDOC"].map((id) => document.getElementById(id));
 
         if (itemsPendientes.length === 0) {
           card.style.display = "none";
-          btnPDF.disabled = true;
-          btnXLS.disabled = true;
+          btns.forEach((b) => (b.disabled = true));
           return;
         }
 
         card.style.display = "block";
-        btnPDF.disabled = false;
-        btnXLS.disabled = false;
+        btns.forEach((b) => (b.disabled = false));
 
-        // Contadores
-        const totalRefs = itemsPendientes.length;
-        const totalUnits = itemsPendientes.reduce(
-          (s, i) => s + (parseInt(i.cantidad) || 0),
-          0
-        );
-        document.getElementById("cntRefs").textContent = totalRefs;
-        document.getElementById("cntUnits").textContent = totalUnits;
+        const t = totales();
+        document.getElementById("cntRefs").textContent = t.refs;
+        document.getElementById("cntUnits").textContent = t.units;
 
         list.innerHTML = itemsPendientes
           .map(
@@ -1304,9 +1368,7 @@
             <div class="item-info">
               <div class="item-lpn">${item.lpn}</div>
               <div class="item-ref">${item.referencia}</div>
-              <div class="item-meta">Cant: ${
-                item.cantidad
-              } &nbsp;·&nbsp; Tipo: ${item.tipo}</div>
+              <div class="item-meta">Cant: ${item.cantidad} &nbsp;·&nbsp; Tipo: ${item.tipo}</div>
               <div class="item-actions">
                 ${
                   !item.foto
@@ -1323,15 +1385,14 @@
       }
 
       function eliminarItem(idx) {
-        if (!Permisos.exigir('eliminar')) return;
+        if (!Permisos.exigir("eliminar")) return;
         itemsPendientes.splice(idx, 1);
         renderLista();
         toast("Referencia eliminada", "");
       }
 
       function agregarFotoItem(idx) {
-        if (!Permisos.exigir('editar')) return;
-        // Permitir foto extra para un item ya guardado
+        if (!Permisos.exigir("editar")) return;
         itemActual = itemsPendientes[idx];
         document.getElementById("fotoArea").classList.add("active");
         iniciarCamaraFoto();
@@ -1350,10 +1411,218 @@
       }
 
       // ════════════════════════════════════════
+      // EXPORTAR WORD (.docx editable, misma estructura del PDF)
+      // ════════════════════════════════════════
+      function dataURLtoBytes(dataURL) {
+        const bin = atob(dataURL.split(",")[1]);
+        const u8 = new Uint8Array(bin.length);
+        for (let i = 0; i < bin.length; i++) u8[i] = bin.charCodeAt(i);
+        return u8;
+      }
+      function medirImagen(src) {
+        return new Promise((res) => {
+          const im = new Image();
+          im.onload = () => res({ w: im.naturalWidth, h: im.naturalHeight });
+          im.onerror = () => res({ w: 4, h: 3 });
+          im.src = src;
+        });
+      }
+
+      async function exportarWord() {
+        if (!Permisos.exigir("exportar")) return;
+        if (itemsPendientes.length === 0) {
+          toast("No hay referencias registradas", "red");
+          return;
+        }
+        const D = window.docx;
+        if (!D) {
+          toast("No cargó la librería de Word. Revisa tu conexión.", "red");
+          return;
+        }
+
+        const btn = document.getElementById("btnDOC");
+        const textoBtn = btn.innerHTML;
+        btn.disabled = true;
+        btn.textContent = "⏳ Generando...";
+
+        try {
+          const { Document, Packer, Paragraph, TextRun, ImageRun, AlignmentType,
+                  Table, TableRow, TableCell, WidthType, BorderStyle } = D;
+
+          const fecha = fechaHoy();
+          const t = totales();
+
+          const run = (text, o = {}) => new TextRun({ text, ...o });
+          const campo = (label, valor) =>
+            new Paragraph({
+              spacing: { after: 80 },
+              children: [run(label + " ", { bold: true }), run(valor)],
+            });
+
+          const children = [
+            new Paragraph({
+              alignment: AlignmentType.RIGHT,
+              spacing: { after: 80 },
+              children: [run(MEMO.codigo, { size: 20 })],
+            }),
+            new Paragraph({
+              alignment: AlignmentType.CENTER,
+              spacing: { after: 200 },
+              children: [run("MEMORANDO " + MEMO.codigo, { bold: true, size: 24 })],
+            }),
+            campo("PARA:", MEMO.para),
+            campo("DE:", MEMO.de),
+            campo("FECHA:", fecha.texto),
+            campo("ASUNTO:", MEMO.asunto),
+            new Paragraph({
+              alignment: AlignmentType.JUSTIFIED,
+              spacing: { before: 280, after: 280 },
+              children: [
+                run(MEMO.cuerpoIni),
+                run(`${t.refs} referencias`, { bold: true }),
+                run(" con "),
+                run(`${t.units} unidades`, { bold: true }),
+                run(MEMO.cuerpoFin),
+              ],
+            }),
+          ];
+
+          // Un bloque por referencia: nombre, foto, LPN | Cant | Tipo
+          for (const item of itemsPendientes) {
+            children.push(
+              new Paragraph({
+                keepNext: true,
+                spacing: { before: 240, after: 100 },
+                children: [run(item.referencia, { bold: true })],
+              })
+            );
+            if (item.foto) {
+              const { w, h } = await medirImagen(item.foto);
+              const esc = Math.min(320 / w, 240 / h, 1);
+              children.push(
+                new Paragraph({
+                  keepNext: true,
+                  spacing: { after: 60 },
+                  children: [
+                    new ImageRun({
+                      type: "jpg",
+                      data: dataURLtoBytes(item.foto),
+                      transformation: {
+                        width: Math.round(w * esc),
+                        height: Math.round(h * esc),
+                      },
+                    }),
+                  ],
+                })
+              );
+            } else {
+              children.push(
+                new Paragraph({
+                  spacing: { after: 60 },
+                  children: [run("(Sin imagen adjunta)", { size: 20, color: "999999" })],
+                })
+              );
+            }
+            children.push(
+              new Paragraph({
+                spacing: { after: 160 },
+                children: [
+                  run(`LPN: ${item.lpn}  |  Cant: ${item.cantidad}  |  Tipo: ${item.tipo}`, {
+                    size: 18,
+                    color: "444444",
+                  }),
+                ],
+              })
+            );
+          }
+
+          children.push(
+            new Paragraph({ spacing: { before: 400, after: 200 }, children: [run("Atentamente,")] })
+          );
+
+          // Firmas: tabla 2 x 2 sin bordes
+          const sinBorde = { style: BorderStyle.NONE, size: 0, color: "FFFFFF" };
+          const bordes = { top: sinBorde, bottom: sinBorde, left: sinBorde, right: sinBorde };
+          const centro = AlignmentType.CENTER;
+          const celdaFirma = (f) =>
+            new TableCell({
+              width: { size: 4513, type: WidthType.DXA },
+              borders: bordes,
+              margins: { top: 500, bottom: 200, left: 100, right: 100 },
+              children: [
+                new Paragraph({ alignment: centro, children: [run("______________________________")] }),
+                new Paragraph({ alignment: centro, children: [run(f.nombre, { bold: true, size: 20 })] }),
+                new Paragraph({ alignment: centro, children: [run(f.cargo, { size: 20 })] }),
+              ],
+            });
+          const filas = [];
+          for (let i = 0; i < MEMO.firmas.length; i += 2) {
+            const par = MEMO.firmas.slice(i, i + 2);
+            const celdas = par.map(celdaFirma);
+            if (celdas.length < 2)
+              celdas.push(
+                new TableCell({
+                  width: { size: 4513, type: WidthType.DXA },
+                  borders: bordes,
+                  children: [new Paragraph("")],
+                })
+              );
+            filas.push(new TableRow({ cantSplit: true, children: celdas }));
+          }
+          children.push(
+            new Table({
+              width: { size: 9026, type: WidthType.DXA },
+              columnWidths: [4513, 4513],
+              borders: {
+                ...bordes,
+                insideHorizontal: sinBorde,
+                insideVertical: sinBorde,
+              },
+              rows: filas,
+            })
+          );
+
+          const doc = new Document({
+            creator: "Módulo 5 — Bajas de Inventario",
+            title: "Memorando " + MEMO.codigo,
+            styles: { default: { document: { run: { font: "Arial", size: 22 } } } },
+            sections: [
+              {
+                properties: {
+                  page: {
+                    size: { width: 11906, height: 16838 }, // A4
+                    margin: { top: 1440, bottom: 1440, left: 1440, right: 1440 },
+                  },
+                },
+                children,
+              },
+            ],
+          });
+
+          const blob = await Packer.toBlob(doc);
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = `Memorando_Bajas_${fecha.archivo}.docx`;
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          setTimeout(() => URL.revokeObjectURL(url), 2000);
+          toast("Word generado correctamente", "green");
+        } catch (err) {
+          console.error(err);
+          toast("Error al generar el Word: " + err.message, "red");
+        }
+
+        btn.innerHTML = textoBtn;
+        btn.disabled = false;
+      }
+
+      // ════════════════════════════════════════
       // GENERAR PDF
       // ════════════════════════════════════════
       async function generarPDF() {
-        if (!Permisos.exigir('exportar')) return;
+        if (!Permisos.exigir("exportar")) return;
         if (itemsPendientes.length === 0) {
           toast("No hay referencias registradas", "red");
           return;
@@ -1361,20 +1630,13 @@
 
         toast("Generando PDF...", "");
         const btnPDF = document.getElementById("btnPDF");
+        const textoBtn = btnPDF.innerHTML;
         btnPDF.disabled = true;
         btnPDF.textContent = "⏳ Generando...";
 
-        const hoy = new Date();
-        const fechaStr = `${String(hoy.getDate()).padStart(2, "0")}/${String(
-          hoy.getMonth() + 1
-        ).padStart(2, "0")}/${hoy.getFullYear()}`;
-        const totalRefs = itemsPendientes.length;
-        const totalUnits = itemsPendientes.reduce(
-          (s, i) => s + (parseInt(i.cantidad) || 0),
-          0
-        );
+        const fecha = fechaHoy();
+        const t = totales();
 
-        // Construir HTML del memorando
         let itemsHTML = "";
         for (const item of itemsPendientes) {
           itemsHTML += `
@@ -1385,58 +1647,41 @@
                   ? `<img src="${item.foto}" style="max-width:260px;max-height:200px;border:1px solid #ccc;" />`
                   : '<p style="font-size:11px;color:#999;">(Sin imagen adjunta)</p>'
               }
-              <p style="font-size:11px;color:#444;margin-top:4px;">LPN: ${
-                item.lpn
-              } &nbsp;|&nbsp; Cant: ${item.cantidad} &nbsp;|&nbsp; Tipo: ${
-            item.tipo
-          }</p>
+              <p style="font-size:11px;color:#444;margin-top:4px;">LPN: ${item.lpn} &nbsp;|&nbsp; Cant: ${item.cantidad} &nbsp;|&nbsp; Tipo: ${item.tipo}</p>
             </div>
           `;
         }
 
+        const firmasHTML = MEMO.firmas
+          .map(
+            (f) => `
+            <div class="firma">
+              <div class="linea"></div>
+              <p><strong>${f.nombre}</strong></p>
+              <p>${f.cargo}</p>
+            </div>`
+          )
+          .join("");
+
         const preview = document.getElementById("pdfPreview");
         preview.innerHTML = `
-          <div style="text-align:right;font-size:11px;margin-bottom:4px;">GLH-AR 2026-173</div>
-          <h3>MEMORANDO GLH-AR 2026-173</h3>
+          <div style="text-align:right;font-size:11px;margin-bottom:4px;">${MEMO.codigo}</div>
+          <h3>MEMORANDO ${MEMO.codigo}</h3>
 
-          <div class="memo-field"><strong>PARA:</strong> Sra. Dora Balbina Muñoz Gómez - Jefa de Auditoría Interna</div>
-          <div class="memo-field"><strong>DE:</strong> Mayerly Andrea Satizabal – Analista de Inventarios</div>
-          <div class="memo-field"><strong>FECHA:</strong> ${fechaStr}</div>
-          <div class="memo-field"><strong>ASUNTO:</strong> DADA DE BAJA CORRESPONDIENTE A MATERIAL DE RECLAMACIONES RECHAZADOS POR PARTE DEL TALLER DE SERVICIOS.</div>
+          <div class="memo-field"><strong>PARA:</strong> ${MEMO.para}</div>
+          <div class="memo-field"><strong>DE:</strong> ${MEMO.de}</div>
+          <div class="memo-field"><strong>FECHA:</strong> ${fecha.texto}</div>
+          <div class="memo-field"><strong>ASUNTO:</strong> ${MEMO.asunto}</div>
 
           <div class="memo-body">
-            Con el objetivo de depurar la Bodega HRC-MATERIAL MAL ESTADO RESPUESTOS MOTOS en el Almacén de Repuestos,
-            y dando cumplimiento al procedimiento administrativo PA-PM-0004 "CONTROL DE INVENTARIOS-PRODUCTOS POSVENTA",
-            Se solicita la dada de baja de <strong>${totalRefs} referencias</strong> con <strong>${totalUnits} unidades</strong> que corresponden
-            al material de RECLAMOS RECHAZADOS reportados por el Taller de Servicio.
+            ${MEMO.cuerpoIni}<strong>${t.refs} referencias</strong> con <strong>${t.units} unidades</strong>${MEMO.cuerpoFin}
           </div>
 
           ${itemsHTML}
 
           <p style="font-size:12px;margin-top:30px;">Atentamente,</p>
 
-          <div class="firmas">
-            <div class="firma">
-              <div class="linea"></div>
-              <p><strong>Nicolás Rendón Escobar</strong></p>
-              <p>Vicepresidente de Operaciones</p>
-            </div>
-            <div class="firma">
-              <div class="linea"></div>
-              <p><strong>Yamileth Caicedo Ospina</strong></p>
-              <p>Director de Posventa Motocicletas</p>
-            </div>
-            <div class="firma">
-              <div class="linea"></div>
-              <p><strong>Luis Fernando Vera</strong></p>
-              <p>Jefe de Operaciones Repuestos Motos</p>
-            </div>
-            <div class="firma">
-              <div class="linea"></div>
-              <p><strong>Mayerly Andrea Satizabal</strong></p>
-              <p>Analista de Inventarios</p>
-            </div>
-          </div>
+          <div class="firmas">${firmasHTML}</div>
         `;
 
         try {
@@ -1451,7 +1696,6 @@
             width: 794,
           });
 
-          const imgData = canvas.toDataURL("image/jpeg", 0.92);
           const pdfW = pdf.internal.pageSize.getWidth();
           const pdfH = pdf.internal.pageSize.getHeight();
           const ratio = canvas.width / canvas.height;
@@ -1468,17 +1712,7 @@
             sliceCanvas.height = sliceH;
             sliceCanvas
               .getContext("2d")
-              .drawImage(
-                canvas,
-                0,
-                posY,
-                canvas.width,
-                sliceH,
-                0,
-                0,
-                canvas.width,
-                sliceH
-              );
+              .drawImage(canvas, 0, posY, canvas.width, sliceH, 0, 0, canvas.width, sliceH);
 
             if (page > 0) pdf.addPage();
             pdf.addImage(
@@ -1495,18 +1729,15 @@
             page++;
           }
 
-          const fecha = `${hoy.getFullYear()}${String(
-            hoy.getMonth() + 1
-          ).padStart(2, "0")}${String(hoy.getDate()).padStart(2, "0")}`;
-          pdf.save(`Memorando_Bajas_${fecha}.pdf`);
+          pdf.save(`Memorando_Bajas_${fecha.archivo}.pdf`);
           toast("PDF generado correctamente", "green");
         } catch (err) {
           toast("Error al generar el PDF: " + err.message, "red");
           console.error(err);
         }
 
+        btnPDF.innerHTML = textoBtn;
         btnPDF.disabled = false;
-        btnPDF.textContent = "↓  Generar Memorando PDF";
       }
 
       // ════════════════════════════════════════
